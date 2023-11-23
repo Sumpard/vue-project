@@ -14,7 +14,7 @@
       placeholder="结束时间"
       start="12:00"
       step="00:15"
-      end="22:30"
+      end="22:00"
     />
 </template>
 
