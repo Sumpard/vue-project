@@ -1,2 +1,2 @@
 # vue-project
-vue-project for seu sortware lab
+vue-project for seu software lab
