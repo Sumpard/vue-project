@@ -1,0 +1,48 @@
+{
+  "name": "meal-tools",
+  "description": "",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vue-tsc --noEmit && vite build",
+    "build2": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.1.0",
+    "@quasar/extras": "^1.16.7",
+    "axios": "^1.6.0",
+    "chart.js": "^4.4.0",
+    "dayjs": "^1.11.10",
+    "echarts": "^5.4.3",
+    "element-plus": "^2.4.2",
+    "lodash-es": "^4.17.21",
+    "pinia": "^2.1.7",
+    "pinyin-match": "^1.2.4",
+    "quasar": "^2.13.0",
+    "vue": "^3.3.7",
+    "vue-chartjs": "^5.2.0",
+    "vue-clipboard3": "^2.0.0",
+    "vue-cookies": "^1.8.3",
+    "vue-echarts": "^6.6.1",
+    "vue-router": "^4.2.5"
+  },
+  "devDependencies": {
+    "@iconify-json/ep": "^1.1.12",
+    "@quasar/vite-plugin": "^1.6.0",
+    "@types/lodash-es": "^4.17.10",
+    "@types/node": "^20.8.9",
+    "@vitejs/plugin-vue": "^4.4.0",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31",
+    "sass": "1.32.13",
+    "tailwindcss": "^3.3.5",
+    "typescript": "^5.2.2",
+    "unplugin-auto-import": "^0.16.7",
+    "unplugin-icons": "^0.17.4",
+    "unplugin-vue-components": "^0.25.2",
+    "vite": "^4.5.0",
+    "vite-plugin-compression": "^0.5.1",
+    "vue-tsc": "^1.8.22"
+  }
+}
