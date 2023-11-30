@@ -7,7 +7,7 @@
   <div class="changebutton" @click="toggleCollapse" v-else><el-icon><i-ep-Fold /></el-icon></div>
   <el-menu default-active="1" class="el-menu-vertical-demo" active-border-color="blue" :collapse="isCollapse"
     :collapse-transition="false" :router="true">
-    <el-menu-item index="mainpage">
+    <el-menu-item index="mainpage" @click="$router.push('mainpage')">
       <el-icon>
         <i-ep-House />
       </el-icon>
@@ -15,7 +15,7 @@
     </el-menu-item>
     <el-sub-menu>
       <template #title>
-        <div @click="$router.push('/reservation')">
+        <div>
           <el-icon><i-ep-edit /></el-icon>
 
           <span v-if="!isCollapse">预约管理</span>
@@ -23,15 +23,14 @@
       </template>
       <el-menu-item index="room" @click="$router.push('/reserveroom')"><el-icon><span class="iconfont icon-huiyishi"></span></el-icon>会议室预约</el-menu-item>
       <el-menu-item index="seat"><el-icon><span class="iconfont icon-zuowei"></span></el-icon>座位预约</el-menu-item>
-      <el-menu-item index="equipment"><el-icon>
-          <i-ep-Camera />
-        </el-icon>器材预约</el-menu-item>
+      <el-menu-item index="equipment"><el-icon><i-ep-Camera /></el-icon>器材预约</el-menu-item>
+      <el-menu-item index="record" @click="$router.push('/reservation')"><el-icon><i-ep-Collection /></el-icon>预约记录</el-menu-item>
     </el-sub-menu>
 
 
 
 
-    <el-menu-item index="contactus">
+    <el-menu-item index="contactus" @click="$router.push('/contact')">
 
       <el-icon>
         <i-ep-Phone />
