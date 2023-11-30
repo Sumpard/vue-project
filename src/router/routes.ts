@@ -1,6 +1,8 @@
 import { RouteRecordRaw } from "vue-router";
 import reservation from '@/views/Useview.vue'
 import reserveroom from '@/views/room/reserveRoom.vue'
+import contactus from '@/views/contact/contactUs.vue'
+import mainpage from '@/views/mainpage/imageShow.vue'
 const routes: RouteRecordRaw[] = [
   {
     path: "/",
@@ -14,12 +16,21 @@ const routes: RouteRecordRaw[] = [
         component: () => import("@/views/Main.vue"),
         meta: { keepalive: false },
       },
+      {
+        path:"/mainpage",
+        name:"mainpage",
+        component:mainpage
+      },
       {path:'/reservation',
         component:reservation
       },
       {path:'/reserveroom',
         component:reserveroom
     },
+      {
+        path:'/contact',
+        component:contactus
+      }
     ],
   },
   {
