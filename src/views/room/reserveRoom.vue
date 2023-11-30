@@ -1,10 +1,11 @@
 <template>
   <div class="chart-container">
-    <h1>会议室预约</h1>
+    <el-form-item label="日期">
+        <el-date-picker v-model="bookingForm.date" type="date" placeholder="选择日期"></el-date-picker>
+      </el-form-item>
     <div class="chart">
-      <Echart1 />
+      <table2 />
     </div>
-    <!-- 其他表单内容... -->
   </div>
   <!-- <div>
     <timeset />
@@ -42,6 +43,9 @@
       </el-form-item>
     </el-form>
   </div>
+
+
+
 </template>
   
 <script lang="ts">
@@ -50,9 +54,11 @@ import BarChart1 from '@/views/chart/chart1.vue'
 import BarChart2 from '@/views/chart/chart2.vue'
 import Echart1 from '@/views/chart/echart1.vue'
 import timeset from '@/views/room/time.vue'
-
+import table1 from '@/views/chart/table1.vue'
+import table2 from '@/views/chart/table2.vue'
+import tabletest from '@/views/tabulation/tabletest.vue'
 export default {
-  components: { Echart1, timeset },
+  components: { tabletest,table2,table1, timeset},
 
   data() {
     return {
@@ -129,10 +135,9 @@ export default {
 
 <style>
 .chart {
-  width: 100vh;
-  /* 设置图表容器的宽度 */
-  height: 30vh;
-  /* 设置图表容器的高度 */
+  width: 100%;
+  flex : 1;
+  background-color: #b13232;
 }
 
 .chart-container {
@@ -140,6 +145,8 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: calc(100% - 30px);
+  /*height: calc(100% - 30px);*/
+  height: 66vh;
+  background-color: #ffffff;
 }
 </style>
