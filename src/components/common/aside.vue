@@ -7,7 +7,7 @@
   <div class="changebutton" @click="toggleCollapse" v-else><el-icon><i-ep-Fold /></el-icon></div>
   <el-menu default-active="1" class="el-menu-vertical-demo" active-border-color="blue" :collapse="isCollapse"
     :collapse-transition="false" :router="true">
-    <el-menu-item index="mainpage">
+    <el-menu-item index="homepage">
       <el-icon>
         <i-ep-House />
       </el-icon>

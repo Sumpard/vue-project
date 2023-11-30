@@ -1,6 +1,7 @@
 import { RouteRecordRaw } from "vue-router";
 import reservation from '@/views/Useview.vue'
 import reserveroom from '@/views/room/reserveRoom.vue'
+import homeindex from '@/views/home/homeindex.vue'
 const routes: RouteRecordRaw[] = [
   {
     path: "/",
@@ -14,12 +15,23 @@ const routes: RouteRecordRaw[] = [
         component: () => import("@/views/Main.vue"),
         meta: { keepalive: false },
       },
-      {path:'/reservation',
+      {
+        path:'/reservation',
         component:reservation
       },
-      {path:'/reserveroom',
+      {
+        path:'/reserveroom',
         component:reserveroom
-    },
+      },
+      {
+        path: "/homepage",
+      name: "homepage",
+      component: () => import("@/views/mainpage/homepage.vue")
+      },
+      {
+        path: '/homeindex',
+        component: homeindex
+      },
     ],
   },
   {
@@ -36,6 +48,11 @@ const routes: RouteRecordRaw[] = [
     path: "/try",
     name: "try",
     component: () => import("@/views/try.vue"),
+  },
+  {
+    path: "/tabletest",
+    name: "tabletest",
+    component: () => import("@/views/tabulation/tabletest.vue"),
   },
   {
     path: "/auth",
