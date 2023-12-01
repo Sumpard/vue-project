@@ -10,20 +10,20 @@
     </div>
     <table class="pure-table pure-table-bordered timetable centered-table">
       <tr>
-        <th>节次/星期</th>
-        <th>星期一</th>
-        <th>星期二</th>
-        <th>星期三</th>
-        <th>星期四</th>
-        <th>星期五</th>
-        <th>星期六</th>
-        <th>星期日</th>
+        <th>时间段/会议室</th>
+        <th>会议室一</th>
+        <th>会议室二</th>
+        <th>会议室三</th>
+        <th>会议室四</th>
+        <th>会议室五</th>
+        <th>会议室六</th>
+        <th>会议室日</th>
       </tr>
-      <tr v-for="i in _.range(13)">
-        <td>{{ i + 1 }}</td>
+      <tr v-for="i in _.range(32)">
+        <td>{{ formatTime(i) }}</td>
         <template v-for="j in _.range(7)">
           <template v-if="showType == 'semester'">
-            <my-schedule-cell v-if="i == 3 && j == 4" :data="getShow(i, j) ?? null" :rowspan="i < 10 ? 2 : 1" />
+            <my-schedule-cell v-if="i == 3 && j == 4" :data="getShow(i, j) ?? null"  />
             <td v-else></td>
           </template>
           <template v-else>
@@ -42,18 +42,47 @@ import { MeetingSession } from "@/data/meeting";
 
 const showTypeWeek = ref(false);
 const showType = computed(() => (showTypeWeek ? "semester" : "week"));
-const meetings:MeetingSession[] =[
+const meetings=
   new MeetingSession(
-  /* start_time */ 1638357600, 
-  /* end_time */ 1643857600,   
+  /* start_time */ 1701397565000, 
+  /* end_time */ 1701401165000,   
   /* pname */ "JZX",     
   /* room */ 101,              
   /* theme */ "AgendaTopic"   
-)
- ]
+);
+
+
+
+const rows = 28; // 行数
+const columns = 7; // 列数
+
+const tDmap: number[][] = [];
+
+for (let i = 0; i < rows; i++) {
+  const row: number[] = [];
+  for (let j = 0; j < columns; j++) {
+    row.push(0); // 将每个元素设置为0
+  }
+  tDmap.push(row);
+};
+
+const formatTime= (index:number) => {
+    const hours = Math.floor(index / 4)+12;
+    const minutes = (index % 4)*15;
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+};
+
+
+
 const getShow = (row: number, col: number) => {
     return  meetings;
 };
+
+const IsShowEmpty = (row: number, col: number) =>{
+  return tDmap[row][col];
+}
+
+
 </script>
   
 <style lang="scss">
@@ -126,10 +155,11 @@ const getShow = (row: number, col: number) => {
 
   th {
     width: 3em;
+    
   }
 
   tr {
-    height: 3.5em;
+    height: 1.5em;
   }
 
   td:not(:nth-child(1)) {

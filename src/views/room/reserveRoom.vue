@@ -4,14 +4,14 @@
         <el-date-picker v-model="bookingForm.date" type="date" placeholder="选择日期"></el-date-picker>
       </el-form-item>
     <div class="chart">
-      <table2 />
+      <Gante2 />
     </div>
   </div>
   <!-- <div>
     <timeset />
   </div> -->
   <div>
-    <h1>会议室预约</h1>
+    <h5>会议室预约</h5>
     <el-form :model="bookingForm" label-width="120px">
       <el-form-item label="会议室">
         <el-select v-model="bookingForm.room" placeholder="选择会议室">
@@ -57,8 +57,9 @@ import timeset from '@/views/room/time.vue'
 import table1 from '@/views/chart/table1.vue'
 import table2 from '@/views/chart/table2.vue'
 import tabletest from '@/views/tabulation/tabletest.vue'
+import Gante2 from '@/views/chart/gante2.vue'
 export default {
-  components: { tabletest,table2,table1, timeset},
+  components: { tabletest,table2,table1, timeset,Gante2},
 
   data() {
     return {
@@ -137,7 +138,7 @@ export default {
 .chart {
   width: 100%;
   flex : 1;
-  background-color: #b13232;
+  background-color: #ffffff;
 }
 
 .chart-container {

@@ -11,6 +11,6 @@ export class MeetingSession {
 
       /** 持续时间 */
   get span() {
-    return Math.floor((this.end_time - this.start_time) / 2700000);
+    return Math.floor((this.end_time - this.start_time) / 900000);
   } 
 }

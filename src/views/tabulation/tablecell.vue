@@ -1,18 +1,18 @@
 <template>
     <template v-if="data">
-      <td :rowspan="rowspan ?? (data as MeetingSession).span" >
+      <!-- <td :rowspan="rowspan ?? (data as MeetingSession).span" > -->
+      <td :rowspan=" (data as MeetingSession).span">
         <div
-          v-for="item in data"
           class="section-label"
           :style="{
-            'background-color': `hsl(${hue(item)}, 80%, 90%)`,
-            'border-color': `hsl(${hue(item)}, 50%, 80%)`,
+            'background-color': `hsl(${hue(data)}, 80%, 90%)`,
+            'border-color': `hsl(${hue(data)}, 50%, 80%)`,
           }"
         >
-          <p>{{ item.start_time }}-{{ item.end_time }}</p>
-          <p>{{ item.room }}</p>
-          <p>{{ item.pname }} </p>
-          <p>{{ item.theme }}</p>
+          <p>{{ data.start_time }}-{{ data.end_time }}</p>
+          <p>{{ data.room }}</p>
+          <p>{{ data.pname }} </p>
+          <p>{{ data.theme }}</p>
         </div>
       </td>
     </template>
