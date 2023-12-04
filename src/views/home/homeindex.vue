@@ -1,25 +1,69 @@
 <template>
-    <div class="my-info">
-      <!-- 封面图 头图 -->
-      <!-- <BannerItem :banner="currentUser.banner" @changeBanner="changeBanner" /> -->
-      <!-- 个人信息 -->
-      <div class="info-deatil">
-        <!-- <UserInfo :currentUser="currentUser" @changeAvatar="changeAvatar" /> -->
-        <avatar/> 
-        <div class="all-info">
-          <message />
-        </div>
+  <div class=" my-info  mdui-card ">
+    <!-- 封面图 头图 -->
+    <!-- <BannerItem :banner="currentUser.banner" @changeBanner="changeBanner" /> -->
+    <!-- 个人信息 -->
+    <div class="info-deatil">
+      <!-- <UserInfo :currentUser="currentUser" @changeAvatar="changeAvatar" /> -->
+      <avatar/> 
+      <div class="all-info">
+        <message />
       </div>
-      <!-- 我的文章 -->
-      
     </div>
-  </template>
+    <!-- 我的文章 -->
+    
+  </div>
+</template>
 
 <script lang="ts" setup>
- import avatar from "./components/avatar.vue"
+import avatar from "./components/avatar.vue"
 import message from "./components/message.vue"
 </script>
 
-<style lang="less" scoped>
-@import url(./components/styles/Home.less);
+<style  scoped>
+@import url('https://cdn.jsdelivr.net/gh/AyagawaSeirin/homepage@latest/mdui/css/mdui.min.css');
+
+
+@media screen and (min-width: 320px) {
+.my-info {
+  width: 100%;
+  overflow: hidden;
+  min-height: 570px;
+  transition: all 0.8s ease;
+  background-color: rgb(255, 255, 255);
+  margin: 1rem 0;
+  margin-top: 6.6rem;
+  font-family: 'maoken', 'urafont', '微软雅黑';
+  font-weight: 500;
+  border: 0.1rem solid #dcdfe6;
+  border-radius: 1rem;
+
+}
+
+.my-info .info-deatil {
+  display: flex;
+  flex-direction: column;
+}
+
+.my-info .info-deatil .all-info {
+  padding: 2rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  color: rgb(0, 0, 0);
+  
+}
+}
+
+@media screen and (min-width: 992px) {
+  .my-info {
+      margin: 1rem 0;
+  }
+
+  .my-info .info-deatil {
+      flex-direction: row;
+  }
+}
+
+
 </style>
