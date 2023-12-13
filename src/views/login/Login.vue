@@ -9,7 +9,7 @@
       <q-tab label="手机号登录" name="two" />
     </q-tabs>
     <q-separator />
-    <q-form  @reset="onReset" class="q-gutter-md">
+    <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel name="one">
           <q-input
@@ -58,9 +58,9 @@
 </template>
 <script setup lang="ts">
 import { login } from "@/api/login";
-//import { getUserMe } from "@/api/user";
+import { getUserMe } from "@/api/user";
 import Message from "@/utils/message";
-//import { useUserStore } from "@/store/user";
+import { useUserStore } from "@/stores/user";
 
 const $router = useRouter();
 const $route = useRoute();
@@ -68,30 +68,32 @@ const $route = useRoute();
 const form = reactive({ username: "", password: "" });
 let tab = ref("one");
 
-/* async function onSubmit() {
+async function onSubmit() {
   const userStore = useUserStore();
   try {
     Message.info("提交登录信息");
     // 获取token
-    const { access_token, token_type } = await login(form.username, form.password);
-    console.log("登录成功", access_token, token_type);
-    const token = `${token_type} ${access_token}`;
+    const { data } = await login(form.username, form.password);
+    Message.info("登录成功");
+    console.log("登录成功", data);
+    const token = data;
     userStore.login({ token }); // 存token
     // 获取用户
     const user = await getUserMe();
+    Message.info("获取用户");
     console.log("获取用户", user);
     userStore.login({ token, user });
     Message.success(`登录成功！`);
 
-    if ($route.query.redirect) {
+    /* if ($route.query.redirect) {
       $router.replace($route.query.redirect as string);
     } else {
       $router.replace({ name: "chat" });
-    }
+    } */
   } catch (error) {
     console.log("登录失败", error);
   }
-} */
+}
 // Submit2手机号
 function onReset() {
   form.username = "";

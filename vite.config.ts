@@ -89,7 +89,7 @@ export default ({ mode }: ConfigEnv) =>
         "/api": {
           target: loadEnv(mode, process.cwd()).VITE_APP_BASE_API,
           changeOrigin: true,
-          // rewrite: path => path.replace(/^\/api/, ""),
+          rewrite: path => path.replace(/^\/api/, ""),
         },
       },
     },

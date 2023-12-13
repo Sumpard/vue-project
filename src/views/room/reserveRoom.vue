@@ -1,8 +1,8 @@
 <template>
   <div class="chart-container">
     <el-form-item label="日期">
-        <el-date-picker v-model="bookingForm.date" type="date" placeholder="选择日期"></el-date-picker>
-      </el-form-item>
+      <el-date-picker v-model="bookingForm.date" type="date" placeholder="选择日期"></el-date-picker>
+    </el-form-item>
     <div class="chart">
       <Gante2 />
     </div>
@@ -39,17 +39,14 @@
         <el-input type="textarea" v-model="bookingForm.remark" placeholder="请输入备注"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button  @click="submitBooking">提交预约</el-button>
+        <el-button @click="submitBooking">提交预约</el-button>
       </el-form-item>
     </el-form>
   </div>
-
-
-
 </template>
   
 <script lang="ts">
-
+import axios from 'axios'
 import BarChart1 from '@/views/chart/chart1.vue'
 import BarChart2 from '@/views/chart/chart2.vue'
 import Echart1 from '@/views/chart/echart1.vue'
@@ -59,7 +56,7 @@ import table2 from '@/views/chart/table2.vue'
 import tabletest from '@/views/tabulation/tabletest.vue'
 import Gante2 from '@/views/chart/gante2.vue'
 export default {
-  components: { tabletest,table2,table1, timeset,Gante2},
+  components: { tabletest, table2, table1, timeset, Gante2 },
 
   data() {
     return {
@@ -67,8 +64,8 @@ export default {
         room: '',
         date: null,
         booker: '',
-        theme:'',
-        remark:''
+        theme: '',
+        remark: ''
       }
     };
   },
@@ -84,60 +81,23 @@ export default {
   }
 };
 
+const chartaxios = axios.create({
+  baseURL: "http://localhost:3306",
+  timeout: 1000
+})
+
+axios.get("http://localhost:3306/test").then(res =>{
+  console.log(res.data)
+})
+
+
 </script>
 
-<!-- <script>
-import Chart from 'chart.js';
-
-export default {
-  data() {
-    return {
-      bookingForm: {
-        // 表单数据...
-      },
-      chart: null
-    };
-  },
-  mounted() {
-    this.initializeChart();
-  },
-  methods: {
-    initializeChart() {
-      const ctx = this.$refs.chart.getContext('2d');
-      this.chart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['会议室1', '会议室2', '会议室3'],
-          datasets: [
-            {
-              label: '预约情况',
-              data: [5, 3, 7], // 这里的数据是示例数据，你需要根据实际情况提供相应的数据
-              backgroundColor: 'rgba(75, 192, 192, 0.6)'
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            y: {
-              beginAtZero: true
-            }
-          }
-        }
-      });
-    },
-    submitBooking() {
-      // 提交预约逻辑...
-    }
-  }
-};
-</script>
- -->
 
 <style>
 .chart {
   width: 100%;
-  flex : 1;
+  flex: 1;
   background-color: #ffffff;
 }
 

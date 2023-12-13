@@ -2,6 +2,7 @@ import axios, { AxiosError } from "axios";
 
 import Message from "@/utils/message";
 import { redirectLogin } from "@/router";
+import { useUserStore } from "@/stores/user";
 
 function format422(data: any, detail: { loc: string[]; msg: string; type: string }[]) {
   return detail.map((t) => t.msg + ".").join(" ");
@@ -17,6 +18,11 @@ const service = axios.create({
 // request拦截器
 service.interceptors.request.use(
   (config) => {
+    const userStore = useUserStore();
+    if (userStore.token) {
+      config.headers["token"] = userStore.token; // 让每个请求携带自定义token
+    }
+    // config.headers["Content-Type"] = "application/json";
     return config;
   },
   (error) => {
@@ -30,6 +36,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response) => {
     const code = response.status;
+    
     if (code < 200 || code > 300) {
       return Promise.reject("error");
     } else {
@@ -37,7 +44,7 @@ service.interceptors.response.use(
     }
   },
   (error: AxiosError<any>) => {
-    console.log(error);
+    // console.log("测试"+error);
     const code = error.response?.status;
     if (error.toString().includes("Error: timeout")) {
       Message.error("网络请求超时");

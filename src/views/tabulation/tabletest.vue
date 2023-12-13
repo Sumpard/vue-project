@@ -23,7 +23,7 @@
         <td>{{ formatTime(i) }}</td>
         <template v-for="j in _.range(7)">
           <template v-if="showType == 'semester'">
-            <my-schedule-cell v-if="i == 3 && j == 4" :data="getShow(i, j) ?? null"  />
+            <my-schedule-cell v-if="i == 3 && j == 4" :data="getShow(i, j) ?? null" />
             <td v-else></td>
           </template>
           <template v-else>
@@ -39,17 +39,30 @@
 import _ from "lodash";
 import MyScheduleCell from "./tablecell.vue";
 import { MeetingSession } from "@/data/meeting";
+import axios from 'axios';
+
+
+async function fetchMeetings() {
+  try {
+    const response = await axios.get('');
+    const meetings = response.data;
+
+    console.log('会议信息:', meetings);
+  } catch (error) {
+    console.error('获取会议信息失败:', error);
+  }
+}
 
 const showTypeWeek = ref(false);
 const showType = computed(() => (showTypeWeek ? "semester" : "week"));
-const meetings=
+const meetings =
   new MeetingSession(
-  /* start_time */ 1701397565000, 
-  /* end_time */ 1701401165000,   
-  /* pname */ "JZX",     
-  /* room */ 101,              
-  /* theme */ "AgendaTopic"   
-);
+  /* start_time */ 1701397565000,
+  /* end_time */ 1701401165000,
+  /* pname */ "JZX",
+  /* room */ 101,
+  /* theme */ "AgendaTopic"
+  );
 
 
 
@@ -66,19 +79,19 @@ for (let i = 0; i < rows; i++) {
   tDmap.push(row);
 };
 
-const formatTime= (index:number) => {
-    const hours = Math.floor(index / 4)+12;
-    const minutes = (index % 4)*15;
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+const formatTime = (index: number) => {
+  const hours = Math.floor(index / 4) + 12;
+  const minutes = (index % 4) * 15;
+  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
 };
 
 
 
 const getShow = (row: number, col: number) => {
-    return  meetings;
+  return meetings;
 };
 
-const IsShowEmpty = (row: number, col: number) =>{
+const IsShowEmpty = (row: number, col: number) => {
   return tDmap[row][col];
 }
 
@@ -155,7 +168,7 @@ const IsShowEmpty = (row: number, col: number) =>{
 
   th {
     width: 3em;
-    
+
   }
 
   tr {
@@ -170,4 +183,5 @@ const IsShowEmpty = (row: number, col: number) =>{
 .centered-table {
   margin: auto;
   /* 将表格本身居中 */
-}</style>
+}
+</style>
