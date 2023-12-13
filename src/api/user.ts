@@ -20,7 +20,7 @@ export type UserStats = {
 };
 
 export async function getUserMe() {
-  return (await api.post<User>("/user/select-all")).data;
+  return (await api.post<User>("/user/select-self")).data;
 }
 
 export async function updateUser(user_id: string, user_data: any) {
@@ -42,4 +42,8 @@ export async function updateUserMeAvatar(user_avatar: File) {
 
 export async function getUserStats() {
   return (await api.get<UserStats>("/users/stat")).data;
+}
+
+export async function updatepassword(password: string, newPassword: string) {
+  return (await api.putForm("/user/update-password", { password: newPassword })).data;
 }
