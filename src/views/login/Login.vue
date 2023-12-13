@@ -65,6 +65,12 @@ import { useUserStore } from "@/stores/user";
 const $router = useRouter();
 const $route = useRoute();
 
+$router.push({ 
+  query: {
+    redirect: '/homepage' // 目标URL中的 redirect 参数值
+  }
+});
+
 const form = reactive({ username: "", password: "" });
 let tab = ref("one");
 
@@ -74,22 +80,23 @@ async function onSubmit() {
     Message.info("提交登录信息");
     // 获取token
     const { data } = await login(form.username, form.password);
-    Message.info("登录成功");
+    //Message.info("登录成功");
     console.log("登录成功", data);
     const token = data;
     userStore.login({ token }); // 存token
     // 获取用户
     const user = await getUserMe();
-    Message.info("获取用户");
+    
+    //Message.info("获取用户");
     console.log("获取用户", user);
     userStore.login({ token, user });
     Message.success(`登录成功！`);
 
-    /* if ($route.query.redirect) {
+    if ($route.query.redirect) {
       $router.replace($route.query.redirect as string);
     } else {
-      $router.replace({ name: "chat" });
-    } */
+      $router.replace({ name: "register" });
+    }
   } catch (error) {
     console.log("登录失败", error);
   }
