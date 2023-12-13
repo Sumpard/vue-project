@@ -15,7 +15,7 @@
     </el-menu-item>
     <el-sub-menu>
       <template #title>
-        <div @click="$router.push('/reservation')">
+        <div>
           <el-icon><i-ep-edit /></el-icon>
 
           <span v-if="!isCollapse">预约管理</span>
@@ -23,22 +23,23 @@
       </template>
       <el-menu-item index="room" @click="$router.push('/reserveroom')"><el-icon><span class="iconfont icon-huiyishi"></span></el-icon>会议室预约</el-menu-item>
       <el-menu-item index="seat"><el-icon><span class="iconfont icon-zuowei"></span></el-icon>座位预约</el-menu-item>
-      <el-menu-item index="equipment"><el-icon>
-          <i-ep-Camera />
-        </el-icon>器材预约</el-menu-item>
+      <el-menu-item index="equipment"><el-icon><i-ep-Camera /></el-icon>器材预约</el-menu-item>
+      <el-menu-item index="record" @click="$router.push('/reservation')"><el-icon><i-ep-Collection /></el-icon>预约记录</el-menu-item>
     </el-sub-menu>
 
 
 
 
-    <el-menu-item index="contactus">
-
-      <el-icon>
-        <i-ep-Phone />
-      </el-icon>
-      <span>联系我们</span>
-
-    </el-menu-item>
+    <el-sub-menu index="contactus">
+      <template #title>
+        <div>
+          <el-icon><i-ep-Phone /></el-icon>
+          <span v-if="!isCollapse">联系我们</span>
+        </div>
+      </template>
+      <el-menu-item index="feedback" @click="$router.push('/contact')"><el-icon><i-ep-Postcard /></el-icon>填写反馈</el-menu-item>
+      <el-menu-item index="response" @click="$router.push('/response')"><el-icon><i-ep-Message /></el-icon>反馈记录</el-menu-item>
+    </el-sub-menu>
   </el-menu>
 </template>
   
