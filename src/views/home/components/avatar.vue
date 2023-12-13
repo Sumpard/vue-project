@@ -204,7 +204,7 @@ background-image: url("@/assets/6.jpg");
 background-size: cover;
 background-position: 40% 50%;
 /* Specify the height of the div */
-height: 580px;
+height: 650px;
 /* Add other styles as needed */
 }
 

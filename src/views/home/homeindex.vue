@@ -31,8 +31,7 @@ import message from "./components/message.vue"
   min-height: 570px;
   transition: all 0.8s ease;
   background-color: rgb(255, 255, 255);
-  margin: 1rem 0;
-  margin-top: 6.6rem;
+ 
   font-family: 'maoken', 'urafont', '微软雅黑';
   font-weight: 500;
   border: 0.1rem solid #dcdfe6;
@@ -46,7 +45,7 @@ import message from "./components/message.vue"
 }
 
 .my-info .info-deatil .all-info {
-  padding: 2rem;
+  padding: 1.5rem 40px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -57,7 +56,7 @@ import message from "./components/message.vue"
 
 @media screen and (min-width: 992px) {
   .my-info {
-      margin: 1rem 0;
+    
   }
 
   .my-info .info-deatil {

@@ -27,12 +27,12 @@ export default ({ mode }: ConfigEnv) =>
     css: {
       preprocessorOptions: {
         scss: { additionalData: `` },
-        less: {
-          charset: false,
-          javascriptEnabled: true,
-          // 这样就能全局使用 src/assets/styles/mixins.less 定义的 变量
-          additionalData: '@import "./src/assets/mixins.less";',
-        }
+        // less: {
+        //   charset: false,
+        //   javascriptEnabled: true,
+        //   // 这样就能全局使用 src/assets/styles/mixins.less 定义的 变量
+        //   additionalData: '@import "./src/assets/mixins.less";',
+        // }
       },
       postcss: {
         plugins: [require("tailwindcss"), require("autoprefixer")],
