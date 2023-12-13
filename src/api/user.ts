@@ -20,7 +20,7 @@ export type UserStats = {
 };
 
 export async function getUserMe() {
-  return (await api.post<User>("http://120.46.203.58:8080/user/select-all")).data;
+  return (await api.post<User>("/user/select-all")).data;
 }
 
 export async function updateUser(user_id: string, user_data: any) {
