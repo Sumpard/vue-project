@@ -32,6 +32,14 @@ const routes: RouteRecordRaw[] = [
         path: '/homeindex',
         component: homeindex
       },
+      {
+        path:'/contact',
+        component:()=> import("@/views/contact/contactUs02.vue")
+      },
+      {
+        path:"/response",
+        component:()=> import("@/views/contact/response.vue")
+      }
     ],
   },
   {
