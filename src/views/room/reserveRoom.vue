@@ -7,7 +7,7 @@
       <Gante2 />
     </div>
   </div>
-  
+
   <!-- <div>
     <timeset />
   </div> -->
@@ -56,7 +56,7 @@ import table1 from '@/views/chart/table1.vue'
 import table2 from '@/views/chart/table2.vue'
 import tabletest from '@/views/tabulation/tabletest.vue'
 import Gante2 from '@/views/chart/gante2.vue'
-
+import Message from "@/utils/message";
 
 
 export default {
@@ -81,9 +81,11 @@ export default {
 
   methods: {
     submitBooking() {
+      Message.info("正在提交预约信息");
       // 在此处执行提交预约的逻辑
-      console.log('预约信息:', this.bookingForm);
-      // 可以发送数据到后端进行处理，或执行其他操作
+
+      console.log('预约信息:', this.time_form);
+      
     }
   }
 };

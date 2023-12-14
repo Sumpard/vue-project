@@ -56,8 +56,8 @@ export default {
         const openDialog = (data1: string, data2: string, data3: string, data4: string) => {
             roomid.value = data1;
             rentedToData.value = "借用者：" + data2;
-            starttime.value = "开始时间：" + moment(data3).format('YYYY-MM-DD HH:mm');
-            endtime.value = "结束时间：" + moment(data4).format('YYYY-MM-DD HH:mm');
+            starttime.value = "开始时间：" + moment(data3-28800000).format('YYYY-MM-DD HH:mm');
+            endtime.value = "结束时间：" + moment(data4-28800000).format('YYYY-MM-DD HH:mm');
             dialogVisible.value = true;
         };
         return {
@@ -90,7 +90,7 @@ export default {
         today.setUTCMilliseconds(0);
         today = today.getTime();
 
-
+        //这边从08：00⏲
         meetingrooms = [
             {
                 model: '会议室1',
@@ -171,6 +171,7 @@ export default {
             tooltip: {
 
                 followPointer: true,
+                //这边从00：00⏲
                 pointFormat:
                     '<span>借用者: {point.rentedTo}</span><br/>' +
                     '<span>开始时间: {point.start:%H: %M}</span><br/>' +
@@ -228,7 +229,7 @@ export default {
                                 console.log('点击事件触发');
                                 var point = event.point;
                                 //console.log(dialogVisible.value);
-                                console.log(point.rentedTo);
+                                console.log(point.rentedTo,point.start,today);
                                 openDialog(point.id, point.rentedTo, point.start, point.end);
                             }
                         }
