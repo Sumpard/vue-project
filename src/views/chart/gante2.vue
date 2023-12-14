@@ -178,7 +178,7 @@ export default {
                     '<span>结束时间: {point.end:%H: %M}</span>'
             },
             xAxis: {
-                currentDateIndicator: true,
+                currentDateIndicator: false,
                 min: today + 12 * hour,
                 max: today + 22 * hour,
             },

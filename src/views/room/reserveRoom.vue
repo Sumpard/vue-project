@@ -27,7 +27,7 @@
       <el-form-item label="时间">
         <!-- <el-time-picker v-model="bookingForm.time" placeholder="选择时间段"></el-time-picker> -->
         <div>
-          <timeset />
+          <timeset ref="timeset" />
         </div>
       </el-form-item>
       <el-form-item label="预订人">
@@ -41,6 +41,7 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="submitBooking">提交预约</el-button>
+        <el-button type="primary" @click="resetForm">重置</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -71,9 +72,10 @@ export default {
         theme: '',
         remark: ''
       },
-      time_form:{
-        time_select:''
-      }
+      time_form: {
+        time_select: ''
+      },
+
     };
   },
 
@@ -81,12 +83,38 @@ export default {
 
   methods: {
     submitBooking() {
-      Message.info("正在提交预约信息");
-      // 在此处执行提交预约的逻辑
+      if (
+        this.bookingForm.room === '' ||
+        this.bookingForm.date === '' ||
+        this.bookingForm.booker === '' ||
+        this.bookingForm.theme === '' ||
+        this.bookingForm.remark === '' ||
+        this.time_form.time_select === ''
+      ) {
+        alert('请填写所有必填项');
+        return;
+      }
 
-      console.log('预约信息:', this.time_form);
+      Message.info("正在提交预约信息");
+      console.log('预约信息:', this.bookingForm);
       
-    }
+    },
+
+    resetForm() {
+      this.bookingForm = {
+        room: '',
+        date: '',
+        booker: '',
+        theme: '',
+        remark: ''
+      };
+      this.time_form = {
+        time_select: ''
+      };
+
+      this.$refs.timeset.reset();
+
+    },
   }
 };
 
