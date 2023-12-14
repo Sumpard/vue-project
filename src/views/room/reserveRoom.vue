@@ -1,12 +1,13 @@
 <template>
   <div class="chart-container">
     <el-form-item label="日期">
-      <el-date-picker v-model="bookingForm.date" type="date" placeholder="选择日期"></el-date-picker>
+      <el-date-picker v-model="time_form.time_select" type="date" placeholder="选择日期"></el-date-picker>
     </el-form-item>
     <div class="chart">
       <Gante2 />
     </div>
   </div>
+  
   <!-- <div>
     <timeset />
   </div> -->
@@ -55,6 +56,9 @@ import table1 from '@/views/chart/table1.vue'
 import table2 from '@/views/chart/table2.vue'
 import tabletest from '@/views/tabulation/tabletest.vue'
 import Gante2 from '@/views/chart/gante2.vue'
+
+
+
 export default {
   components: { tabletest, table2, table1, timeset, Gante2 },
 
@@ -62,10 +66,13 @@ export default {
     return {
       bookingForm: {
         room: '',
-        date: null,
+        date: '',
         booker: '',
         theme: '',
         remark: ''
+      },
+      time_form:{
+        time_select:''
       }
     };
   },
@@ -80,15 +87,6 @@ export default {
     }
   }
 };
-
-const chartaxios = axios.create({
-  baseURL: "http://localhost:3306",
-  timeout: 1000
-})
-
-axios.get("http://localhost:3306/test").then(res =>{
-  console.log(res.data)
-})
 
 
 </script>

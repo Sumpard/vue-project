@@ -1,6 +1,25 @@
 <template>
     <div>
         <div ref="container" class="scrolling-container"></div>
+
+
+        <!--  <el-button plain @click="dialogVisible = true">
+            click to open the Dialog
+        </el-button> -->
+        <!-- <el-dialog v-model="dialogVisible" title="会议信息" width="30%" :before-close="handleClose"> -->
+        <el-dialog v-model="dialogVisible" title="会议信息" width="30%">
+            <span>{{ roomid }}</span>
+            <p>{{ rentedToData }}</p>
+            <p>{{ starttime }}</p>
+            <p>{{ endtime }}</p>
+            <template #footer>
+                <span class="dialog-footer">
+                    <el-button type="primary" @click="dialogVisible = false">
+                        关闭
+                    </el-button>
+                </span>
+            </template>
+        </el-dialog>
     </div>
 </template>
   
@@ -9,27 +28,68 @@ import Highcharts from 'highcharts';
 import HighchartsGantt from 'highcharts/modules/gantt';
 import HighchartsExporting from 'highcharts/modules/exporting';
 import HighchartsGridLight from 'highcharts/themes/grid-light';
+import Message from "@/utils/message";
+import { ref, getCurrentInstance } from 'vue'
+import { ElMessageBox } from 'element-plus'
+import moment from 'moment';
 
 HighchartsGantt(Highcharts);
 //HighchartsExporting(Highcharts);
 HighchartsGridLight(Highcharts);
 
 export default {
+    setup() {
+        const dialogVisible = ref(false);
+        const roomid = ref('');
+        const rentedToData = ref('');
+        const starttime = ref('');
+        const endtime = ref('');
+        const handleClose = (done: () => void) => {
+            ElMessageBox.confirm('Are you sure to close this dialog?')
+                .then(() => {
+                    done()
+                })
+                .catch(() => {
+                    // catch error
+                })
+        }
+        const openDialog = (data1: string, data2: string, data3: string, data4: string) => {
+            roomid.value = data1;
+            rentedToData.value = "借用者：" + data2;
+            starttime.value = "开始时间：" + moment(data3).format('YYYY-MM-DD HH:mm');
+            endtime.value = "结束时间：" + moment(data4).format('YYYY-MM-DD HH:mm');
+            dialogVisible.value = true;
+        };
+        return {
+            dialogVisible, // 添加类型注解
+            roomid,
+            rentedToData,
+            starttime,
+            endtime,
+            handleClose,
+            openDialog,
+        };
+    },
     mounted() {
         var today = new Date();
-        const day = 1000 * 60 * 60 * 24;
-        const hour = 1000 *60 * 60;
-        const minite = 1000 *60;
+        const hour = 1000 * 60 * 60;
         const map = Highcharts.map;
-        const dateFormat = Highcharts.dateFormat;
         let series;
         let meetingrooms;
+
+        const instance = getCurrentInstance()!;
+        const { dialogVisible, rentedToData, handleClose, openDialog } = instance.proxy! as unknown as {
+            dialogVisible: any;
+            handleClode: () => void;
+            openDialog: (arg0: string, arg1: string, arg2: string, arg3: string) => void;
+        };
 
         today.setUTCHours(0);
         today.setUTCMinutes(0);
         today.setUTCSeconds(0);
         today.setUTCMilliseconds(0);
         today = today.getTime();
+
 
         meetingrooms = [
             {
@@ -38,32 +98,32 @@ export default {
                 deals: [
                     {
                         rentedTo: '卢婷',
-                        from: today +13*hour,
-                        to: today + 14*hour
+                        from: today + 13 * hour,
+                        to: today + 14 * hour
                     },
                     // more deals...
                     {
                         rentedTo: '许睿',
-                        from: today + 18*hour,
-                        to: today + 18.5*hour
+                        from: today + 18 * hour,
+                        to: today + 18.5 * hour
                     },
                 ]
             },
-            // more cars...
+            // more 
             {
                 model: '会议室2',
                 current: 0,
                 deals: [
                     {
                         rentedTo: '历婷',
-                        from: today +14*hour,
-                        to: today + 15*hour
+                        from: today + 14 * hour,
+                        to: today + 15 * hour
                     },
                     // more deals...
                     {
                         rentedTo: '勾睿',
-                        from: today + 18*hour,
-                        to: today + 19.5*hour
+                        from: today + 18 * hour,
+                        to: today + 19.5 * hour
                     },
                 ]
             },
@@ -73,8 +133,8 @@ export default {
                 deals: [
                     {
                         rentedTo: '历闻',
-                        from: today +14*hour,
-                        to: today + 16*hour
+                        from: today + 14 * hour,
+                        to: today + 16 * hour
                     },
                 ]
             },
@@ -83,7 +143,7 @@ export default {
         series = meetingrooms.map(function (meetingroom, i) {
             const data = meetingroom.deals.map(function (deal) {
                 return {
-                    id: 'deal-' + i,
+                    id: '会议室-' + (i + 1),
                     rentedTo: deal.rentedTo,
                     start: deal.from,
                     end: deal.to,
@@ -102,7 +162,15 @@ export default {
             title: {
                 text: '会议室预约系统'
             },
+            //credits
+            credits: {
+                //enabled: false
+                text: '吴健雄学院',
+                href: ''
+            },
             tooltip: {
+
+                followPointer: true,
                 pointFormat:
                     '<span>借用者: {point.rentedTo}</span><br/>' +
                     '<span>开始时间: {point.start:%H: %M}</span><br/>' +
@@ -110,8 +178,8 @@ export default {
             },
             xAxis: {
                 currentDateIndicator: true,
-                min : today+12*hour,
-                max : today+22*hour,
+                min: today + 12 * hour,
+                max: today + 22 * hour,
             },
             yAxis: {
                 type: 'category',
@@ -125,7 +193,7 @@ export default {
                                 return s.name;
                             })
                         },
-                        {
+                        /* {
                             title: {
                                 text: '借用者'
                             },
@@ -148,12 +216,30 @@ export default {
                             categories: map(series, function (s: { current: { to: any; }; }) {
                                 return dateFormat('%H. %M', s.current.to);
                             })
-                        }
+                        } */
                     ]
+                }
+            },
+            plotOptions: {
+                series: {
+                    point: {
+                        events: {
+                            click: function (event: { point: any; }) {
+                                console.log('点击事件触发');
+                                var point = event.point;
+                                //console.log(dialogVisible.value);
+                                console.log(point.rentedTo);
+                                openDialog(point.id, point.rentedTo, point.start, point.end);
+                            }
+                        }
+                    }
                 }
             }
         });
-    }
+
+
+    },
+
 };
 </script>
   
@@ -168,5 +254,9 @@ export default {
 .scrolling-container {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+}
+
+.dialog-footer button:first-child {
+    margin-right: 10px;
 }
 </style>
