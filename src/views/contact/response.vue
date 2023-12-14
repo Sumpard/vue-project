@@ -1,28 +1,20 @@
 <template>
   <el-table :data="tableData" style="width: 100%" max-height=650 @selection-change="handleSelectionChange">
-    <el-table-column type="selection" width="55" sortable/>
-    <el-table-column fixed prop="date" label="Date" sortable width="150" />
-    <el-table-column prop="name" label="Name" width="120" />
-    <el-table-column prop="state" label="State" width="120" />
-    <el-table-column prop="city" label="City" width="120" />
-    <el-table-column prop="address" label="Address" width="500" />
-    <el-table-column prop="zip" label="Zip" width="120" />
-    <el-table-column fixed="right" label="Operations" width="120">
+    <el-table-column fixed prop="date" label="反馈时间" sortable width="150" />
+    <el-table-column prop="title" label="反馈主题" width="300" />
+    <el-table-column prop="state" label="答复状态" width="1200" />
+    <el-table-column fixed="right" label="查看详情" width="120">
       <template #default="scope">
         <el-button
           link
           type="primary"
           size="small"
-          @click.prevent="deleteRow(scope.$index)"
-        >
-          Remove
+          @click.prevent>
+        <el-icon><i-ep-CaretRight /></el-icon>
         </el-button>
       </template>
     </el-table-column>
   </el-table>
-  <el-button class="mt-4" style="width: 100%" @click="onAddItem"
-    >Add Item</el-button
-  >
   
 </template>
 
@@ -61,27 +53,18 @@ const handleSelectionChange = (val: User[]) => {
 const tableData = ref([
   {
     date: '2016-05-01',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
+    title: '书院器材遗失',
+    state: '未应答',
   },
   {
     date: '2016-05-02',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
+    title: '研讨间座位添加',
+    state: '已应答',
   },
   {
     date: '2016-05-03',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
+    title: '前台添加书架',
+    state: '已应答',
   },
 ])
 
