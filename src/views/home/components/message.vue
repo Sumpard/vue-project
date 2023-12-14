@@ -26,14 +26,14 @@
         </ElFormItem>
         
         <ElFormItem label="邮件地址" prop="email">
-          <el-input :disabled="!isEdit" v-model="formAllinfo.email"></el-input>
+          <el-input :disabled="!isEdit" v-model="currentUser.email"></el-input>
         </ElFormItem>
     
       </ElForm>
       <div class="right-button">
         <ElButton type="primary" @click="changeIsEdit(true)" v-if="!isEdit">编辑资料</ElButton>
         <ElButton type="primary" @click="changeIsEdit(false)" v-else>取消</ElButton>
-        <ElButton type="success" @click="changeIsEdit(false)" v-if="isEdit">完成</ElButton>
+        <ElButton type="success" @click="updateAndFinishEditing" v-if="isEdit">完成</ElButton>
         
       </div>
       </div>
@@ -68,9 +68,38 @@ import { ref } from 'vue'
 import { PropType } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { useUserStore } from "@/stores/user";
-import { updatepassword } from "@/api/user";
+import { getUserMe,updatepassword ,updateemail} from "@/api/user";
 import { ElMessage } from 'element-plus';
+
+
 const userStore = useUserStore();
+
+const user = ref();
+
+
+
+onMounted(async () => {
+  user.value = await userStore.fetch();
+  currentUser.email=user.value.data.email;
+  currentUser.role=user.value.data.user_role;
+  currentUser.id=user.value.data.user_id;
+  currentUser. username=user.value.data.user_name;
+  console.log(user.value.data)
+});
+
+const updateAndFinishEditing = async () => {
+      // 调用更新 email 的 API
+      try {
+        const response = await updateemail(currentUser.email);
+        console.log('Email updated successfully:', response.data);
+        // 更新成功后，将编辑模式设置为 false
+        changeIsEdit(false);
+      } catch (error) {
+        console.error('Error updating email:', error);
+        // 处理错误，例如显示错误提示
+      }
+    };
+
 
 const ruleFormRef = ref<FormInstance>()
 const editPosswordForm=reactive({
@@ -114,7 +143,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         if (valid) {
           try{
             const result= await updatepassword(editPosswordForm.password,editPosswordForm.newPassword)
-          
+            console.log(result)
           if (result === 'success') {
           console.log('Password changed successfully!');
           } else {
@@ -146,7 +175,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
 
 const formAllinfo =reactive( {
   nickname: 'Tom',
-  email: 'California',
+  email: '',
   gender: '',
   introduce: 'No. 189, Grove St, Los Angeles',
   
@@ -161,10 +190,10 @@ const changeIsEdit = (val: boolean) => {
 
 
 let currentUser=reactive({
-  
-  username:"哈哈哈",
-  id:"12343245",
-  role:"guest"
+  username:"",
+  id:"",
+  role:"",
+  email:""
 })
 
 
