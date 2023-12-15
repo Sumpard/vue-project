@@ -35,6 +35,9 @@ dependencies:
   element-plus:
     specifier: ^2.4.2
     version: registry.npmmirror.com/element-plus@2.4.2(vue@3.3.7)
+  eventbus:
+    specifier: ^0.0.3
+    version: registry.npmmirror.com/eventbus@0.0.3
   font-awesome:
     specifier: ^4.7.0
     version: registry.npmmirror.com/font-awesome@4.7.0
@@ -95,6 +98,9 @@ dependencies:
   vue-router:
     specifier: ^4.2.5
     version: registry.npmmirror.com/vue-router@4.2.5(vue@3.3.7)
+  vuex:
+    specifier: ^4.1.0
+    version: registry.npmmirror.com/vuex@4.1.0(vue@3.3.7)
 
 devDependencies:
   '@iconify-json/ep':
@@ -1614,6 +1620,16 @@ packages:
     name: estree-walker
     version: 2.0.2
 
+  registry.npmmirror.com/eventbus@0.0.3:
+    resolution: {integrity: sha512-kLusKK7hvjYQ0XOSOKwQNBzpnX4aR6xptwbsaEP58yOhMNSkLf46dKfg9UPvhxAXCWSfsQiYUBuz8F2Nzz3FhQ==, tarball: https://registry.npmmirror.com/eventbus/-/eventbus-0.0.3.tgz}
+    name: eventbus
+    version: 0.0.3
+    engines: {node: '>=0.8.15'}
+    dependencies:
+      node-uuid: registry.npmmirror.com/node-uuid@1.4.8
+      ovy: registry.npmmirror.com/ovy@0.1.6
+    dev: false
+
   registry.npmmirror.com/events@3.3.0:
     resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==, tarball: https://registry.npmmirror.com/events/-/events-3.3.0.tgz}
     name: events
@@ -2322,6 +2338,14 @@ packages:
     name: node-releases
     version: 2.0.13
 
+  registry.npmmirror.com/node-uuid@1.4.8:
+    resolution: {integrity: sha512-TkCET/3rr9mUuRp+CpO7qfgT++aAxfDRaalQhwPFzI9BY/2rCDn6OfpZOVggi1AXfTPpfkTrg5f5WQx5G1uLxA==, tarball: https://registry.npmmirror.com/node-uuid/-/node-uuid-1.4.8.tgz}
+    name: node-uuid
+    version: 1.4.8
+    deprecated: Use uuid module instead
+    hasBin: true
+    dev: false
+
   registry.npmmirror.com/normalize-path@3.0.0:
     resolution: {integrity: sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/normalize-path/-/normalize-path-3.0.0.tgz}
     name: normalize-path
@@ -2381,6 +2405,12 @@ packages:
     dependencies:
       mimic-fn: registry.npmmirror.com/mimic-fn@2.1.0
     dev: true
+
+  registry.npmmirror.com/ovy@0.1.6:
+    resolution: {integrity: sha512-EluTVcQnJ0kEp3eHGpGWKbT4l305rpo1Mx9BPWUUgdccbk5lmH5Ngx2Gp4mEtgB8oHpq+6cxqyfMSkfE0B2Aqw==, tarball: https://registry.npmmirror.com/ovy/-/ovy-0.1.6.tgz}
+    name: ovy
+    version: 0.1.6
+    dev: false
 
   registry.npmmirror.com/p-limit@3.1.0:
     resolution: {integrity: sha512-TYOanM3wGwNGsZN2cVTYPArw454xnXj5qmWF1bEoAc4+cU/ol7GVh7odevjp1FNHduHc3KZMcFduxU5Xc6uJRQ==, tarball: https://registry.npmmirror.com/p-limit/-/p-limit-3.1.0.tgz}
@@ -3376,6 +3406,18 @@ packages:
       '@vue/server-renderer': registry.npmmirror.com/@vue/server-renderer@3.3.7(vue@3.3.7)
       '@vue/shared': registry.npmmirror.com/@vue/shared@3.3.7
       typescript: registry.npmmirror.com/typescript@5.2.2
+
+  registry.npmmirror.com/vuex@4.1.0(vue@3.3.7):
+    resolution: {integrity: sha512-hmV6UerDrPcgbSy9ORAtNXDr9M4wlNP4pEFKye4ujJF8oqgFFuxDCdOLS3eNoRTtq5O3hoBDh9Doj1bQMYHRbQ==, tarball: https://registry.npmmirror.com/vuex/-/vuex-4.1.0.tgz}
+    id: registry.npmmirror.com/vuex/4.1.0
+    name: vuex
+    version: 4.1.0
+    peerDependencies:
+      vue: ^3.2.0
+    dependencies:
+      '@vue/devtools-api': registry.npmmirror.com/@vue/devtools-api@6.5.1
+      vue: registry.npmmirror.com/vue@3.3.7(typescript@5.2.2)
+    dev: false
 
   registry.npmmirror.com/watchpack@2.4.0:
     resolution: {integrity: sha512-Lcvm7MGST/4fup+ifyKi2hjyIAwcdI4HRgtvTpIUxBRhB+RFtUh8XtDOxUfctVCnhVi+QQj49i91OyvzkJl6cg==, tarball: https://registry.npmmirror.com/watchpack/-/watchpack-2.4.0.tgz}

@@ -2,7 +2,6 @@
     <div>
         <div ref="container" class="scrolling-container"></div>
 
-
         <!--  <el-button plain @click="dialogVisible = true">
             click to open the Dialog
         </el-button> -->
@@ -29,15 +28,20 @@ import HighchartsGantt from 'highcharts/modules/gantt';
 import HighchartsExporting from 'highcharts/modules/exporting';
 import HighchartsGridLight from 'highcharts/themes/grid-light';
 import Message from "@/utils/message";
+import time_form from '@/views/room/reserveRoom.vue'
 import { ref, getCurrentInstance } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import moment from 'moment';
+
 
 HighchartsGantt(Highcharts);
 //HighchartsExporting(Highcharts);
 HighchartsGridLight(Highcharts);
 
 export default {
+
+
+
     setup() {
         const dialogVisible = ref(false);
         const roomid = ref('');
@@ -56,8 +60,8 @@ export default {
         const openDialog = (data1: string, data2: string, data3: string, data4: string) => {
             roomid.value = data1;
             rentedToData.value = "借用者：" + data2;
-            starttime.value = "开始时间：" + moment(data3-28800000).format('YYYY-MM-DD HH:mm');
-            endtime.value = "结束时间：" + moment(data4-28800000).format('YYYY-MM-DD HH:mm');
+            starttime.value = "开始时间：" + moment(data3 - 28800000).format('YYYY-MM-DD HH:mm');
+            endtime.value = "结束时间：" + moment(data4 - 28800000).format('YYYY-MM-DD HH:mm');
             dialogVisible.value = true;
         };
         return {
@@ -70,12 +74,15 @@ export default {
             openDialog,
         };
     },
+
     mounted() {
         var today = new Date();
+        var a = time_form.time_select;
         const hour = 1000 * 60 * 60;
         const map = Highcharts.map;
         let series;
         let meetingrooms;
+
 
         const instance = getCurrentInstance()!;
         const { dialogVisible, rentedToData, handleClose, openDialog } = instance.proxy! as unknown as {
@@ -229,7 +236,7 @@ export default {
                                 console.log('点击事件触发');
                                 var point = event.point;
                                 //console.log(dialogVisible.value);
-                                console.log(point.rentedTo,point.start,today);
+                                console.log(point.rentedTo, point.start, today, a, time_form.time_select);
                                 openDialog(point.id, point.rentedTo, point.start, point.end);
                             }
                         }

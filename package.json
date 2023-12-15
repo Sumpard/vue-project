@@ -19,6 +19,7 @@
     "dhtmlx-gantt": "^8.0.6",
     "echarts": "^5.4.3",
     "element-plus": "^2.4.2",
+    "eventbus": "^0.0.3",
     "font-awesome": "^4.7.0",
     "frappe-gantt": "^0.6.1",
     "gantt-schedule-timeline-calendar": "^3.35.2",
@@ -38,7 +39,8 @@
     "vue-clipboard3": "^2.0.0",
     "vue-cookies": "^1.8.3",
     "vue-echarts": "^6.6.1",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.2.5",
+    "vuex": "^4.1.0"
   },
   "devDependencies": {
     "@iconify-json/ep": "^1.1.12",

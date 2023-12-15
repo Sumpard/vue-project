@@ -1,7 +1,7 @@
 <template>
   <div class="chart-container">
     <el-form-item label="日期">
-      <el-date-picker v-model="time_form.time_select" type="date" placeholder="选择日期"></el-date-picker>
+      <el-date-picker v-model="time_form.time_select" type="date" placeholder="选择日期" ></el-date-picker>
     </el-form-item>
     <div class="chart">
       <Gante2 />
@@ -48,10 +48,6 @@
 </template>
   
 <script lang="ts">
-import axios from 'axios'
-import BarChart1 from '@/views/chart/chart1.vue'
-import BarChart2 from '@/views/chart/chart2.vue'
-import Echart1 from '@/views/chart/echart1.vue'
 import timeset from '@/views/room/time.vue'
 import table1 from '@/views/chart/table1.vue'
 import table2 from '@/views/chart/table2.vue'
@@ -80,7 +76,6 @@ export default {
   },
 
 
-
   methods: {
     submitBooking() {
       if (
@@ -92,12 +87,13 @@ export default {
         this.time_form.time_select === ''
       ) {
         alert('请填写所有必填项');
+        console.log(this.time_form.time_select);
         return;
       }
 
       Message.info("正在提交预约信息");
       console.log('预约信息:', this.bookingForm);
-      
+
     },
 
     resetForm() {
