@@ -1,21 +1,18 @@
 <template>
-    
   <el-row >
     <el-col :span="24">
-    <el-carousel :interval="4000" type="card" height="300px">
+    <el-carousel :interval="4000" type="card" height="400px">
       <el-carousel-item v-for="item in imageUrl" :key="item">
         <img  :src="item.url" alt=""/>
       </el-carousel-item>
     </el-carousel>
     </el-col>
   </el-row>
-  <el-row >
-    <el-col :span="8"><div class="grid-content ep-bg-purple-dark" >1</div></el-col>
-    <el-col :span="8"><div class="grid-content ep-bg-purple" >2</div></el-col>
-    <el-col :span="8"><div class="grid-content ep-bg-purple-dark">3</div></el-col>
-    
+    <el-row>
+    <cols />
+    <cols />
+    <cols />
   </el-row>
-  
   </template>
   
   
@@ -24,6 +21,8 @@
   import image2 from "@/assets/2.jpg"
   import image3 from "@/assets/3.jpg"
   import image4 from "@/assets/4.png"
+  import cols from "@/views/components/cols.vue"
+  import cols2 from "@/views/components/cols2.vue"
   
   const imageUrl = [
     { url: image1 },
@@ -57,6 +56,7 @@ height: 100%;
 
 .el-row {
   margin-bottom: 20px;
+
 }
 .el-row:last-child {
   margin-bottom: 0;
