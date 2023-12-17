@@ -80,11 +80,11 @@ const user = ref();
 
 onMounted(async () => {
   user.value = await userStore.fetch();
-  currentUser.email=user.value.data.email;
-  currentUser.role=user.value.data.user_role;
-  currentUser.id=user.value.data.user_id;
-  currentUser. username=user.value.data.user_name;
-  console.log(user.value.data)
+  currentUser.email=user.value.email;
+  currentUser.role=user.value.user_role;
+  currentUser.id=user.value.user_id;
+  currentUser. username=user.value.user_name;
+  console.log(user.value)
 });
 
 const updateAndFinishEditing = async () => {
