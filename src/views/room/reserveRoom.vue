@@ -150,6 +150,8 @@ export default {
       );
     },
 
+    
+
     resetForm() {
       this.bookingForm = {
         room: "",

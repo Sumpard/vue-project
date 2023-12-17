@@ -93,6 +93,13 @@ const updateAndFinishEditing = async () => {
         const response = await updateemail(currentUser.email);
         console.log('Email updated successfully:', response.data);
         // 更新成功后，将编辑模式设置为 false
+
+
+        
+        ElMessage({
+      message: '个人信息更新成功',
+       type: 'success',
+      })
         changeIsEdit(false);
       } catch (error) {
         console.error('Error updating email:', error);
@@ -144,8 +151,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
           try{
             const result= await updatepassword(editPosswordForm.password,editPosswordForm.newPassword)
             console.log(result)
-          if (result === 'success') {
-          console.log('Password changed successfully!');
+          if (result === 'OK') {
+          console.log('密码更改成功');
           } else {
           console.log('Error: ');
           // Handle backend validation errors

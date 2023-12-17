@@ -28,6 +28,7 @@ export const useUserStore = defineStore("user", () => {
   const fetch = async () => {
     try {
       user.value = await getUserMe();
+      console.log(user)
     } catch (e) {}
     return user.value;
   };
