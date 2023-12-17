@@ -5,15 +5,15 @@
       <div class="text-subtitle text-blue-8 text-center text-weight-bolder">遇见您的书院小助手</div>
     </q-card-section>
     <q-tabs v-model="tab" class="text-primary">
-      <q-tab label="用户名登录" name="one" />
+      <q-tab label="用户登录" name="one" />
       <!-- <q-tab label="手机号登录" name="two" /> -->
     </q-tabs>
     <q-separator />
     <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
       <q-tab-panels v-model="tab" animated class="custom-tab-panels">
         <q-tab-panel name="one">
-          <q-input filled v-model="form.username" label="用户名" lazy-rules
-            :rules="[(val: string | any[]) => val?.length > 0 || '请输入您的用户名']" dense />
+          <q-input filled v-model="form.username" label="用户id" lazy-rules
+            :rules="[(val: string | any[]) => val?.length > 0 || '请输入您的用户id']" dense />
           <q-input filled type="password" v-model="form.password" label="密码" lazy-rules
             :rules="[(val: string | any[]) => val?.length > 0 || '请输入您的密码']" dense />
         </q-tab-panel>
@@ -86,7 +86,7 @@ async function onSubmit() {
       console.log("验证码错误", Ans_check);
     }
     else {
-      console.log("登录信息： ",form.username, form.password, form.verifycode);
+      console.log("登录信息： ", form.username, form.password, form.verifycode);
       const { data } = await login(form.username, form.password, form.verifycode);
 
       //Message.info("登录成功");

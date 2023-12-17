@@ -1,5 +1,6 @@
 import { Page, Pagination, castPagination } from "./page";
 import api from "./request";
+import { Result } from "./result";
 
 export interface User {
   user_id: string;
@@ -20,7 +21,7 @@ export type UserStats = {
 };
 
 export async function getUserMe() {
-  return (await api.post<User>("/user/select-self")).data;
+  return (await api.post<Result<User>>("/user/select-self")).data.data;
 }
 
 export async function updateUser(user_id: string, user_data: any) {

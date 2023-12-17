@@ -19,11 +19,11 @@
 
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item >
+          <el-dropdown-item>
             <a href="/homeindex">个人中心</a>
           </el-dropdown-item>
           <el-dropdown-item>
-            <a href="/auth/login">退出登录</a>
+            <a @click="Onlogout">退出登录</a>
           </el-dropdown-item>
           <el-dropdown-item>Delete</el-dropdown-item>
         </el-dropdown-menu>
@@ -33,7 +33,19 @@
   </div>
 </template>
   
-<script lang="ts">
+<script setup lang="ts">
+import { useUserStore } from '@/stores/user';
+const router = useRouter();
+//const {logout} = useUserStore();
+
+function Onlogout() {
+  const { logout, user } = useUserStore();
+  logout();
+  console.log(useUserStore().user);
+  
+  console.log(router)
+  router.push({name:"login"});
+}
 
 </script>
   

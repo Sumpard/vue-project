@@ -21,6 +21,7 @@ export const useUserStore = defineStore("user", () => {
   };
   const logout = () => {
     user.value = undefined;
+    token.value = undefined;
     $cookies.remove("user");
     $cookies.remove("token");
   };
@@ -33,6 +34,8 @@ export const useUserStore = defineStore("user", () => {
   const hasPerm = () => {
     return user.value?.user_role == "MANAGER";
   };
+
+  fetch();
 
   return { user, token, avatar, login, logout, fetch, hasPerm };
 });
