@@ -6,6 +6,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/",
     name: "index",
+    redirect:"/auth/login",
     component: () => import("@/layouts/manage.vue"),
     meta: { keepalive: false },
     children: [

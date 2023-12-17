@@ -1,5 +1,6 @@
 <template>
     <div>
+
         <div ref="container" class="scrolling-container"></div>
 
         <!--  <el-button plain @click="dialogVisible = true">
@@ -28,19 +29,46 @@ import HighchartsGantt from 'highcharts/modules/gantt';
 import HighchartsExporting from 'highcharts/modules/exporting';
 import HighchartsGridLight from 'highcharts/themes/grid-light';
 import Message from "@/utils/message";
-import time_form from '@/views/room/reserveRoom.vue'
+import submitdate from '@/views/room/reserveRoom.vue'
 import { ref, getCurrentInstance } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import moment from 'moment';
 
+type Deal = {
+    id: string;
+    rentedTo: string;
+    start: string;
+    end: string;
+    y: number;
+};
+
+type M_Room = {
+    name: string;
+    data: Deal[];
+    current: Deal | undefined;
+};
 
 HighchartsGantt(Highcharts);
 //HighchartsExporting(Highcharts);
 HighchartsGridLight(Highcharts);
 
+var timestamp: number;
+var today = new Date();
+const hour = 1000 * 60 * 60;
+const map = Highcharts.map;
+let series: M_Room[];
+let meetingrooms;
+const instance = getCurrentInstance()!;
+
+
 export default {
 
-
+    props: {
+        timett: {
+            type: String,
+            required: true
+        }
+    },
 
     setup() {
         const dialogVisible = ref(false);
@@ -58,11 +86,14 @@ export default {
                 })
         }
         const openDialog = (data1: string, data2: string, data3: string, data4: string) => {
+            const num3 = parseInt(data3, 10) - 28800000;
+            const num4 = parseInt(data4, 10) - 28800000;
+            //console.log("num: ",num3,num4,num3.toString());
             roomid.value = data1;
             rentedToData.value = "借用者：" + data2;
-            starttime.value = "开始时间：" + moment(data3 - 28800000).format('YYYY-MM-DD HH:mm');
-            endtime.value = "结束时间：" + moment(data4 - 28800000).format('YYYY-MM-DD HH:mm');
-            dialogVisible.value = true;
+            starttime.value = "开始时间：" + moment(num3).format('YYYY-MM-DD HH:mm');
+            endtime.value = "结束时间：" + moment(num4).format('YYYY-MM-DD HH:mm');
+            dialogVisible.value = true; //- 28800000
         };
         return {
             dialogVisible, // 添加类型注解
@@ -74,29 +105,98 @@ export default {
             openDialog,
         };
     },
+    watch: {
+        'timett'(newVal, oldVal) {
+
+            // todo
+            if (newVal == null)
+                return;
+            else {
+                timestamp = new Date(this.timett).getTime();
+                const today = timestamp;
+                console.log('time_select changed:', newVal, today);
+                Highcharts.ganttChart(this.$refs.container, {
+                    series: series,
+                    title: {
+                        text: '会议室预约'
+                    },
+                    //credits
+                    credits: {
+                        //enabled: false
+                        text: '吴健雄学院',
+                        href: ''
+                    },
+                    tooltip: {
+
+                        followPointer: true,
+                        //这边从00：00⏲
+                        pointFormat:
+                            '<span>借用者: {point.rentedTo}</span><br/>' +
+                            '<span>开始时间: {point.start:%H: %M}</span><br/>' +
+                            '<span>结束时间: {point.end:%H: %M}</span>'
+                    },
+                    xAxis: {
+                        currentDateIndicator: false,
+                        min: today + 20 * hour,
+                        max: today + 30 * hour,
+                    },
+                    yAxis: {
+                        type: 'category',
+                        grid: {
+                            columns: [
+                                {
+                                    title: {
+                                        text: '会议室'
+                                    },
+                                    categories: map(series, function (s: { name: any; }) {
+                                        return s.name;
+                                    })
+                                },
+                            ]
+                        }
+                    },
+                    plotOptions: {
+                        series: {
+                            point: {
+                                events: {
+                                    click: (event: { point: any; }) => {
+                                        console.log('点击事件触发');
+                                        var point = event.point;
+                                        //console.log(dialogVisible.value);
+                                        console.log(point.rentedTo, point.start, today, this.timett, timestamp);
+                                        this.openDialog(point.id, point.rentedTo, point.start, point.end);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        },
+    },
 
     mounted() {
-        var today = new Date();
-        var a = time_form.time_select;
-        const hour = 1000 * 60 * 60;
-        const map = Highcharts.map;
-        let series;
-        let meetingrooms;
 
+        //console.log('timett:', this.timett);
 
+        //var today = new Date();
+        //var a = new getdate();
         const instance = getCurrentInstance()!;
-        const { dialogVisible, rentedToData, handleClose, openDialog } = instance.proxy! as unknown as {
+        const { dialogVisible, handleClose, openDialog } = instance.proxy! as unknown as {
             dialogVisible: any;
-            handleClode: () => void;
+            handleClose: () => void;
             openDialog: (arg0: string, arg1: string, arg2: string, arg3: string) => void;
         };
 
-        today.setUTCHours(0);
-        today.setUTCMinutes(0);
-        today.setUTCSeconds(0);
-        today.setUTCMilliseconds(0);
-        today = today.getTime();
 
+        console.log(":", today);
+        today.setHours(0, 0, 0, 0);
+        /* today.setUTCMinutes(0);
+        today.setUTCSeconds(0);
+        today.setUTCMilliseconds(0); */
+        console.log(":", today);
+        const today_ = today.getTime();
+        console.log(":", today_);
         //这边从08：00⏲
         meetingrooms = [
             {
@@ -105,14 +205,14 @@ export default {
                 deals: [
                     {
                         rentedTo: '卢婷',
-                        from: today + 13 * hour,
-                        to: today + 14 * hour
+                        from: today_ + 21 * hour,
+                        to: today_ + 22 * hour
                     },
                     // more deals...
                     {
                         rentedTo: '许睿',
-                        from: today + 18 * hour,
-                        to: today + 18.5 * hour
+                        from: today_ + 26 * hour,
+                        to: today_ + 26.5 * hour
                     },
                 ]
             },
@@ -123,14 +223,14 @@ export default {
                 deals: [
                     {
                         rentedTo: '历婷',
-                        from: today + 14 * hour,
-                        to: today + 15 * hour
+                        from: today_ + 22 * hour,
+                        to: today_ + 23 * hour
                     },
                     // more deals...
                     {
                         rentedTo: '勾睿',
-                        from: today + 18 * hour,
-                        to: today + 19.5 * hour
+                        from: today_ + 26 * hour,
+                        to: today_ + 27.5 * hour
                     },
                 ]
             },
@@ -140,8 +240,8 @@ export default {
                 deals: [
                     {
                         rentedTo: '历闻',
-                        from: today + 14 * hour,
-                        to: today + 16 * hour
+                        from: today_ + 22 * hour,
+                        to: today_ + 24 * hour
                     },
                 ]
             },
@@ -167,7 +267,7 @@ export default {
         Highcharts.ganttChart(this.$refs.container, {
             series: series,
             title: {
-                text: '会议室预约系统'
+                text: '会议室预约'
             },
             //credits
             credits: {
@@ -186,8 +286,8 @@ export default {
             },
             xAxis: {
                 currentDateIndicator: false,
-                min: today + 12 * hour,
-                max: today + 22 * hour,
+                min: today_ + 20 * hour,
+                max: today_ + 30 * hour,
             },
             yAxis: {
                 type: 'category',
@@ -232,11 +332,11 @@ export default {
                 series: {
                     point: {
                         events: {
-                            click: function (event: { point: any; }) {
+                            click: (event: { point: any; }) => {
                                 console.log('点击事件触发');
                                 var point = event.point;
                                 //console.log(dialogVisible.value);
-                                console.log(point.rentedTo, point.start, today, a, time_form.time_select);
+                                console.log(point.rentedTo, point.start, today_, "x", this.timett, "xx", timestamp);
                                 openDialog(point.id, point.rentedTo, point.start, point.end);
                             }
                         }
@@ -247,6 +347,8 @@ export default {
 
 
     },
+
+
 
 };
 </script>

@@ -41,11 +41,12 @@ service.interceptors.response.use(
     if (code < 200 || code > 300) {
       return Promise.reject("error");
     } else {
+      // if (responseBody.msg) Message.success(responseBody.msg)
       return response;
     }
   },
   (error: AxiosError<any>) => {
-    // console.log("测试"+error);
+    console.log(error);
     const code = error.response?.status;
     if (error.toString().includes("Error: timeout")) {
       Message.error("网络请求超时");
@@ -68,7 +69,7 @@ service.interceptors.response.use(
       // Unprocessable Entity
       Message.error(format422(JSON.parse(error.config?.data), error.response!.data.detail));
     } else {
-      const errorMsg = error.response?.data.message ?? error.response?.data.detail;
+      const errorMsg = error.response?.data.msg ?? error.response?.data.detail;
       Message.error(errorMsg ?? "Unknown error");
     }
     return Promise.reject(error);
