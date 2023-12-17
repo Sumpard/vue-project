@@ -42,6 +42,7 @@ declare module 'vue' {
     ElUpload: typeof import('element-plus/es')['ElUpload']
     Header: typeof import('./components/common/header.vue')['default']
     IEpCamera: typeof import('~icons/ep/camera')['default']
+    IEpCaretRight: typeof import('~icons/ep/caret-right')['default']
     IEpCollection: typeof import('~icons/ep/collection')['default']
     IEpDArrowRight: typeof import('~icons/ep/d-arrow-right')['default']
     IEpEdit: typeof import('~icons/ep/edit')['default']
