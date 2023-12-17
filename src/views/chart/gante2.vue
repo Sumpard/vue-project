@@ -58,7 +58,7 @@ const hour = 1000 * 60 * 60;
 const map = Highcharts.map;
 let series: M_Room[];
 let meetingrooms;
-
+const instance = getCurrentInstance()!;
 
 
 export default {
@@ -164,7 +164,7 @@ export default {
                                         var point = event.point;
                                         //console.log(dialogVisible.value);
                                         console.log(point.rentedTo, point.start, today, this.timett, timestamp);
-                                        //openDialog(point.id, point.rentedTo, point.start, point.end);
+                                        this.openDialog(point.id, point.rentedTo, point.start, point.end);
                                     }
                                 }
                             }

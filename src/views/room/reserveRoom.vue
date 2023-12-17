@@ -1,7 +1,8 @@
 <template>
   <div class="chart-container">
     <el-form-item label="日期">
-      <el-date-picker v-model="time_form.time_select" type="date" placeholder="选择日期"></el-date-picker>
+      <el-date-picker v-model="time_form.time_select" type="date" placeholder="选择日期"
+        :disabled-date="disabledDate"></el-date-picker>
     </el-form-item>
     <div class="chart">
       <Gante2 :timett="time_form.time_select" />
@@ -62,7 +63,7 @@ export default {
   components: { tabletest, table2, table1, timeset, Gante2 },
 
   async mounted() {
-    const appoint = await getAppoint_by_day("", "SUBMITTED");
+    const appoint = await getAppoint_by_day("2023-12-17", "SUBMITTED");
     console.log(appoint);
   },
 
@@ -77,6 +78,13 @@ export default {
       },
       time_form: {
         time_select: ''
+      },
+      disabledDate(time: { getTime: () => number }) {
+        //return time.getTime() > Date.now(); 
+        const currentDate = new Date();
+        const upperBound = new Date().setDate(currentDate.getDate() + 6);
+        //禁止选择今天以前的时间和7天后的时间
+        return time.getTime() < Date.now() - 8.64e7 || time.getTime() > upperBound;
       },
 
     };
@@ -94,7 +102,7 @@ export default {
         this.bookingForm.date === '' ||
         this.bookingForm.booker === '' ||
         this.bookingForm.theme === '' ||
-        this.$refs.timeset.startTime === ''||
+        this.$refs.timeset.startTime === '' ||
         this.$refs.timeset.endTime === ''
       ) {
         alert('请填写所有必填项');
@@ -106,7 +114,7 @@ export default {
       const start_ = this.formatTimestamp(this.getTimeFormat(this.$refs.timeset.startTime, date_));
       const end_ = this.formatTimestamp(this.getTimeFormat(this.$refs.timeset.endTime, date_));
       const temp = new Date();
-      const submit =  this.formatTimestamp(temp.getTime());
+      const submit = this.formatTimestamp(temp.getTime());
       const des = this.bookingForm.theme;
       const temp_str = this.bookingForm.room;
       const avail_id = parseInt(temp_str[temp_str.length - 1], 10);
@@ -116,9 +124,9 @@ export default {
       const user_id = user.user_id;
       const user_name = user.user_name;
       const phone = this.bookingForm.booker;
-      const submit_info = await submitAppoint(start_,end_,des,avail_id,avail_name,
-      avail_type_name,user_id,user_name,phone); 
-      console.log('预约信息:',date_, start_, end_,
+      const submit_info = await submitAppoint(start_, end_, des, avail_id, avail_name,
+        avail_type_name, user_id, user_name, phone);
+      console.log('预约信息:', date_, start_, end_,
         submit, des, avail_id, avail_type_name, avail_name, user_id, user_name, phone, user);
 
     },
