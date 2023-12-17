@@ -89,16 +89,17 @@ export default {
 
 
     async submitBooking() {
-      /* if (
+      if (
         this.bookingForm.room === '' ||
         this.bookingForm.date === '' ||
         this.bookingForm.booker === '' ||
         this.bookingForm.theme === '' ||
-        this.bookingForm.remark === ''
+        this.$refs.timeset.startTime === ''||
+        this.$refs.timeset.endTime === ''
       ) {
         alert('请填写所有必填项');
         return;
-      } */
+      }
 
       Message.info("正在提交预约信息");
       const date_ = new Date(this.bookingForm.date);
@@ -116,7 +117,7 @@ export default {
       const user_name = user.user_name;
       const phone = this.bookingForm.booker;
       const submit_info = await submitAppoint(start_,end_,des,avail_id,avail_name,
-      avail_type_name,user_id,user_name,phone,submit); 
+      avail_type_name,user_id,user_name,phone); 
       console.log('预约信息:',date_, start_, end_,
         submit, des, avail_id, avail_type_name, avail_name, user_id, user_name, phone, user);
 

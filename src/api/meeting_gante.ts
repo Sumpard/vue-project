@@ -55,7 +55,17 @@ export interface appoint_order {
   type: string;
 }
 
-
+export interface appoint_sub{
+  renter_id: string;
+  renter_name: string;
+  renter_phone: string;
+  available_id: number;
+  available_name: string;
+  available_type_name: string;
+  appointment_description: string;
+  appoint_end_time: string;
+  appoint_start_time: string;
+}
 
 //目前传参无效
 export async function getAppoint_by_day(day: string, appointstatus: string) {
@@ -79,36 +89,11 @@ export async function getAppoint_by_day(day: string, appointstatus: string) {
 
 export async function submitAppoint(start_time: string, end_time: string, description: string,
   avail_id: number, avail_name: string, avail_type_name: string, user_id: string,
-  user_name: string, phone: string, sub_time: string) {
+  user_name: string, phone: string) {
   Message.info("提交中……");
-  const appointbody: appoint_order = {
+  const appointbody: appoint_sub = {
     appoint_end_time: end_time,
     appoint_start_time: start_time,
-    appointment: {
-      appoint_end_time: end_time,
-      appoint_start_time: start_time,
-      appointment_description: description,
-      appointment_id: 3,
-      appointment_status: 'SUBMITTED',
-      availableNameInvalid: false,
-      available_id: avail_id,
-      available_name: avail_name,
-      available_type_name: avail_type_name,
-      descriptionInvalid: false,
-      duration: 30,
-      renterIdInvalid: false,
-      renterNameInvalid: false,
-      renterPhoneInvalid: false,
-      renter_id: user_id,
-      renter_name: user_name,
-      renter_phone: phone,
-      reply: "",
-      review_time: '',
-      reviewer_id: "",
-      reviewer_name: "",
-      submit_time: sub_time,
-      timeInvalid: false,
-    },
     appointment_description: description,
     available_id: avail_id,
     available_name: avail_name,
@@ -116,8 +101,6 @@ export async function submitAppoint(start_time: string, end_time: string, descri
     renter_id: user_id,
     renter_name: user_name,
     renter_phone: phone,
-    requiredInvalid: false,
-    type: '',
   };
   return (await api.post("appointment/insert", appointbody)).data;
 }
