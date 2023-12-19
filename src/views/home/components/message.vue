@@ -42,13 +42,13 @@
         <el-form ref="ruleFormRef" :model="editPosswordForm" :rules="rules"  label-position="left"
         label-width="100px">
 				<el-form-item label="旧密码" prop="password">
-					<el-input v-model="editPosswordForm.password" show-password/>
+					<el-input v-model="editPosswordForm.password" show-password  clearable/>
 				</el-form-item>
 				<el-form-item label="新密码" prop="newPassword">
-					<el-input v-model="editPosswordForm.newPassword" show-password/>
+					<el-input v-model="editPosswordForm.newPassword" show-password  clearable/>
 				</el-form-item>
 				<el-form-item label="确认密码" prop="confirm">
-					<el-input v-model="editPosswordForm.confirm" show-password/>
+					<el-input v-model="editPosswordForm.confirm" show-password  clearable/>
 				</el-form-item>
 			</el-form>
 			
@@ -204,31 +204,10 @@ let currentUser=reactive({
 })
 
 
-//    import { useFormGroup } from '@/hooks/Home'
-
-//   defineProps({
-//     formAllinfo: {
-//     //   type: Object as PropType<UpdateUserInfoParams>,
-//       default: () => {
-//         return {}
-//       }
-//     },
-//     currentUser: {
-//     //   type: Object as PropType<UserAll>,
-//       default: () => {
-//         return {}
-//       }
-//     }
-//   })
-//   const emit = defineEmits(['changeInfo'])
-
-//    const { formSubmit, changeIsEdit, formInstance, rules, isEdit } = useFormGroup(emit)
-
-
 </script>
 
 
-<style style="less" scoped>
+<style  scoped>
 @import url('https://cdn.jsdelivr.net/gh/AyagawaSeirin/homepage@latest/mdui/css/mdui.min.css');
 .form{
   margin:20px 0 0 0 

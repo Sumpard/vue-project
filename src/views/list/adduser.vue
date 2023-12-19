@@ -1,43 +1,34 @@
 <template>
     <!-- Form -->
-    <el-button  @click="look">
-     查看
-    </el-button>
-    <el-button  @click="look2">
-     查看2
-    </el-button>
+   
     <el-button  @click="dialogFormVisible = true">
-      新建物品
+      新建用户
     </el-button>
-    <el-dialog v-model="dialogFormVisible" title="新增物品" :before-close="handleClose" draggable>
+    <el-dialog v-model="dialogFormVisible" title="新增用户" :before-close="handleClose" draggable>
       <el-form ref="ruleFormRef" :model="form" :rules="rules">
-        <el-form-item label="名称" prop="name" :label-width="formLabelWidth">
-          <el-input v-model="form.name" autocomplete="off"  clearable/>
+        <el-form-item label="用户名" prop="user_name" :label-width="formLabelWidth">
+          <el-input v-model="form.user_name" autocomplete="off"  clearable/>
         </el-form-item>
-        <el-form-item label="序号" prop="id" :label-width="formLabelWidth">
-          <el-input v-model="form.id" autocomplete="off"  clearable/>
+        <el-form-item label="学号" prop="user_id" :label-width="formLabelWidth">
+          <el-input v-model="form.user_id" autocomplete="off"  clearable/>
         </el-form-item>
-        
-        <el-form-item label="状态" prop="status" :label-width="formLabelWidth">
-        <el-select v-model="form.status" placeholder="请选择状态">
-          <el-option label="使用中" value="USING" />
-          <el-option label="开放" value="FREE" />
-        </el-select>
+        <el-form-item label="密码" prop="password" :label-width="formLabelWidth">
+          <el-input v-model="form.password" placeholder="默认为123456，可不输入" autocomplete="off"  clearable/>
         </el-form-item>
 
-        <el-form-item label="类型" prop="type_name" :label-width="formLabelWidth">
-        <el-select v-model="form.type_name" placeholder="请选择类型">
-          <el-option label="器材" value="equipment" />
-          <el-option label="会议室" value="room" />
-          <el-option label="座位" value="seat" />
+        <el-form-item label="身份" prop="user_role" :label-width="formLabelWidth">
+        <el-select v-model="form.user_role" placeholder="请选择类型">
+          <el-option label="普通用户" value="REGULAR_USER" />
+          <el-option label="管理员" value="MANAGER" />
+          
         </el-select>
         </el-form-item>
         
-        <el-form-item label="描述" prop="description" :label-width="formLabelWidth">
-          <el-input v-model="form.description" autocomplete="off"  clearable/>
+        <el-form-item label="诚信点" prop="score" :label-width="formLabelWidth">
+          <el-input v-model="form.score" placeholder="默认为100，可不输入" autocomplete="off"  clearable/>
         </el-form-item>
-        <el-form-item label="图片" prop="image" :label-width="formLabelWidth">
-          <el-input v-model="form.image" autocomplete="off"  clearable/>
+        <el-form-item label="邮箱" prop="email" :label-width="formLabelWidth">
+          <el-input v-model="form.email" autocomplete="off"  clearable/>
         </el-form-item>
         <!-- <el-form-item label="Zones" :label-width="formLabelWidth">
           <el-select v-model="form.region" placeholder="请选择类型">
@@ -65,7 +56,7 @@
   
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
-import { addgoods,getallgoods,getalluser} from "@/api/goods"; 
+import { adduser} from "@/api/goods"; 
 import type { FormInstance, FormRules } from 'element-plus'
 
 const uploadedImage = ref<string | null>(null);
@@ -94,31 +85,29 @@ const ruleFormRef = ref<FormInstance>()
 const dialogFormVisible = ref(false)
 const formLabelWidth = '140px'
 const form = reactive({
-  description: "",
-  id: "",
-  image: "",
-  name: "",
-  status: "",
-  type_name: ""
+    avatar:"",
+      email:"",
+      password:"123456",
+      score:100,
+      user_id:"",
+      user_name:"",
+      user_role:"",
   })
 
 const rules = reactive<any>({
-	name: [
-		{ required: true, message: '请输入名称', trigger: 'blur' },
+	user_name: [
+		{ required: true, message: '请输入用户名', trigger: 'blur' },
 	],
-    id: [
-		{ required: true, message: '请输入编号', trigger: 'blur' },
+    user_id: [
+		{ required: true, message: '请输入学号', trigger: 'blur' },
 	],
-    type_name: [
-		{ required: true, message: '请选择类型', trigger: 'blur' },
+    user_role: [
+		{ required: true, message: '请选择身份', trigger: 'blur' },
 	],
-    status: [
+    score: [
 		{ required: true, message: '请选择状态', trigger: 'blur' },
 	],
-    image:[
-		{ required: true, message: '请上传图片', trigger: 'blur' },
-	],
-
+    
 	
 })
 
@@ -136,13 +125,13 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         // 校验成功
     if (valid) {
         try{    
-            const result= await addgoods( form.description,form.id,form.image,form.name,form.status,form.type_name)
+            const result= await adduser(form.avatar,form.email,form.password, form.score,form.user_id,form.user_name,form.user_role,)
             console.log(result)
             if (!result) {
              ElMessage.error('增加失败')
               return
              }  
-             ElMessage({ message: '增加物品成功.',type: 'success',})
+             ElMessage({ message: '增加用户成功.',type: 'success',})
              dialogFormVisible.value = false
        } catch (error) {
          console.error('Error: ', error);
@@ -168,29 +157,10 @@ const handleClose = (done: () => void) => {
 
 
 
-
-
-const look =async()=>{
-    const list= await getallgoods()
-    
-    console.log(list)
-
-}
-
-
-const look2 =async()=>{
-    const m= await getalluser()
-    
-    console.log(m)
-
-}
-
-
-
-
-
 </script>
 <style scoped>
+
+
   .el-button--text {
     margin-right: 15px;
   }
@@ -205,6 +175,3 @@ const look2 =async()=>{
   }
 </style>
   
-
-
-
