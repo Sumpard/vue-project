@@ -34,7 +34,7 @@ export async function getallgoods() {
   export async function getalluser() {
     return (await api.post("/user/select-all")).data;
   }
-
+  
   export async function editscore(id:string,score:int) {
     console.log(typeof score)
     return (await api.putForm("/user/update-score ",{id,score })).data;
@@ -44,8 +44,15 @@ export async function getallgoods() {
     
     return (await api.putForm("/user/update-role ",{id,role })).data;
   }
-
-
+  export async function editdescription(available_id:int,des:string) {
+   
+    return (await api.putForm("/available/update-description ",{"available-id":available_id,des })).data;
+  }
+  export async function editstatus(available_id:int,status:string) {
+    
+    return (await api.putForm("/available/update-status",{"available-id":available_id,status})).data;
+  }
+  
   export async function adduser(
     avatar: string,
     email: string,

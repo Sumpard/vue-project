@@ -3,9 +3,7 @@
     <el-button  @click="look">
      查看
     </el-button>
-    <el-button  @click="look2">
-     查看2
-    </el-button>
+   
     <el-button  @click="dialogFormVisible = true">
       新建物品
     </el-button>
@@ -174,14 +172,6 @@ const look =async()=>{
     const list= await getallgoods()
     
     console.log(list)
-
-}
-
-
-const look2 =async()=>{
-    const m= await getalluser()
-    
-    console.log(m)
 
 }
 

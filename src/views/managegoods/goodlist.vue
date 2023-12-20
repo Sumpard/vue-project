@@ -1,45 +1,46 @@
 <template>
     <div class=" my-info ">
-      <div class="rin-card"><addbutton /></div>
+      <div class="rin-card"><addgoods /></div>
       
       <el-divider class="divide" />
 
       <el-table :header-cell-style="{'text-align':'center'}"
       :cell-style="{'text-align':'center'}" :data="filterTableData" max-height="550"  highlight-current-row 
-      :default-sort="{ prop: 'score', order: 'descending' }">
-      <el-table-column prop="user_id" label="学号"></el-table-column>
-      <el-table-column prop="user_name" label="用户名"></el-table-column>
-      <el-table-column prop="user_role" label="身份" :filters="[
-        { text: '普通用户', value: 'REGULAR_USER' },
-        { text: '管理员', value: 'MANAGER' },
+      >
+      <el-table-column prop="available_id" label="编号"></el-table-column>
+      <el-table-column prop="available_name" label="名称"></el-table-column>
+      <el-table-column prop="available_type_name" label="类型"></el-table-column>
+      <el-table-column prop="available_status" label="状态" >
+
+      <template v-slot="{ row }">
+        <template v-if="!row.editingstatus">
+          {{mapstatus(row.available_status) }}
+          </template>
+          <template v-if="row.editingstatus">
+            <el-select v-model="row.editedstatus" placeholder="请选择状态"
+            :filters="[
+        { text: '正在使用', value: 'USING' },
+        { text: '可借用', value: 'FREE' },
       ]"
       :filter-method="filterTag"
       filter-placement="bottom-end">
-
-      <template v-slot="{ row }">
-        <template v-if="!row.editingrole">
-          {{mapUserRole(row.user_role) }}
-          </template>
-          <template v-if="row.editingrole">
-            <el-select v-model="row.editedRole" placeholder="请选择身份">
-          <el-option label="普通用户" value="REGULAR_USER" />
-          <el-option label="管理员" value="MANAGER" />
+          <el-option label="正在使用" value="USING" />
+          <el-option label="可借用" value="FREE" />
            </el-select>
           </template>
         </template>
        </el-table-column>
-        <el-table-column prop="email" label="邮箱"></el-table-column>
-        <el-table-column prop="score" sortable label="诚信点" width=200px >
+        <el-table-column prop="available_description"  label="描述" width=200px >
             <template v-slot="{ row }">
-           <template v-if="!row.editingscore">
-            {{ row.score }}
+           <template v-if="!row.editingdescription">
+            {{ row.available_description }}
            
           </template>
-          <template v-if="row.editingscore">
+          <template v-if="row.editingdescription">
             <el-form class="center" ref="ruleFormRef" :model="form" :rules="rules">
-              <el-form-item :cell-style="{'text-align':'center'}"  prop="score" >
+              <el-form-item :cell-style="{'text-align':'center'}"  prop="available_description" >
             <div >
-            <el-input-number class="center" v-model="form.score"  />
+            <el-input class="center" v-model="form.available_description"  />
             </div>
            </el-form-item>
             </el-form>
@@ -52,10 +53,10 @@
       </template>
           <template v-slot="{ row }">
           
-          <el-button type="primary" link size="small" @click="startEditingscore(row)" v-if="!row.editingscore">修改诚信点</el-button>
-          <el-button type="success" link size="small" @click="saveEditingscore(row,ruleFormRef,form)" v-if="row.editingscore">保存诚信点</el-button>
-          <el-button type="primary" link size="small" @click="startEditingrole(row)" v-if="!row.editingrole">修改身份</el-button>    
-          <el-button type="success" link size="small" @click="saveEditingrole(row)" v-if="row.editingrole">保存身份</el-button>
+          <el-button type="primary" link size="small" @click="starteditingdescription(row)" v-if="!row.editingdescription">修改描述</el-button>
+          <el-button type="success" link size="small" @click="saveeditingdescription(row,ruleFormRef,form)" v-if="row.editingdescription">保存描述</el-button>
+          <el-button type="primary" link size="small" @click="starteditingstatus(row)" v-if="!row.editingstatus">修改状态</el-button>    
+          <el-button type="success" link size="small" @click="saveeditingstatus(row)" v-if="row.editingstatus">保存状态</el-button>
           
         </template>
         </el-table-column>       
@@ -66,9 +67,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
-import { getalluser,editscore,editrole} from "@/api/goods";
+import { getallgoods,editdescription,editstatus } from "@/api/goods"; 
 import type { FormInstance, FormRules } from 'element-plus'
-import addbutton from '@/views/list/adduser.vue'
+import addgoods from '@/views/managegoods/add.vue'
 const ruleFormRef = ref<FormInstance>()
 const tableData= ref([]);
 const search = ref('')
@@ -82,62 +83,60 @@ const filterTableData = computed(() =>
 )
 
 const form = reactive({
-  score:undefined,
+    available_description:undefined,
   })
 
 
 const rules = reactive<any>({
-	score: [
+	available_description: [
 		{ required: true, message: '请输入分数', trigger: 'blur' },
 	],
 })
 
 
 const filterTag = (value: string, row:any) => {
-  return row.user_role === value
+  return row.a === value
 }
 
-const startEditingscore = (row:any) => {
+const starteditingdescription = (row:any) => {
   // 进入编辑模式
-  form.score=row.score
-  row.editingscore = true;
+  form.available_description=row.available_description
+  row.editingdescription = true;
 };
 
-const startEditingrole = (row:any) => {
+const starteditingstatus = (row:any) => {
   // 进入编辑模式
-  row.editedRole=row.user_role 
-  row.editingrole = true;
+  row.editedstatus=row.available_status
+  row.editingstatus = true;
 };
 
 
-const mapUserRole=(userRole:any)=> {
+const mapstatus=(status:any)=> {
       // 映射user_role到相应的文本
-      return userRole === 'MANAGER' ? '管理员' : userRole === "REGULAR_USER"  ? '普通用户' : '';
+      return status === 'USING' ? '正在使用' :status  === "FREE"  ? '可借用' : '';
     };
 
 
-const saveEditingscore = async (row:any,formEl: FormInstance | undefined ,form:any) => {
+const saveeditingdescription = async (row:any,formEl: FormInstance | undefined ,form:any) => {
   if (!formEl) return;
   await formEl.validate(async(valid, fields) => {
         // 校验成功
   if (valid) {
   try {  
-    console.log(row.user_id);console.log(form.score)
-    console.log(typeof row.user_id);
-    form.score=parseInt(form.score, 10)
-    console.log(typeof form.score)
-    const result= await editscore( row.user_id, form.score  )
+    console.log(row.available_description)
+    console.log(typeof row.available_id);
+    const result= await editdescription( row.available_id,row.available_description  )
             console.log(result)
       
     if (!result) {
         
-             ElMessage.error('修改诚信点失败')
+             ElMessage.error('修改描述失败')
               return
              }  
 
-    ElMessage({ message: '修改诚信点成功',type: 'success',})
-    row.editingscore = false;
-    row.score=form.score 
+    ElMessage({ message: '修改描述成功',type: 'success',})
+    row.editingdescription = false;
+    row.available_description=form.available_description
   } catch (error) {
     console.error('Failed to save editing:', error);
   }
@@ -149,26 +148,26 @@ const saveEditingscore = async (row:any,formEl: FormInstance | undefined ,form:a
 };
 
 
-const saveEditingrole = async (row:any) => {
+const saveeditingstatus = async (row:any) => {
   
   try {
-    
-    console.log(row.user_id);console.log(row.editedRole)
-    const result2= await editrole  ( row.user_id, row.editedRole  )    
+    console.log(typeof row.available_id);
+    console.log( row.available_id);
+    console.log(row.editedstatus)
+
+    const result2= await editstatus (row.available_id,row.editedstatus)    
     
   if (!result2) {
         
-        ElMessage.error('修改身份失败')
+        ElMessage.error('修改状态失败')
          return
         } 
-    ElMessage({ message: '修改身份成功',type: 'success',})
-    row.editingrole = false;
-    row.user_role=row.editedRole
+    ElMessage({ message: '修改状态成功',type: 'success',})
+    row.editingstatus = false;
+    row.available_status=row.editedstatus
   } catch (error) {
     console.error('Failed to save editing:', error);
   }
-
-
 
 };
 
@@ -176,7 +175,7 @@ const saveEditingrole = async (row:any) => {
 onMounted(async () => {
   // 通过 API 请求获取数据
   try {
-    const response = await getalluser()
+    const response = await getallgoods()
     console.log(response)
     console.log(response.code)
     if (response.code === 200) {

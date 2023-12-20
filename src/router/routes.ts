@@ -42,8 +42,8 @@ const routes: RouteRecordRaw[] = [
         component:()=> import("@/views/contact/response.vue")
       },
       {
-        path:'/add',
-        component:() => import("@/views/managegoods/add.vue")
+        path:'/goodlist',
+        component:() => import("@/views/managegoods/goodlist.vue")
       },
       {
         path:'/userlist',
