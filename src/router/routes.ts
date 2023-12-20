@@ -1,12 +1,15 @@
 import { RouteRecordRaw } from "vue-router";
-import reservation from '@/views/Useview.vue'
-import reserveroom from '@/views/room/reserveRoom.vue'
-import homeindex from '@/views/home/homeindex.vue'
+
+import reservation from "@/views/Useview.vue";
+import equipment from "@/views/equip/equipment.vue";
+import homeindex from "@/views/home/homeindex.vue";
+import reserveroom from "@/views/room/reserveRoom.vue";
+
 const routes: RouteRecordRaw[] = [
   {
     path: "/",
     name: "index",
-    redirect:"/auth/login",
+    redirect: "/auth/login",
     component: () => import("@/layouts/manage.vue"),
     meta: { keepalive: false },
     children: [
@@ -17,38 +20,42 @@ const routes: RouteRecordRaw[] = [
         meta: { keepalive: false },
       },
       {
-        path:'/reservation',
-        component:reservation
+        path: "/reservation",
+        component: reservation,
       },
       {
-        path:'/reserveroom',
-        component:reserveroom
+        path: "/reserveroom",
+        component: reserveroom,
+      },
+      {
+        path: "/equipment",
+        component: equipment,
       },
       {
         path: "/homepage",
-      name: "homepage",
-      component: () => import("@/views/mainpage/homepage.vue")
+        name: "homepage",
+        component: () => import("@/views/mainpage/homepage.vue"),
       },
       {
-        path: '/homeindex',
-        component: homeindex
+        path: "/homeindex",
+        component: homeindex,
       },
       {
-        path:'/contact',
-        component:()=> import("@/views/contact/contactUs02.vue")
+        path: "/contact",
+        component: () => import("@/views/contact/contactUs02.vue"),
       },
       {
-        path:"/response",
-        component:()=> import("@/views/contact/response.vue")
+        path: "/response",
+        component: () => import("@/views/contact/response.vue"),
       },
       {
-        path:'/add',
-        component:() => import("@/views/managegoods/add.vue")
+        path: "/add",
+        component: () => import("@/views/managegoods/add.vue"),
       },
       {
-        path:'/userlist',
-        component:() => import("@/views/list/userlist.vue")
-      }
+        path: "/userlist",
+        component: () => import("@/views/list/userlist.vue"),
+      },
     ],
   },
   {

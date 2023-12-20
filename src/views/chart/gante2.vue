@@ -1,11 +1,6 @@
 <template>
   <div>
     <div ref="container" class="scrolling-container"></div>
-
-    <!--  <el-button plain @click="dialogVisible = true">
-            click to open the Dialog
-        </el-button> -->
-    <!-- <el-dialog v-model="dialogVisible" title="会议信息" width="30%" :before-close="handleClose"> -->
     <el-dialog v-model="dialogVisible" title="会议信息" width="30%">
       <span>{{ roomid }}</span>
       <p>{{ rentedToData }}</p>
@@ -61,7 +56,7 @@ let meetingrooms: M_Room[] = new Array(numRooms).fill(0).map((_, i) => ({
   current: 0,
   deals: [],
 }));
-//console.log(meetingrooms)
+//console.log(meetingrooms);
 
 export default {
   props: {
@@ -117,6 +112,7 @@ export default {
 
         const timeformat = this.formatTimestamp(today);
         this.get_today_meeting(timeformat, "SUBMITTED").then(() => {
+          console.log("watch", meetingrooms);
           series = meetingrooms.map(function (meetingroom, i) {
             const data = meetingroom.deals.map(function (deal: { rentedTo: any; from: any; to: any }) {
               return {
@@ -127,7 +123,7 @@ export default {
                 y: i,
               };
             });
-            console.log("data:", data, meetingroom, meetingroom.model, meetingroom.deals[meetingroom.current]);
+            //console.log("data:", data, meetingroom, meetingroom.model, meetingroom.deals[meetingroom.current]);
             return {
               name: meetingroom.model,
               data: data,
@@ -195,11 +191,6 @@ export default {
   },
 
   mounted() {
-    //console.log('timett:', this.timett);
-
-    //var today = new Date();
-    //var a = new getdate();
-
     //setup instance
     const instance = getCurrentInstance()!;
     const { dialogVisible, handleClose, openDialog } = instance.proxy! as unknown as {
@@ -208,73 +199,17 @@ export default {
       openDialog: (arg0: string, arg1: string, arg2: string, arg3: string) => void;
     };
 
-    //console.log(meetingrooms);
-    //console.log(":", today);
     today.setHours(0, 0, 0, 0);
-    //console.log(":", today);
+
     const today_ = today.getTime();
-    //console.log(":", today_);
     //meeting get
     const timeformat = this.formatTimestamp(today_);
+
     this.get_today_meeting(timeformat, "SUBMITTED").then(() => {
-      //console.log("hou");
-
-      //这边从08：00⏲
-      /*  meetingrooms = [
-                 {
-                     model: '会议室1',
-                     current: 1,
-                     deals: [
-                         {
-                             rentedTo: '卢婷',
-                             from: today_ + 21 * hour,
-                             to: today_ + 22 * hour
-                         },
-                         // more deals...
-                         {
-                             rentedTo: '许睿',
-                             from: today_ + 26 * hour,
-                             to: today_ + 26.5 * hour
-                         },
-                     ]
-                 },
-                 // more 
-                 {
-                     model: '会议室2',
-                     current: 0,
-                     deals: [
-                         {
-                             rentedTo: '历婷',
-                             from: today_ + 22 * hour,
-                             to: today_ + 23 * hour
-                         },
-                         // more deals...
-                         {
-                             rentedTo: '勾睿',
-                             from: today_ + 26 * hour,
-                             to: today_ + 27.5 * hour
-                         },
-                     ]
-                 },
-                 {
-                     model: '会议室3',
-                     current: 0,
-                     deals: [
-                         {
-                             rentedTo: '历闻',
-                             from: today_ + 22 * hour,
-                             to: today_ + 24 * hour
-                         },
-                     ]
-                 },
-             ]; */
-
-      //console.log(meetingrooms);
-
       series = meetingrooms.map(function (meetingroom, i) {
         const data = meetingroom.deals.map(function (deal: { rentedTo: any; from: any; to: any }) {
           return {
-            id: "会议室-" + (i + 1),
+            id: "会议室" + (i + 1),
             rentedTo: deal.rentedTo,
             start: deal.from,
             end: deal.to,
@@ -325,30 +260,6 @@ export default {
                   return s.name;
                 }),
               },
-              /* {
-                                title: {
-                                    text: '借用者'
-                                },
-                                categories: map(series, function (s: { current: { rentedTo: any; }; }) {
-                                    return s.current.rentedTo;
-                                })
-                            },
-                            {
-                                title: {
-                                    text: '开始时间'
-                                },
-                                categories: map(series, function (s: { current: { from: any; }; }) {
-                                    return dateFormat('%H: %M', s.current.from);
-                                })
-                            },
-                            {
-                                title: {
-                                    text: '结束时间'
-                                },
-                                categories: map(series, function (s: { current: { to: any; }; }) {
-                                    return dateFormat('%H. %M', s.current.to);
-                                })
-                            } */
             ],
           },
         },
@@ -357,10 +268,7 @@ export default {
             point: {
               events: {
                 click: (event: { point: any }) => {
-                  //console.log('点击事件触发');
                   var point = event.point;
-                  //console.log(dialogVisible.value);
-                  //console.log(point.rentedTo, point.start, today_, "x", this.timett, "xx", timestamp);
                   openDialog(point.id, point.rentedTo, point.start, point.end);
                 },
               },
@@ -374,26 +282,26 @@ export default {
   methods: {
     async get_today_meeting(day: string, status: string) {
       try {
-        //console.log(day);
         const data = await getAppoint_by_day(day, status);
-        console.log(data);
         const appointlist: List<Appointment> = data as List<Appointment>;
-
-        //console.log("appointlist.length:",appointlist);
-        for (let i = 0; i < appointlist.length; i++) {
-          //console.log(appointlist[i]);
-          //const size = meetingrooms[appointlist[i].available_id - 1].deals.length;
-          const start = new Date(appointlist[i].appoint_start_time).getTime() + 8 * hour;
-          const end = new Date(appointlist[i].appoint_end_time).getTime() + 8 * hour;
-          const newdeal = {
-            rentedTo: appointlist[i].renter_name,
-            from: start,
-            to: end,
-          };
-          meetingrooms[appointlist[i].available_id - 1].deals.push(newdeal);
-          //meetingrooms[appointlist[i].available_id-1]
+        if (appointlist != undefined) {
+          for (let i = 0; i < appointlist.length; i++) {
+            const start = new Date(appointlist[i].appoint_start_time).getTime() + 8 * hour;
+            const end = new Date(appointlist[i].appoint_end_time).getTime() + 8 * hour;
+            const newdeal = {
+              rentedTo: appointlist[i].renter_name,
+              from: start,
+              to: end,
+            };
+            meetingrooms[appointlist[i].available_id - 1].deals.push(newdeal);
+          }
+        } else {
+          console.log("not run:", meetingrooms);
+          const _today_ = new Date(day).getTime();
         }
-        //console.log(meetingrooms);
+        meetingrooms[2].deals.push({ rentedTo: "test", from: 1, to: 1 });
+        meetingrooms[2].deals.push({ rentedTo: "test", from: 1, to: 1 });
+        meetingrooms[2].deals.push({ rentedTo: "test", from: 1, to: 1 });
       } catch (error) {
         console.error(error);
       }
@@ -428,3 +336,9 @@ export default {
   margin-right: 10px;
 }
 </style>
+
+/* meetingrooms = [ { model: '会议室1', current: 1, deals: [ { rentedTo: '卢婷', from: today_ + 21 * hour, to: today_ +
+22 * hour }, // more deals... { rentedTo: '许睿', from: today_ + 26 * hour, to: today_ + 26.5 * hour }, ] }, // more {
+model: '会议室2', current: 0, deals: [ { rentedTo: '历婷', from: today_ + 22 * hour, to: today_ + 23 * hour }, // more
+deals... { rentedTo: '勾睿', from: today_ + 26 * hour, to: today_ + 27.5 * hour }, ] }, { model: '会议室3', current: 0,
+deals: [ { rentedTo: '历闻', from: today_ + 22 * hour, to: today_ + 24 * hour }, ] }, ]; */

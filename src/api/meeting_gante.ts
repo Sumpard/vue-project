@@ -69,7 +69,6 @@ export interface appoint_sub {
   appoint_start_time: string;
 }
 
-//目前传参无效
 export async function getAppoint_by_day(day: string, appointstatus: string) {
   //Message.info("查询中");
   const appointbody: SearchBody = {
