@@ -14,10 +14,10 @@
   </div>
 
   <!-- <div>
-    <timeset />
-  </div> -->
+      <timeset />
+    </div> -->
   <div>
-    <h5>会议室预约</h5>
+    <h5>器材预约</h5>
     <el-form :model="bookingForm" label-width="120px">
       <el-form-item label="会议室">
         <el-select v-model="bookingForm.room" placeholder="选择会议室">

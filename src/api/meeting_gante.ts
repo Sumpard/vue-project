@@ -1,11 +1,13 @@
-import api from "./request";
 import Message from "@/utils/message";
+
+import api from "./request";
+
 export interface Appointment {
   appoint_end_time: string;
   appoint_start_time: string;
   appointment_description: string;
   appointment_id: number;
-  appointment_status: ('SUBMITTED' | 'REFUSED' | 'ACCEPTED');
+  appointment_status: "SUBMITTED" | "REFUSED" | "ACCEPTED";
   availableNameInvalid: boolean;
   available_id: number;
   available_name: string;
@@ -27,17 +29,17 @@ export interface Appointment {
 }
 
 export interface SearchBody {
-  appointment_status: string,
-  available_type_name: string,
-  day: string,
-  needSort: boolean,
-  renterIdEmptyOrNull: boolean,
-  renter_id: string,
-  reviewerIdEmptyOrNull: boolean,
-  reviewer_id: string,
-  sort_type: string,
-  sorted: boolean,
-  typeNull: boolean
+  appointment_status: string;
+  available_type_name: string;
+  day: string;
+  needSort: boolean;
+  renterIdEmptyOrNull: boolean;
+  renter_id: string;
+  reviewerIdEmptyOrNull: boolean;
+  reviewer_id: string;
+  sort_type: string;
+  sorted: boolean;
+  typeNull: boolean;
 }
 
 export interface appoint_order {
@@ -55,7 +57,7 @@ export interface appoint_order {
   type: string;
 }
 
-export interface appoint_sub{
+export interface appoint_sub {
   renter_id: string;
   renter_name: string;
   renter_phone: string;
@@ -67,7 +69,6 @@ export interface appoint_sub{
   appoint_start_time: string;
 }
 
-//目前传参无效
 export async function getAppoint_by_day(day: string, appointstatus: string) {
   //Message.info("查询中");
   const appointbody: SearchBody = {
@@ -81,15 +82,22 @@ export async function getAppoint_by_day(day: string, appointstatus: string) {
     reviewer_id: "",
     sort_type: "START_TIME",
     sorted: true,
-    typeNull: true
+    typeNull: true,
   };
-  return (await api.post("appointment/select-condition", appointbody)).data;
+  return (await api.post("appointment/select-condition", appointbody)).data.data;
 }
 
-
-export async function submitAppoint(start_time: string, end_time: string, description: string,
-  avail_id: number, avail_name: string, avail_type_name: string, user_id: string,
-  user_name: string, phone: string) {
+export async function submitAppoint(
+  start_time: string,
+  end_time: string,
+  description: string,
+  avail_id: number,
+  avail_name: string,
+  avail_type_name: string,
+  user_id: string,
+  user_name: string,
+  phone: string
+) {
   Message.info("提交中……");
   const appointbody: appoint_sub = {
     appoint_end_time: end_time,
@@ -104,4 +112,3 @@ export async function submitAppoint(start_time: string, end_time: string, descri
   };
   return (await api.post("appointment/insert", appointbody)).data;
 }
-
