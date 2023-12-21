@@ -29,12 +29,12 @@
         </el-dropdown-menu>
       </template>
     </el-dropdown>
-
   </div>
 </template>
-  
+
 <script setup lang="ts">
-import { useUserStore } from '@/stores/user';
+import { useUserStore } from "@/stores/user";
+
 const router = useRouter();
 //const {logout} = useUserStore();
 
@@ -42,13 +42,12 @@ function Onlogout() {
   const { logout, user } = useUserStore();
   logout();
   console.log(useUserStore().user);
-  
-  console.log(router)
-  router.push({name:"login"});
-}
 
+  //console.log(router)
+  router.push({ name: "login" });
+}
 </script>
-  
+
 <style scoped>
 .layout-container-demo .toolbar {
   display: inline-flex;
@@ -56,11 +55,9 @@ function Onlogout() {
   justify-content: center;
   height: 100%;
   right: 60px;
-
 }
 
 .circle {
-
   position: relative;
   width: 38px;
   height: 38px;

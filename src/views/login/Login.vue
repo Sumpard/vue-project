@@ -50,7 +50,7 @@
         ></q-input>
         <div class="verify-wrapper">
           <img :src="verifyCodeImage" alt="验证码" class="code-img" />
-          <el-text class="text" type="info" @click="update_img">看不清楚？换一张</el-text>
+          <el-text class="text_" type="info" @click="update_img">看不清楚？换一张</el-text>
         </div>
       </div>
       <div>
@@ -174,7 +174,7 @@ getcodeimg();
   margin-left: 10px;
 }
 
-.text {
+.text_ {
   font-size: 11px;
   position: absolute;
   top: 35px;
@@ -182,7 +182,7 @@ getcodeimg();
   left: 10%;
 }
 
-.text:hover {
+.text_:hover {
   cursor: pointer;
   color: #1890ff;
   transition: color 0.3s;
