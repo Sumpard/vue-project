@@ -40,10 +40,8 @@ declare module "vue" {
     ElTableColumn: (typeof import("element-plus/es"))["ElTableColumn"];
     ElText: (typeof import("element-plus/es"))["ElText"];
     ElTimeSelect: (typeof import("element-plus/es"))["ElTimeSelect"];
-    ElUpload: (typeof import("element-plus/es"))["ElUpload"];
     Header: (typeof import("./components/common/header.vue"))["default"];
     IEpCamera: (typeof import("~icons/ep/camera"))["default"];
-    IEpCaretRight: (typeof import("~icons/ep/caret-right"))["default"];
     IEpCollection: (typeof import("~icons/ep/collection"))["default"];
     IEpDArrowRight: (typeof import("~icons/ep/d-arrow-right"))["default"];
     IEpEdit: (typeof import("~icons/ep/edit"))["default"];
