@@ -79,16 +79,6 @@ const routes: RouteRecordRaw[] = [
     component: () => import("@/views/tabulation/tabletest.vue"),
   },
   {
-    path: "/gante1",
-    name: "gante1",
-    component: () => import("@/views/chart/gante1.vue"),
-  },
-  {
-    path: "/gante2",
-    name: "gante2",
-    component: () => import("@/views/chart/gante2.vue"),
-  },
-  {
     path: "/auth",
     name: "auth",
     component: () => import("@/views/login/LoginPage.vue"),
