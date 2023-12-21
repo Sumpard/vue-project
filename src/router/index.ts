@@ -1,4 +1,5 @@
 import { RouteRecordRaw, Router, createRouter, createWebHistory } from "vue-router";
+
 import routes from "./routes";
 
 const router: Router = createRouter({
@@ -7,7 +8,7 @@ const router: Router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  console.log("beforeEach", from, to, to.meta);
+  //console.log("beforeEach", from, to, to.meta);
   next();
 });
 

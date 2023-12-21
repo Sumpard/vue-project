@@ -87,7 +87,7 @@ async function getcodeimg() {
   try {
     const verifyCodeData = await getverifycode();
     verifyCodeImage.value = "data:image/png;base64," + verifyCodeData.img;
-    console.log("get verifycode", verifyCodeData);
+    //console.log("get verifycode", verifyCodeData);
     // 处理验证码数据
   } catch (error) {
     console.error(error);
@@ -100,32 +100,36 @@ async function onSubmit() {
     Message.info("提交登录信息");
     // 获取token
     const Ans = await getanswer();
-    console.log(Ans);
+    //console.log(Ans);
     const Ans_check = await verifyanswer(form.verifycode);
-    console.log(Ans_check);
+    //console.log(Ans_check);
     if (Ans_check.code != "200") {
       Message.error(" 验证码错误");
-      console.log("验证码错误", Ans_check);
+      //console.log("验证码错误", Ans_check);
     } else {
-      console.log("登录信息： ", form.username, form.password, form.verifycode);
+      //console.log("登录信息： ", form.username, form.password, form.verifycode);
       const { data } = await login(form.username, form.password, form.verifycode);
+      if (data != undefined) {
+        //Message.info("登录成功");
+        //console.log("登录成功", data);
+        const token = data;
+        userStore.login({ token }); // 存token
+        // 获取用户
+        const user = await getUserMe();
 
-      //Message.info("登录成功");
-      console.log("登录成功", data);
-      const token = data;
-      userStore.login({ token }); // 存token
-      // 获取用户
-      const user = await getUserMe();
+        //Message.info("获取用户");
+        //console.log("获取用户", user);
+        userStore.login({ token, user });
+        Message.success(`登录成功！`);
 
-      //Message.info("获取用户");
-      console.log("获取用户", user);
-      userStore.login({ token, user });
-      Message.success(`登录成功！`);
-
-      if ($route.query.redirect) {
-        $router.replace($route.query.redirect as string);
+        if ($route.query.redirect) {
+          $router.replace($route.query.redirect as string);
+        } else {
+          $router.replace({ name: "register" });
+        }
       } else {
-        $router.replace({ name: "register" });
+        //console.log("登录失败", data);
+        Message.error("登录失败,用户id或密码错误");
       }
     }
   } catch (error) {
