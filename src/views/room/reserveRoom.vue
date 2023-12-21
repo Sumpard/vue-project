@@ -20,10 +20,13 @@
     <h5>会议室预约</h5>
     <el-form :model="bookingForm" label-width="120px">
       <el-form-item label="会议室">
-        <el-select v-model="bookingForm.room" placeholder="选择会议室">
+        <!-- <el-select v-model="bookingForm.room" placeholder="选择会议室">
           <el-option label="会议室1" value="room1"></el-option>
           <el-option label="会议室2" value="room2"></el-option>
           <el-option label="会议室3" value="room3"></el-option>
+        </el-select> -->
+        <el-select v-model="bookingForm.room">
+          <el-option v-for="room in rooms" :value="room.available_type_name + room.available_id"> </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="日期">
@@ -53,7 +56,7 @@
 </template>
 
 <script lang="ts">
-import { getAppoint_by_day, submitAppoint } from "@/api/meeting_gante";
+import { getAppoint_by_day, get_roomset, submitAppoint } from "@/api/meeting_gante";
 import { getUserMe } from "@/api/user";
 import { useUserStore } from "@/stores/user";
 import Message from "@/utils/message";
@@ -63,15 +66,26 @@ import table2 from "@/views/chart/table2.vue";
 import timeset from "@/views/room/time.vue";
 import tabletest from "@/views/tabulation/tabletest.vue";
 
+interface room {
+  available_description: string;
+  available_id: number;
+  available_image: string;
+  available_name: string;
+  available_status: string;
+  available_type_name: string;
+}
+
 export default {
   components: { tabletest, table2, table1, timeset, Gante2 },
 
   async mounted() {
     const appoint = await getAppoint_by_day("2023-12-20", "SUBMITTED");
     //console.log(appoint);
+    this.room_template();
   },
 
   data() {
+    let rooms: room[] = [];
     return {
       bookingForm: {
         room: "",
@@ -83,6 +97,8 @@ export default {
       time_form: {
         time_select: "",
       },
+
+      rooms,
       disabledDate(time: { getTime: () => number }) {
         //return time.getTime() > Date.now();
         const currentDate = new Date();
@@ -150,6 +166,16 @@ export default {
       );
     },
 
+    async room_template() {
+      try {
+        const roomdata = (await get_roomset("会议室")).data;
+        this.rooms = roomdata;
+        //console.log("room:",roomdata);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
     resetForm() {
       this.bookingForm = {
         room: "",
@@ -206,5 +232,7 @@ export default {
   /*height: calc(100% - 30px);*/
   height: 66vh;
   background-color: #ffffff;
+  margin-bottom: 40px;
+  margin-top: 40px;
 }
 </style>

@@ -20,17 +20,13 @@ import { ElMessageBox } from "element-plus";
 import Highcharts from "highcharts";
 import HighchartsExporting from "highcharts/modules/exporting";
 import HighchartsGantt from "highcharts/modules/gantt";
-import Highchartsavocado from "highcharts/themes/avocado";
-import Highchartsgray from "highcharts/themes/gray";
 import HighchartsGridLight from "highcharts/themes/grid-light";
 import HighchartsSand from "highcharts/themes/sand-signika";
 import moment from "moment";
 import { List } from "typescript-collections";
 import { getCurrentInstance, ref } from "vue";
 
-import { Appointment, getAppoint_by_day, get_roomset } from "@/api/meeting_gante";
-import Message from "@/utils/message";
-import submitdate from "@/views/room/reserveRoom.vue";
+import { Appointment, getAppoint_by_day } from "@/api/meeting_gante";
 
 type Deal = {
   rentedTo: string;
@@ -52,9 +48,13 @@ var timestamp: number;
 var today = new Date();
 const hour = 1000 * 60 * 60;
 const map = Highcharts.map;
-const numRooms = 7;
+const numRooms = 4;
 let series: { name: string; data: any; current: any }[];
-let meetingrooms: M_Room[] = [];
+let meetingrooms: M_Room[] = new Array(numRooms).fill(0).map((_, i) => ({
+  model: `会议室${i + 1}`,
+  current: 0,
+  deals: [],
+}));
 //console.log(meetingrooms);
 
 export default {
@@ -159,13 +159,27 @@ export default {
                 columns: [
                   {
                     title: {
-                      text: "会议室",
+                      text: "物品",
+                    },
+                    categories: map(series, function (s: { name: any }) {
+                      return s.name;
+                    }),
+                  },
+                  {
+                    title: {
+                      text: "详细信息",
                     },
                     categories: map(series, function (s: { name: any }) {
                       return s.name;
                     }),
                   },
                 ],
+              },
+              events: {
+                // 给y轴添加点击事件
+                click: function () {
+                  console.log("Y Axis clicked");
+                },
               },
             },
             plotOptions: {
@@ -190,7 +204,6 @@ export default {
   },
 
   mounted() {
-    this.get_room("会议室");
     //setup instance
     const instance = getCurrentInstance()!;
     const { dialogVisible, handleClose, openDialog } = instance.proxy! as unknown as {
@@ -216,7 +229,6 @@ export default {
             y: i,
           };
         });
-        //console.log("data:", data, meetingroom, meetingroom.model, meetingroom.deals[meetingroom.current]);
         return {
           name: meetingroom.model,
           data: data,
@@ -237,7 +249,6 @@ export default {
         },
         tooltip: {
           followPointer: true,
-          //这边从00：00⏲
           pointFormat:
             "<span>借用者: {point.rentedTo}</span><br/>" +
             "<span>开始时间: {point.start:%H: %M}</span><br/>" +
@@ -254,7 +265,15 @@ export default {
             columns: [
               {
                 title: {
-                  text: "会议室",
+                  text: "物品",
+                },
+                categories: map(series, function (s: { name: any }) {
+                  return s.name;
+                }),
+              },
+              {
+                title: {
+                  text: "详细信息",
                 },
                 categories: map(series, function (s: { name: any }) {
                   return s.name;
@@ -288,7 +307,7 @@ export default {
           for (let i = 0; i < appointlist.length; i++) {
             const start = new Date(appointlist[i].appoint_start_time).getTime() + 8 * hour;
             const end = new Date(appointlist[i].appoint_end_time).getTime() + 8 * hour;
-            const newdeal: Deal = {
+            const newdeal = {
               rentedTo: appointlist[i].renter_name,
               from: start,
               to: end,
@@ -299,35 +318,9 @@ export default {
           console.log("not run:", meetingrooms);
           const _today_ = new Date(day).getTime();
         }
-
-        for (let i = 0; i < numRooms; i++) {
-          const index: Deal = { rentedTo: "test", from: 1, to: 1 };
-          meetingrooms[i].deals.push(index);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    },
-
-    async get_room(room: string) {
-      try {
-        const roomdata = (await get_roomset(room)).data;
-        console.log(roomdata);
-        const len = roomdata.length;
-        //console.log(len);
-        /*  meetingrooms = new Array(len).fill(0).map((_, i) => ({
-          model: `会议室${i + 1}`,
-          current: 0,
-          deals: [],
-        })); */
-        for (let i = 0; i < len; i++) {
-          const id = roomdata[i].available_id.toString();
-          meetingrooms.push({
-            model: "会议室" + id,
-            current: 0,
-            deals: [],
-          });
-        }
+        meetingrooms[2].deals.push({ rentedTo: "test", from: 1, to: 1 });
+        meetingrooms[2].deals.push({ rentedTo: "test", from: 1, to: 1 });
+        meetingrooms[2].deals.push({ rentedTo: "test", from: 1, to: 1 });
       } catch (error) {
         console.error(error);
       }
