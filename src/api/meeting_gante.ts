@@ -112,3 +112,15 @@ export async function submitAppoint(
   };
   return (await api.post("appointment/insert", appointbody)).data;
 }
+
+export async function get_roomset(room: string) {
+  return (await api.post("/available/select-by-type", { type_description: "", type_id: 0, type_name: room })).data;
+}
+
+export async function get_all() {
+  return (await api.post("available/select-all")).data;
+}
+
+export async function update_img(id: number, img: string) {
+  return await api.put("/available/update-image"), { image: img }, { params: { available_id: id } };
+}

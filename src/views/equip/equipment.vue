@@ -9,7 +9,7 @@
       ></el-date-picker>
     </el-form-item>
     <div class="chart">
-      <Gante2 :timett="time_form.time_select" />
+      <Gante :timett="time_form.time_select" />
     </div>
   </div>
 
@@ -19,7 +19,7 @@
   <div>
     <h5>器材预约</h5>
     <el-form :model="bookingForm" label-width="120px">
-      <el-form-item label="会议室">
+      <el-form-item label="器材">
         <el-select v-model="bookingForm.room" placeholder="选择会议室">
           <el-option label="会议室1" value="room1"></el-option>
           <el-option label="会议室2" value="room2"></el-option>
@@ -53,23 +53,17 @@
 </template>
 
 <script lang="ts">
-import { getAppoint_by_day, submitAppoint } from "@/api/meeting_gante";
+import { getAppoint_by_day, get_roomset, submitAppoint } from "@/api/meeting_gante";
 import { getUserMe } from "@/api/user";
 import { useUserStore } from "@/stores/user";
 import Message from "@/utils/message";
-import Gante2 from "@/views/chart/gante2.vue";
-import table1 from "@/views/chart/table1.vue";
-import table2 from "@/views/chart/table2.vue";
+import Gante from "@/views/chart/gante_equip.vue";
 import timeset from "@/views/room/time.vue";
-import tabletest from "@/views/tabulation/tabletest.vue";
+
+let rooms = [];
 
 export default {
-  components: { tabletest, table2, table1, timeset, Gante2 },
-
-  async mounted() {
-    const appoint = await getAppoint_by_day("2023-12-20", "SUBMITTED");
-    //console.log(appoint);
-  },
+  components: { timeset, Gante },
 
   data() {
     return {
