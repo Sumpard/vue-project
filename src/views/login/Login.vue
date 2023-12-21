@@ -48,7 +48,10 @@
           :rules="[(val: string | any[]) => val?.length > 0 || '请输入验证码']"
           dense
         ></q-input>
-        <img :src="verifyCodeImage" alt="验证码" class="code-img" @click="update_img" />
+        <div class="verify-wrapper">
+          <img :src="verifyCodeImage" alt="验证码" class="code-img" />
+          <el-text class="text" type="info" @click="update_img">看不清楚？换一张</el-text>
+        </div>
       </div>
       <div>
         <q-btn label="登录" type="submit" color="primary" />
@@ -164,5 +167,23 @@ getcodeimg();
   width: 120px;
   height: auto;
   margin-left: 10px;
+}
+
+.text {
+  font-size: 11px;
+  position: absolute;
+  top: 35px;
+  bottom: 0;
+  left: 10%;
+}
+
+.text:hover {
+  cursor: pointer;
+  color: #1890ff;
+  transition: color 0.3s;
+}
+
+.verify-wrapper {
+  position: relative;
 }
 </style>
