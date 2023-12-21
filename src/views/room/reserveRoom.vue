@@ -1,13 +1,15 @@
 <template>
   <div class="chart-container">
-    <el-form-item label="日期">
-      <el-date-picker
-        v-model="time_form.time_select"
-        type="date"
-        placeholder="选择日期"
-        :disabled-date="disabledDate"
-      ></el-date-picker>
-    </el-form-item>
+    <div>
+      <el-form-item label="日期">
+        <el-date-picker
+          v-model="time_form.time_select"
+          type="date"
+          placeholder="选择日期"
+          :disabled-date="disabledDate"
+        ></el-date-picker>
+      </el-form-item>
+    </div>
     <div class="chart">
       <Gante2 :timett="time_form.time_select" />
     </div>
@@ -19,16 +21,16 @@
   <div>
     <h5>会议室预约</h5>
     <el-form :model="bookingForm" label-width="120px">
-      <el-form-item label="会议室">
-        <!-- <el-select v-model="bookingForm.room" placeholder="选择会议室">
-          <el-option label="会议室1" value="room1"></el-option>
-          <el-option label="会议室2" value="room2"></el-option>
-          <el-option label="会议室3" value="room3"></el-option>
-        </el-select> -->
-        <el-select v-model="bookingForm.room">
-          <el-option v-for="room in rooms" :value="room.available_type_name + room.available_id"> </el-option>
-        </el-select>
-      </el-form-item>
+      <div class="flex">
+        <el-form-item label="会议室">
+          <el-select v-model="bookingForm.room" placeholder="选择会议室">
+            <el-option v-for="room in rooms" :value="room.available_type_name + room.available_id"> </el-option>
+          </el-select>
+        </el-form-item>
+        <el-button size="small" class="text-bu" type="primary" :icon="search" @click="dialog_switch = true"
+          >详细信息</el-button
+        >
+      </div>
       <el-form-item label="日期">
         <el-date-picker v-model="bookingForm.date" type="date" placeholder="选择日期"></el-date-picker>
       </el-form-item>
@@ -49,14 +51,33 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="submitBooking">提交预约</el-button>
-        <el-button type="primary" @click="resetForm">重置</el-button>
+        <el-button @click="resetForm">重置</el-button>
       </el-form-item>
     </el-form>
+  </div>
+
+  <div>
+    <el-drawer v-model="dialog_switch" title="I am the title" :with-header="false">
+      <span>健雄书院会议室</span>
+      <div>
+        <el-tabs v-model="activeName" type="card" class="demo-tabs" @tab-click="handleClick">
+          <el-tab-pane v-for="room in rooms" :key="room.available_id" :label="room.available_name">
+            <p>{{ "会议室名称：" + room.available_name }}</p>
+            <p>{{ "会议室当前状态:" + room.available_status }}</p>
+            <p>{{ "会议室信息:" + room.available_description }}</p>
+            <p>{{ "图片:" + room.available_image }}</p>
+          </el-tab-pane>
+        </el-tabs>
+      </div>
+    </el-drawer>
   </div>
 </template>
 
 <script lang="ts">
-import { getAppoint_by_day, get_roomset, submitAppoint } from "@/api/meeting_gante";
+import { Delete, Edit, Search, Share, Upload } from "@element-plus/icons-vue";
+import type { TabsPaneContext } from "element-plus";
+
+import { getAppoint_by_day, get_all, get_roomset, submitAppoint, update_img } from "@/api/meeting_gante";
 import { getUserMe } from "@/api/user";
 import { useUserStore } from "@/stores/user";
 import Message from "@/utils/message";
@@ -75,12 +96,17 @@ interface room {
   available_type_name: string;
 }
 
+const activeName = ref("first");
+const dialog_switch = ref(false);
+
 export default {
   components: { tabletest, table2, table1, timeset, Gante2 },
 
   async mounted() {
-    const appoint = await getAppoint_by_day("2023-12-20", "SUBMITTED");
-    //console.log(appoint);
+    //const appoint = await getAppoint_by_day("2023-12-20", "SUBMITTED");
+    const updateImg = await update_img(1, "123");
+    const all = await get_all();
+    console.log(updateImg, all);
     this.room_template();
   },
 
@@ -97,8 +123,11 @@ export default {
       time_form: {
         time_select: "",
       },
-
+      search: Search,
       rooms,
+      dialog_switch,
+      activeName: "First",
+      pos: "top",
       disabledDate(time: { getTime: () => number }) {
         //return time.getTime() > Date.now();
         const currentDate = new Date();
@@ -213,6 +242,10 @@ export default {
       const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}`;
       return formattedDateTime;
     },
+
+    handleClick(tab: TabsPaneContext, event: Event) {
+      console.log(tab, event);
+    },
   },
 };
 </script>
@@ -234,5 +267,17 @@ export default {
   background-color: #ffffff;
   margin-bottom: 40px;
   margin-top: 40px;
+}
+
+.text-bu {
+  margin-top: 3px;
+  margin-left: 10px;
+}
+
+.demo-tabs > .el-tabs__content {
+  padding: 10px;
+  /* color: #6b778c; */
+  font-size: 24px;
+  font-weight: 600;
 }
 </style>

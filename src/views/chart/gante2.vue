@@ -47,6 +47,10 @@ type M_Room = {
 HighchartsGantt(Highcharts);
 //HighchartsExporting(Highcharts);
 HighchartsSand(Highcharts);
+//Highcharts.AST.allowedAttributes.push("@click");
+/* Highcharts.setOptions({
+  bypassHTMLFiltering: true 
+}) */
 
 var timestamp: number;
 var today = new Date();
@@ -66,6 +70,7 @@ export default {
   },
 
   setup() {
+    Highcharts.AST.allowedAttributes.push("@click");
     const dialogVisible = ref(false);
     const roomid = ref("");
     const rentedToData = ref("");
@@ -190,91 +195,94 @@ export default {
   },
 
   mounted() {
-    this.get_room("会议室");
-    //setup instance
     const instance = getCurrentInstance()!;
     const { dialogVisible, handleClose, openDialog } = instance.proxy! as unknown as {
       dialogVisible: any;
       handleClose: () => void;
       openDialog: (arg0: string, arg1: string, arg2: string, arg3: string) => void;
     };
+    this.get_room("会议室").then(() => {
+      //setup instance
 
-    today.setHours(0, 0, 0, 0);
+      today.setHours(0, 0, 0, 0);
 
-    const today_ = today.getTime();
-    //meeting get
-    const timeformat = this.formatTimestamp(today_);
+      const today_ = today.getTime();
+      //meeting get
+      const timeformat = this.formatTimestamp(today_);
 
-    this.get_today_meeting(timeformat, "SUBMITTED").then(() => {
-      series = meetingrooms.map(function (meetingroom, i) {
-        const data = meetingroom.deals.map(function (deal: { rentedTo: any; from: any; to: any }) {
+      this.get_today_meeting(timeformat, "SUBMITTED").then(() => {
+        series = meetingrooms.map(function (meetingroom, i) {
+          const data = meetingroom.deals.map(function (deal: { rentedTo: any; from: any; to: any }) {
+            return {
+              id: "会议室" + (i + 1),
+              rentedTo: deal.rentedTo,
+              start: deal.from,
+              end: deal.to,
+              y: i,
+            };
+          });
+          //console.log("data:", data, meetingroom, meetingroom.model, meetingroom.deals[meetingroom.current]);
           return {
-            id: "会议室" + (i + 1),
-            rentedTo: deal.rentedTo,
-            start: deal.from,
-            end: deal.to,
-            y: i,
+            name: meetingroom.model,
+            data: data,
+            current: meetingroom.deals[meetingroom.current],
           };
         });
-        //console.log("data:", data, meetingroom, meetingroom.model, meetingroom.deals[meetingroom.current]);
-        return {
-          name: meetingroom.model,
-          data: data,
-          current: meetingroom.deals[meetingroom.current],
-        };
-      });
 
-      Highcharts.ganttChart(this.$refs.container, {
-        series: series,
-        title: {
-          text: "会议室预约",
-        },
-        //credits
-        credits: {
-          //enabled: false
-          text: "吴健雄学院",
-          href: "",
-        },
-        tooltip: {
-          followPointer: true,
-          //这边从00：00⏲
-          pointFormat:
-            "<span>借用者: {point.rentedTo}</span><br/>" +
-            "<span>开始时间: {point.start:%H: %M}</span><br/>" +
-            "<span>结束时间: {point.end:%H: %M}</span>",
-        },
-        xAxis: {
-          currentDateIndicator: false,
-          min: today_ + 20 * hour,
-          max: today_ + 30 * hour,
-        },
-        yAxis: {
-          type: "category",
-          grid: {
-            columns: [
-              {
-                title: {
-                  text: "会议室",
-                },
-                categories: map(series, function (s: { name: any }) {
-                  return s.name;
-                }),
-              },
-            ],
+        Highcharts.ganttChart(this.$refs.container, {
+          series: series,
+          title: {
+            text: "会议室预约",
           },
-        },
-        plotOptions: {
-          series: {
-            point: {
-              events: {
-                click: (event: { point: any }) => {
-                  var point = event.point;
-                  openDialog(point.id, point.rentedTo, point.start, point.end);
+          //credits
+          credits: {
+            //enabled: false
+            text: "吴健雄学院",
+            href: "",
+          },
+          tooltip: {
+            followPointer: true,
+            //这边从00：00⏲
+            pointFormat:
+              "<span>借用者: {point.rentedTo}</span><br/>" +
+              "<span>开始时间: {point.start:%H: %M}</span><br/>" +
+              "<span>结束时间: {point.end:%H: %M}</span>",
+          },
+          xAxis: {
+            currentDateIndicator: false,
+            min: today_ + 20 * hour,
+            max: today_ + 30 * hour,
+          },
+          yAxis: {
+            type: "category",
+            grid: {
+              columns: [
+                {
+                  title: {
+                    text: "会议室",
+                  },
+                  categories: map(series, (s: { name: any }) => {
+                    //https://www.baidu.com/
+                    const link = '<a href="javascript:console.log("1111")" ' + ">(详细信息)</a>";
+                    return s.name;
+                  }),
+                },
+              ],
+            },
+          },
+          plotOptions: {
+            series: {
+              point: {
+                events: {
+                  click: (event: { point: any }) => {
+                    var point = event.point;
+                    openDialog(point.id, point.rentedTo, point.start, point.end);
+                  },
                 },
               },
             },
           },
-        },
+        });
       });
     });
   },
@@ -312,7 +320,7 @@ export default {
     async get_room(room: string) {
       try {
         const roomdata = (await get_roomset(room)).data;
-        console.log(roomdata);
+        //console.log(roomdata);
         const len = roomdata.length;
         //console.log(len);
         /*  meetingrooms = new Array(len).fill(0).map((_, i) => ({
@@ -341,6 +349,12 @@ export default {
       const formattedDateTime = `${year}-${month}-${day}`;
       return formattedDateTime.toString();
     },
+
+    handleLinkClick() {
+      // 处理点击事件
+      alert("你点击了链接!");
+      console.log("Link clicked!");
+    },
   },
 };
 </script>
@@ -360,6 +374,12 @@ export default {
 
 .dialog-footer button:first-child {
   margin-right: 10px;
+}
+
+.text:hover {
+  cursor: pointer;
+  color: #1890ff;
+  transition: color 0.3s;
 }
 </style>
 

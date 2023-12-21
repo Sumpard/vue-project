@@ -99,13 +99,14 @@ async function onSubmit() {
   try {
     Message.info("提交登录信息");
     // 获取token
-    const Ans = await getanswer();
+    //const Ans = await getanswer();
     //console.log(Ans);
     const Ans_check = await verifyanswer(form.verifycode);
     //console.log(Ans_check);
     if (Ans_check.code != "200") {
       Message.error(" 验证码错误");
       //console.log("验证码错误", Ans_check);
+      update_img();
     } else {
       //console.log("登录信息： ", form.username, form.password, form.verifycode);
       const { data } = await login(form.username, form.password, form.verifycode);
