@@ -96,6 +96,10 @@ const routes: RouteRecordRaw[] = [
         component: () => import("@/views/login/Register.vue"),
         meta: { keepalive: false },
       },
+      {
+        path:"/imgUpload",
+         component:()=> import("@/views/components/ImgUpload.vue")
+      },
     ],
   },
 ];
