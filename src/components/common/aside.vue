@@ -22,7 +22,7 @@
         </div>
       </template>
       <el-menu-item index="room" @click="$router.push('/reserveroom')"><el-icon><span class="iconfont icon-huiyishi"></span></el-icon>会议室预约</el-menu-item>
-      <el-menu-item index="seat"><el-icon><span class="iconfont icon-zuowei"></span></el-icon>座位预约</el-menu-item>
+      <el-menu-item index="seat" @click="$router.push('/imgUpload')"><el-icon><span class="iconfont icon-zuowei"></span></el-icon>座位预约</el-menu-item>
       <el-menu-item index="equipment"><el-icon><i-ep-Camera /></el-icon>器材预约</el-menu-item>
       <el-menu-item index="record" @click="$router.push('/reservation')"><el-icon><i-ep-Collection /></el-icon>预约记录</el-menu-item>
     </el-sub-menu>
