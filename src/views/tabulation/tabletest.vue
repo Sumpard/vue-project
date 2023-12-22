@@ -34,37 +34,35 @@
     </table>
   </div>
 </template>
-  
-<script setup lang="ts">
-import _ from "lodash";
-import MyScheduleCell from "./tablecell.vue";
-import { MeetingSession } from "@/data/meeting";
-import axios from 'axios';
 
+<script setup lang="ts">
+import axios from "axios";
+import _ from "lodash-es";
+
+import { MeetingSession } from "@/data/meeting";
+
+import MyScheduleCell from "./tablecell.vue";
 
 async function fetchMeetings() {
   try {
-    const response = await axios.get('');
+    const response = await axios.get("");
     const meetings = response.data;
 
-    console.log('会议信息:', meetings);
+    console.log("会议信息:", meetings);
   } catch (error) {
-    console.error('获取会议信息失败:', error);
+    console.error("获取会议信息失败:", error);
   }
 }
 
 const showTypeWeek = ref(false);
 const showType = computed(() => (showTypeWeek ? "semester" : "week"));
-const meetings =
-  new MeetingSession(
+const meetings = new MeetingSession(
   /* start_time */ 1701397565000,
   /* end_time */ 1701401165000,
   /* pname */ "JZX",
   /* room */ 101,
   /* theme */ "AgendaTopic"
-  );
-
-
+);
 
 const rows = 28; // 行数
 const columns = 7; // 列数
@@ -77,15 +75,13 @@ for (let i = 0; i < rows; i++) {
     row.push(0); // 将每个元素设置为0
   }
   tDmap.push(row);
-};
+}
 
 const formatTime = (index: number) => {
   const hours = Math.floor(index / 4) + 12;
   const minutes = (index % 4) * 15;
-  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+  return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
 };
-
-
 
 const getShow = (row: number, col: number) => {
   return meetings;
@@ -93,11 +89,9 @@ const getShow = (row: number, col: number) => {
 
 const IsShowEmpty = (row: number, col: number) => {
   return tDmap[row][col];
-}
-
-
+};
 </script>
-  
+
 <style lang="scss">
 .title-block {
   background-color: #edf0e5;
@@ -153,7 +147,6 @@ const IsShowEmpty = (row: number, col: number) => {
 }
 
 .pure-table {
-
   td,
   th {
     font-size: inherit;
@@ -168,7 +161,6 @@ const IsShowEmpty = (row: number, col: number) => {
 
   th {
     width: 3em;
-
   }
 
   tr {
