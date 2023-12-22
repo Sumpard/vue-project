@@ -1,15 +1,9 @@
 import { RouteRecordRaw } from "vue-router";
 
-import reservation from "@/views/Useview.vue";
-import equipment from "@/views/equip/equipment.vue";
-import homeindex from "@/views/home/homeindex.vue";
-import reserveroom from "@/views/room/reserveRoom.vue";
-
 const routes: RouteRecordRaw[] = [
   {
     path: "/",
     name: "index",
-    redirect: "/auth/login",
     component: () => import("@/layouts/manage.vue"),
     meta: { keepalive: false },
     children: [
@@ -21,15 +15,15 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: "/reservation",
-        component: reservation,
+        component: () => import("@/views/Useview.vue"),
       },
       {
         path: "/reserveroom",
-        component: reserveroom,
+        component: () => import("@/views/room/reserveRoom.vue"),
       },
       {
         path: "/equipment",
-        component: equipment,
+        component: () => import("@/views/equip/equipment.vue"),
       },
       {
         path: "/homepage",
@@ -38,7 +32,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: "/homeindex",
-        component: homeindex,
+        component: () => import("@/views/home/homeindex.vue"),
       },
       {
         path: "/contact",
