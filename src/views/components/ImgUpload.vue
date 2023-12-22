@@ -124,7 +124,7 @@ function handleRemove(file) {
   console.log("fileList length: " + fileList.value.length+'\n');
 }
 
-const uploadUrl =  "http://120.46.203.58:8080" + "/http://localhost:5173/question/upload";
+const uploadUrl = "http://120.46.203.58:8080/question/upload";
 let response; // 在外部定义 response
 
 async function onBtn() {//点击按钮开始上传
