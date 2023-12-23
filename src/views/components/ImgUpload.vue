@@ -3,6 +3,7 @@
     <el-form-item label="上传图片：" label-width="100">
       <el-upload
           multiple
+          :http-request="UploadImage"
           :show-file-list="true"
           list-type="picture-card"
           :limit="limit"
@@ -11,6 +12,7 @@
           :on-remove="handleRemove"
           :auto-upload="false"
           :on-success="onSuccess"
+          accept=".jpg,.jpeg,.png"
           ><el-icon><Plus /></el-icon>
       </el-upload>
     </el-form-item>
@@ -42,7 +44,7 @@
       </el-dialog>
       <el-form-item>
       <div class="el-upload__tip" slot="tip" v-if="isShowTip">
-          请上传
+          请上传不多于
           <template v-if="limit"><b>{{ limit }}</b></template>
           <template v-if="fileSize"> 张大小不超过 <b>{{ fileSize }}MB</b> </template>
           <template v-if="fileType"> 格式为 <b>{{ fileType.join("/") }}</b> </template>
@@ -58,13 +60,15 @@ import {ref, reactive, defineProps} from "vue";
 import axios from "axios";
 import { Plus } from '@element-plus/icons-vue';
 import { UploadProps, UploadFile, ElMessage } from 'element-plus';
-import Response from "./contact/response.vue";
+import { VueCookies } from 'vue-cookies';
+import { inject } from 'vue';
+
 
 
 const props = defineProps({
   limit: {
     type: Number,
-    default: 1,
+    default: 3,
   },
   fileSize: {
     type: Number,
@@ -124,8 +128,22 @@ function handleRemove(file) {
   console.log("fileList length: " + fileList.value.length+'\n');
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const uploadUrl = "http://120.46.203.58:8080/question/upload";
-let response; // 在外部定义 response
+const $cookies = inject('$cookies')!;
 
 async function onBtn() {//点击按钮开始上传
 
@@ -160,30 +178,45 @@ async function onBtn() {//点击按钮开始上传
 
   //开始上传
   console.log("开始上传图片");
-  let dataForm = new FormData();//新建formdata
+  const dataForm = new FormData();//新建formdata
   console.log("创建formData");
-  fileList.value.forEach((it,index)=>{
-        dataForm.append('filename',it.file)
-    })
+  fileList.value.forEach(file => {
+    dataForm.append(`image`, file);
+    console.log("图片信息",file);
+    console.log("formdata value:",dataForm.get(`image`));
+  })
+
+
+    const token = $cookies.get("token"); // 使用 vue-cookies 获取 token
+    if (!token) {
+        console.error("Token不存在,请登录获取");
+        return;
+    }
+    console.log("token: "+ token);
+
+    console.log('Request data:', dataForm);
+
     await axios({
+        timeout: 10000,
         method: 'POST',
         url: uploadUrl,
         data: dataForm,
 //设置请求参数的规则
         headers: {
-            "Content-Type": "multipart/form-data"
+            "Content-Type": "multipart/form-data",
+            "token": `${token}`,
         }
     }).then(res => {
-    response = res; // 将 response 赋值
-    console.log(response.data);
-  }).catch(function(error){console.log(error);});
+    console.log(res.data);
+    console.log('Full response:', res);
+    if (res.status === 200) {
+      ElMessage({
+        message: '图片上传成功',
+        type: 'success',
+      });
+    }
+  }).catch(function(error){console.log("Error:",error);});
 
-  if (response.data.code === 200) {
-    ElMessage({
-      message: '图片上传成功',
-      type: 'success',
-    });
-  }
 }
 
 function onSuccess(){
