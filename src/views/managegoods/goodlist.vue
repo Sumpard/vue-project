@@ -57,7 +57,7 @@
           <el-button type="success" link size="small" @click="saveeditingdescription(row,ruleFormRef,form)" v-if="row.editingdescription">保存描述</el-button>
           <el-button type="primary" link size="small" @click="starteditingstatus(row)" v-if="!row.editingstatus">修改状态</el-button>    
           <el-button type="success" link size="small" @click="saveeditingstatus(row)" v-if="row.editingstatus">保存状态</el-button>
-          
+          <el-button @click="deleteTableData(row)" link :icon="Delete" type="primary"></el-button>
         </template>
         </el-table-column>       
       </el-table>
@@ -66,13 +66,15 @@
   </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
-import { getallgoods,editdescription,editstatus } from "@/api/goods"; 
+import { ref, onMounted, computed , getCurrentInstance } from 'vue';
+import { getallgoods,editdescription,editstatus,deletegood } from "@/api/goods"; 
 import type { FormInstance, FormRules } from 'element-plus'
 import addgoods from '@/views/managegoods/add.vue'
+import { Delete, Edit, Search, Share, Upload } from '@element-plus/icons-vue'
 const ruleFormRef = ref<FormInstance>()
 const tableData= ref([]);
 const search = ref('')
+
 const filterTableData = computed(() =>
   tableData.value.filter(
     (data)=>
@@ -146,6 +148,32 @@ const saveeditingdescription = async (row:any,formEl: FormInstance | undefined ,
     }
   });
 };
+
+const deleteTableData = async(row:any) =>{
+
+  try {
+
+     console.log(row.available_id);
+     const result3= await deletegood(row.available_id)    
+     console.log(result3)
+     console.log(result3.msg)
+     if(result3.code !==200)
+     {
+        
+        ElMessage.error('删除失败')
+         return
+        }  
+     ElMessage({ message: '删除成功',type: 'success',})
+    const index = tableData.value.indexOf(row);
+    if (index !== -1) {
+    tableData.value.splice(index, 1);
+  }
+  } catch (error) {
+    console.error('Failed to save editing:', error);
+  }
+  
+}
+
 
 
 const saveeditingstatus = async (row:any) => {

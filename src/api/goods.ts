@@ -52,6 +52,12 @@ export async function getallgoods() {
     
     return (await api.putForm("/available/update-status",{"available-id":available_id,status})).data;
   }
+  export async function deletegood(id:int) {
+    
+    return (await api.delete("/available/delete",{params:{id}})).data;
+  }
+ 
+
   
   export async function adduser(
     avatar: string,

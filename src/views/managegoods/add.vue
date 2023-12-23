@@ -113,9 +113,7 @@ const rules = reactive<any>({
     status: [
 		{ required: true, message: '请选择状态', trigger: 'blur' },
 	],
-    image:[
-		{ required: true, message: '请上传图片', trigger: 'blur' },
-	],
+    
 
 	
 })
@@ -142,6 +140,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
              }  
              ElMessage({ message: '增加物品成功.',type: 'success',})
              dialogFormVisible.value = false
+             
+             
        } catch (error) {
          console.error('Error: ', error);
        }
