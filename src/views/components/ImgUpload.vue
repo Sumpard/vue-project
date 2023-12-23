@@ -181,9 +181,9 @@ async function onBtn() {//点击按钮开始上传
   const dataForm = new FormData();//新建formdata
   console.log("创建formData");
   fileList.value.forEach(file => {
-    dataForm.append(`image`, file);
+    dataForm.append("files", file);
     console.log("图片信息",file);
-    console.log("formdata value:",dataForm.get(`image`));
+    console.log("formdata value:",dataForm.get("files"));
   })
 
 
