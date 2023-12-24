@@ -9,8 +9,6 @@ declare module 'vue' {
   export interface GlobalComponents {
     AppAside: typeof import('./components/common/AppAside.vue')['default']
     AppHeader: typeof import('./components/common/AppHeader.vue')['default']
-    AppToolBar: typeof import('./components/common/AppToolBar.vue')['default']
-    DetailView: typeof import('./components/common/DetailView.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElButton: typeof import('element-plus/es')['ElButton']
@@ -59,10 +57,7 @@ declare module 'vue' {
     IEpMessage: typeof import('~icons/ep/message')['default']
     IEpPhone: typeof import('~icons/ep/phone')['default']
     IEpPostcard: typeof import('~icons/ep/postcard')['default']
-    InputDateTime: typeof import('./components/common/InputDateTime.vue')['default']
-    MemberSelect: typeof import('./components/common/MemberSelect.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    UIConfig: typeof import('./components/common/UIConfig.vue')['default']
   }
 }

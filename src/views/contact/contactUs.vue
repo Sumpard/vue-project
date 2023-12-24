@@ -16,12 +16,7 @@
 </template>
 
 <script lang="ts">
-import Echart1 from "@/views/chart/echart1.vue";
-import timeset from "@/views/room/time.vue";
-
 export default {
-  components: { Echart1, timeset },
-
   data() {
     return {
       bookingForm: {
