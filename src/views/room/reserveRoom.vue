@@ -100,12 +100,6 @@ export default {
   components: { Gante2 },
 
   async mounted() {
-    //const appoint = await getAppoint_by_day("2023-12-20", "SUBMITTED");
-    /* const imgdata = new FormData();
-    const fileInput = document.getElementById("file-input"); // 文件输入框
-    const file = fileInput.files[0]; // 获取文件对象
-    imgdata.append("image", file);
-    const updateImg = await update_img(1, imgdata); */
     const all = await get_all();
     console.log(all);
     this.room_template();
@@ -161,9 +155,9 @@ export default {
       const submit = formatTimestamp(temp.getTime());
       const des = this.bookingForm.theme;
       const temp_str = this.bookingForm.room;
-      const avail_id = parseInt(temp_str[temp_str.length - 1], 10);
+      const avail_id = parseInt(temp_str[0], 10) - 1;
       const avail_type_name = "会议室";
-      const avail_name = temp_str[temp_str.length - 1] + "号" + avail_type_name;
+      const avail_name = temp_str;
       const user = useUserStore().user!;
       const user_id = user.user_id;
       const user_name = user.user_name;
