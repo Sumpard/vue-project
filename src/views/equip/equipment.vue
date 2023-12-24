@@ -18,31 +18,34 @@
     </div> -->
   <div>
     <h5>器材预约</h5>
-    <el-form :model="bookingForm" label-width="120px">
-      <el-form-item label="器材">
-        <el-select v-model="bookingForm.room" placeholder="选择会议室">
-          <el-option label="会议室1" value="room1"></el-option>
-          <el-option label="会议室2" value="room2"></el-option>
-          <el-option label="会议室3" value="room3"></el-option>
-        </el-select>
-      </el-form-item>
+    <el-form :model="bookingForm_equip" label-width="120px">
+      <div class="flex">
+        <el-form-item label="器材">
+          <el-select v-model="bookingForm_equip.equip" placeholder="选择器材">
+            <el-option v-for="equip in equips" :value="equip.available_name"> </el-option>
+          </el-select>
+        </el-form-item>
+        <el-button size="small" class="text-bu" type="primary" :icon="search" @click="dialog_switch = true"
+          >详细信息</el-button
+        >
+      </div>
       <el-form-item label="日期">
-        <el-date-picker v-model="bookingForm.date" type="date" placeholder="选择日期"></el-date-picker>
+        <el-date-picker v-model="bookingForm_equip.date" type="date" placeholder="选择日期"></el-date-picker>
       </el-form-item>
       <el-form-item label="时间">
-        <!-- <el-time-picker v-model="bookingForm.time" placeholder="选择时间段"></el-time-picker> -->
+        <!-- <el-time-picker v-model="bookingForm_equip.time" placeholder="选择时间段"></el-time-picker> -->
         <div>
           <timeset ref="timeset" />
         </div>
       </el-form-item>
       <el-form-item label="手机号">
-        <el-input v-model="bookingForm.booker" placeholder="请输入手机号"></el-input>
+        <el-input v-model="bookingForm_equip.booker" placeholder="请输入手机号"></el-input>
       </el-form-item>
-      <el-form-item label="会议主题">
-        <el-input v-model="bookingForm.theme" placeholder="请输入会议主题"></el-input>
+      <el-form-item label="用途">
+        <el-input v-model="bookingForm_equip.use" placeholder="请输入会议主题"></el-input>
       </el-form-item>
       <el-form-item label="备注">
-        <el-input type="textarea" v-model="bookingForm.remark" placeholder="请输入备注"></el-input>
+        <el-input type="textarea" v-model="bookingForm_equip.remark" placeholder="请输入备注"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="submitBooking">提交预约</el-button>
@@ -50,33 +53,63 @@
       </el-form-item>
     </el-form>
   </div>
+
+  <div>
+    <el-drawer v-model="dialog_switch" title="I am the title" :with-header="false">
+      <span>健雄书院器材</span>
+      <div>
+        <el-tabs v-model="activeName" type="card" class="demo-tabs" @tab-click="handleClick">
+          <el-tab-pane v-for="equip in equips" :key="equip.available_id" :label="equip.available_name">
+            <p>{{ "器材名称：" + equip.available_name }}</p>
+            <p>{{ "器材当前状态:" + equip.available_status }}</p>
+            <p>{{ "器材信息:" + equip.available_description }}</p>
+            <p>{{ "图片:" + equip.available_image }}</p>
+          </el-tab-pane>
+        </el-tabs>
+      </div>
+    </el-drawer>
+  </div>
 </template>
 
 <script lang="ts">
-import { getAppoint_by_day, get_roomset, submitAppoint } from "@/api/meeting_gante";
+import { Search } from "@element-plus/icons-vue";
+import type { TabsPaneContext } from "element-plus";
+
+import { avail, getAppoint_by_day, get_avail_set, submitAppoint } from "@/api/meeting_gante";
+import { formatTimestamp, getTimeFormat } from "@/api/timeformat";
 import { getUserMe } from "@/api/user";
 import { useUserStore } from "@/stores/user";
 import Message from "@/utils/message";
 import Gante from "@/views/chart/gante_equip.vue";
 import timeset from "@/views/room/time.vue";
 
-let rooms = [];
+let equips: avail[] = [];
+const dialog_switch = ref(false);
+const activeName = ref("first");
 
 export default {
   components: { timeset, Gante },
 
+  async mounted() {
+    this.equip_template();
+  },
+
   data() {
     return {
-      bookingForm: {
-        room: "",
+      bookingForm_equip: {
+        equip: "",
         date: "",
         booker: "",
-        theme: "",
+        use: "",
         remark: "",
       },
       time_form: {
         time_select: "",
       },
+      equips,
+      search: Search,
+      dialog_switch,
+      activeName,
       disabledDate(time: { getTime: () => number }) {
         //return time.getTime() > Date.now();
         const currentDate = new Date();
@@ -90,10 +123,10 @@ export default {
   methods: {
     async submitBooking() {
       if (
-        this.bookingForm.room === "" ||
-        this.bookingForm.date === "" ||
-        this.bookingForm.booker === "" ||
-        this.bookingForm.theme === "" ||
+        this.bookingForm_equip.equip === "" ||
+        this.bookingForm_equip.date === "" ||
+        this.bookingForm_equip.booker === "" ||
+        this.bookingForm_equip.use === "" ||
         this.$refs.timeset.startTime === "" ||
         this.$refs.timeset.endTime === ""
       ) {
@@ -102,20 +135,20 @@ export default {
       }
 
       Message.info("正在提交预约信息");
-      const date_ = new Date(this.bookingForm.date);
-      const start_ = this.formatTimestamp(this.getTimeFormat(this.$refs.timeset.startTime, date_));
-      const end_ = this.formatTimestamp(this.getTimeFormat(this.$refs.timeset.endTime, date_));
+      const date_ = new Date(this.bookingForm_equip.date);
+      const start_ = formatTimestamp(getTimeFormat(this.$refs.timeset.startTime, date_));
+      const end_ = formatTimestamp(getTimeFormat(this.$refs.timeset.endTime, date_));
       const temp = new Date();
-      const submit = this.formatTimestamp(temp.getTime());
-      const des = this.bookingForm.theme;
-      const temp_str = this.bookingForm.room;
+      const submit = formatTimestamp(temp.getTime());
+      const des = this.bookingForm_equip.use;
+      const temp_str = this.bookingForm_equip.equip;
       const avail_id = parseInt(temp_str[temp_str.length - 1], 10);
-      const avail_type_name = "会议室";
-      const avail_name = temp_str[temp_str.length - 1] + "号" + avail_type_name;
+      const avail_type_name = "equipment";
+      const avail_name = temp_str[temp_str.length - 1];
       const user = useUserStore().user!;
       const user_id = user.user_id;
       const user_name = user.user_name;
-      const phone = this.bookingForm.booker;
+      const phone = this.bookingForm_equip.booker;
       const submit_info = await submitAppoint(
         start_,
         end_,
@@ -144,12 +177,22 @@ export default {
       );
     },
 
+    async equip_template() {
+      try {
+        const roomdata = (await get_avail_set("equipment")).data;
+        this.equips = roomdata;
+        //console.log("room:",roomdata);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
     resetForm() {
-      this.bookingForm = {
-        room: "",
+      this.bookingForm_equip = {
+        equip: "",
         date: "",
         booker: "",
-        theme: "",
+        use: "",
         remark: "",
       };
       this.time_form = {
@@ -162,24 +205,8 @@ export default {
     getdate() {
       return this.time_form.time_select;
     },
-
-    getTimeFormat(time: string, date: Date) {
-      const [hours, minutes] = time.split(":");
-      date.setHours(parseInt(hours, 10));
-      date.setMinutes(parseInt(minutes, 10));
-      return date.getTime();
-    },
-
-    formatTimestamp(timestamp: number) {
-      const date = new Date(timestamp);
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const day = String(date.getDate()).padStart(2, "0");
-      const hours = String(date.getHours()).padStart(2, "0");
-      const minutes = String(date.getMinutes()).padStart(2, "0");
-
-      const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}`;
-      return formattedDateTime;
+    handleClick(tab: TabsPaneContext, event: Event) {
+      //console.log(tab, event);
     },
   },
 };
