@@ -4,12 +4,12 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/",
     name: "index",
-    component: () => import("@/layouts/manage.vue"),
+    component: () => import("@/layouts/AppLayout.vue"),
     meta: { requireAuth: true },
     children: [
       {
         path: "/reservation",
-        component: () => import("@/views/Useview.vue"),
+        component: () => import("@/views/list/record.vue"),
       },
       {
         path: "/reserveroom",
@@ -37,8 +37,8 @@ const routes: RouteRecordRaw[] = [
         component: () => import("@/views/contact/response.vue"),
       },
       {
-        path: "/add",
-        component: () => import("@/views/managegoods/add.vue"),
+        path: "/goodlist",
+        component: () => import("@/views/managegoods/goodlist.vue"),
       },
       {
         path: "/userlist",

@@ -14,10 +14,6 @@
       <Gante2 :timett="time_form.time_select" />
     </div>
   </div>
-
-  <!-- <div>
-    <timeset />
-  </div> -->
   <div>
     <h5>会议室预约</h5>
     <el-form :model="bookingForm" label-width="120px">
@@ -42,7 +38,7 @@
       <el-form-item label="时间">
         <!-- <el-time-picker v-model="bookingForm.time" placeholder="选择时间段"></el-time-picker> -->
         <div>
-          <timeset ref="timeset" />
+          <time-set ref="timeset" />
         </div>
       </el-form-item>
       <el-form-item label="手机号">
@@ -87,7 +83,6 @@ import { formatTimestamp, getTimeFormat } from "@/api/timeformat";
 import { useUserStore } from "@/stores/user";
 import Message from "@/utils/message";
 import Gante2 from "@/views/chart/gante2.vue";
-import timeset from "@/views/room/time.vue";
 
 /* interface room {
   available_description: string;
@@ -102,7 +97,7 @@ const activeName = ref("first");
 const dialog_switch = ref(false);
 
 export default {
-  components: { timeset, Gante2 },
+  components: { Gante2 },
 
   async mounted() {
     const all = await get_all();
