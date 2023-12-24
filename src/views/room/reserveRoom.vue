@@ -1,7 +1,7 @@
 <template>
   <div class="chart-container">
     <div>
-      <el-form-item label="日期">
+      <el-form-item label="日期" size="small">
         <el-date-picker
           v-model="time_form.time_select"
           type="date"
@@ -24,7 +24,7 @@
       <div class="flex">
         <el-form-item label="会议室">
           <el-select v-model="bookingForm.room" placeholder="选择会议室">
-            <el-option v-for="room in rooms" :value="room.available_type_name + room.available_id"> </el-option>
+            <el-option v-for="room in rooms" :value="room.available_name"> </el-option>
           </el-select>
         </el-form-item>
         <el-button size="small" class="text-bu" type="primary" :icon="search" @click="dialog_switch = true"
@@ -32,7 +32,12 @@
         >
       </div>
       <el-form-item label="日期">
-        <el-date-picker v-model="bookingForm.date" type="date" placeholder="选择日期"></el-date-picker>
+        <el-date-picker
+          v-model="bookingForm.date"
+          type="date"
+          placeholder="选择日期"
+          :disabled-date="disabledDate"
+        ></el-date-picker>
       </el-form-item>
       <el-form-item label="时间">
         <!-- <el-time-picker v-model="bookingForm.time" placeholder="选择时间段"></el-time-picker> -->
@@ -74,42 +79,45 @@
 </template>
 
 <script lang="ts">
-import { Delete, Edit, Search, Share, Upload } from "@element-plus/icons-vue";
+import { Search } from "@element-plus/icons-vue";
 import type { TabsPaneContext } from "element-plus";
 
-import { getAppoint_by_day, get_all, get_roomset, submitAppoint, update_img } from "@/api/meeting_gante";
+import { avail, get_all, get_avail_set, submitAppoint, update_img } from "@/api/meeting_gante";
+import { formatTimestamp, getTimeFormat } from "@/api/timeformat";
 import { useUserStore } from "@/stores/user";
 import Message from "@/utils/message";
 import Gante2 from "@/views/chart/gante2.vue";
-import table1 from "@/views/chart/table1.vue";
-import table2 from "@/views/chart/table2.vue";
 import timeset from "@/views/room/time.vue";
 
-interface room {
+/* interface room {
   available_description: string;
   available_id: number;
   available_image: string;
   available_name: string;
   available_status: string;
   available_type_name: string;
-}
+} */
 
 const activeName = ref("first");
 const dialog_switch = ref(false);
 
 export default {
-  components: { table2, table1, timeset, Gante2 },
+  components: { timeset, Gante2 },
 
   async mounted() {
     //const appoint = await getAppoint_by_day("2023-12-20", "SUBMITTED");
-    const updateImg = await update_img(1, "123");
+    /* const imgdata = new FormData();
+    const fileInput = document.getElementById("file-input"); // 文件输入框
+    const file = fileInput.files[0]; // 获取文件对象
+    imgdata.append("image", file);
+    const updateImg = await update_img(1, imgdata); */
     const all = await get_all();
-    console.log(updateImg, all);
+    console.log(all);
     this.room_template();
   },
 
   data() {
-    let rooms: room[] = [];
+    let rooms: avail[] = [];
     return {
       bookingForm: {
         room: "",
@@ -152,10 +160,10 @@ export default {
 
       Message.info("正在提交预约信息");
       const date_ = new Date(this.bookingForm.date);
-      const start_ = this.formatTimestamp(this.getTimeFormat(this.$refs.timeset.startTime, date_));
-      const end_ = this.formatTimestamp(this.getTimeFormat(this.$refs.timeset.endTime, date_));
+      const start_ = formatTimestamp(getTimeFormat(this.$refs.timeset.startTime, date_));
+      const end_ = formatTimestamp(getTimeFormat(this.$refs.timeset.endTime, date_));
       const temp = new Date();
-      const submit = this.formatTimestamp(temp.getTime());
+      const submit = formatTimestamp(temp.getTime());
       const des = this.bookingForm.theme;
       const temp_str = this.bookingForm.room;
       const avail_id = parseInt(temp_str[temp_str.length - 1], 10);
@@ -195,7 +203,7 @@ export default {
 
     async room_template() {
       try {
-        const roomdata = (await get_roomset("会议室")).data;
+        const roomdata = (await get_avail_set("会议室")).data;
         this.rooms = roomdata;
         //console.log("room:",roomdata);
       } catch (error) {
@@ -222,27 +230,8 @@ export default {
       return this.time_form.time_select;
     },
 
-    getTimeFormat(time: string, date: Date) {
-      const [hours, minutes] = time.split(":");
-      date.setHours(parseInt(hours, 10));
-      date.setMinutes(parseInt(minutes, 10));
-      return date.getTime();
-    },
-
-    formatTimestamp(timestamp: number) {
-      const date = new Date(timestamp);
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const day = String(date.getDate()).padStart(2, "0");
-      const hours = String(date.getHours()).padStart(2, "0");
-      const minutes = String(date.getMinutes()).padStart(2, "0");
-
-      const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}`;
-      return formattedDateTime;
-    },
-
     handleClick(tab: TabsPaneContext, event: Event) {
-      console.log(tab, event);
+      //console.log(tab, event);
     },
   },
 };

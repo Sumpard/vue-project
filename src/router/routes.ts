@@ -44,6 +44,10 @@ const routes: RouteRecordRaw[] = [
         path: "/userlist",
         component: () => import("@/views/list/userlist.vue"),
       },
+      {
+        path: "/upload-image",
+        component: () => import("@/views/fun/UploadImage.vue"),
+      },
     ],
   },
   {
@@ -60,10 +64,6 @@ const routes: RouteRecordRaw[] = [
         path: "/auth/register",
         name: "register",
         component: () => import("@/views/login/Register.vue"),
-      },
-      {
-        path: "/imgUpload",
-        component: () => import("@/views/components/ImgUpload.vue"),
       },
     ],
   },

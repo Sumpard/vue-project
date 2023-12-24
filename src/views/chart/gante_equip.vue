@@ -1,7 +1,7 @@
 <template>
   <div>
     <div ref="container" class="scrolling-container"></div>
-    <el-dialog v-model="dialogVisible" title="会议信息" width="30%">
+    <el-dialog v-model="dialogVisible" title="预约信息" width="30%">
       <span>{{ roomid }}</span>
       <p>{{ rentedToData }}</p>
       <p>{{ starttime }}</p>
@@ -20,13 +20,16 @@ import { ElMessageBox } from "element-plus";
 import Highcharts from "highcharts";
 import HighchartsExporting from "highcharts/modules/exporting";
 import HighchartsGantt from "highcharts/modules/gantt";
+import Highchartsavocado from "highcharts/themes/avocado";
+import Highchartsgray from "highcharts/themes/gray";
 import HighchartsGridLight from "highcharts/themes/grid-light";
 import HighchartsSand from "highcharts/themes/sand-signika";
 import moment from "moment";
 import { List } from "typescript-collections";
 import { getCurrentInstance, ref } from "vue";
 
-import { Appointment, getAppoint_by_day } from "@/api/meeting_gante";
+import { Appointment, getAppoint_by_day, get_avail_set } from "@/api/meeting_gante";
+import { formatTimestamp } from "@/api/timeformat";
 
 type Deal = {
   rentedTo: string;
@@ -34,7 +37,7 @@ type Deal = {
   to: number;
 };
 
-type M_Room = {
+type M_Equip = {
   model: string;
   deals: Deal[];
   current: number;
@@ -43,18 +46,18 @@ type M_Room = {
 HighchartsGantt(Highcharts);
 //HighchartsExporting(Highcharts);
 HighchartsSand(Highcharts);
+//Highcharts.AST.allowedAttributes.push("@click");
+/* Highcharts.setOptions({
+  bypassHTMLFiltering: true 
+}) */
 
 var timestamp: number;
 var today = new Date();
 const hour = 1000 * 60 * 60;
 const map = Highcharts.map;
-const numRooms = 4;
+let numRooms = 7;
 let series: { name: string; data: any; current: any }[];
-let meetingrooms: M_Room[] = new Array(numRooms).fill(0).map((_, i) => ({
-  model: `会议室${i + 1}`,
-  current: 0,
-  deals: [],
-}));
+let equipments: M_Equip[] = [];
 //console.log(meetingrooms);
 
 export default {
@@ -83,7 +86,6 @@ export default {
     const openDialog = (data1: string, data2: string, data3: string, data4: string) => {
       const num3 = parseInt(data3, 10) - 28800000;
       const num4 = parseInt(data4, 10) - 28800000;
-      //console.log("num: ",num3,num4,num3.toString());
       roomid.value = data1;
       rentedToData.value = "借用者：" + data2;
       starttime.value = "开始时间：" + moment(num3).format("YYYY-MM-DD HH:mm");
@@ -109,13 +111,13 @@ export default {
         const today = timestamp;
         console.log("time_select changed:", newVal, today);
 
-        const timeformat = this.formatTimestamp(today);
-        this.get_today_meeting(timeformat, "SUBMITTED").then(() => {
-          console.log("watch", meetingrooms);
-          series = meetingrooms.map(function (meetingroom, i) {
-            const data = meetingroom.deals.map(function (deal: { rentedTo: any; from: any; to: any }) {
+        const timeformat = formatTimestamp(today);
+        this.get_today_equip(timeformat, "SUBMITTED").then(() => {
+          //console.log("watch", equipments);
+          series = equipments.map(function (equipment, i) {
+            const data = equipment.deals.map(function (deal: { rentedTo: any; from: any; to: any }) {
               return {
-                id: "会议室-" + (i + 1),
+                id: equipment.model,
                 rentedTo: deal.rentedTo,
                 start: deal.from,
                 end: deal.to,
@@ -124,15 +126,15 @@ export default {
             });
             //console.log("data:", data, meetingroom, meetingroom.model, meetingroom.deals[meetingroom.current]);
             return {
-              name: meetingroom.model,
+              name: equipment.model,
               data: data,
-              current: meetingroom.deals[meetingroom.current],
+              current: equipment.deals[equipment.current],
             };
           });
           Highcharts.ganttChart(this.$refs.container, {
             series: series,
             title: {
-              text: "会议室预约",
+              text: "器材预约",
             },
             //credits
             credits: {
@@ -159,15 +161,7 @@ export default {
                 columns: [
                   {
                     title: {
-                      text: "物品",
-                    },
-                    categories: map(series, function (s: { name: any }) {
-                      return s.name;
-                    }),
-                  },
-                  {
-                    title: {
-                      text: "详细信息",
+                      text: "器材",
                     },
                     categories: map(series, function (s: { name: any }) {
                       return s.name;
@@ -175,22 +169,16 @@ export default {
                   },
                 ],
               },
-              events: {
-                // 给y轴添加点击事件
-                click: function () {
-                  console.log("Y Axis clicked");
-                },
-              },
             },
             plotOptions: {
               series: {
                 point: {
                   events: {
                     click: (event: { point: any }) => {
-                      console.log("点击事件触发");
+                      //console.log("点击事件触发");
                       var point = event.point;
                       //console.log(dialogVisible.value);
-                      console.log(point.rentedTo, point.start, today, this.timett, timestamp);
+                      //console.log(point.rentedTo, point.start, today, this.timett, timestamp);
                       this.openDialog(point.id, point.rentedTo, point.start, point.end);
                     },
                   },
@@ -204,135 +192,152 @@ export default {
   },
 
   mounted() {
-    //setup instance
+    console.log("mounted");
     const instance = getCurrentInstance()!;
     const { dialogVisible, handleClose, openDialog } = instance.proxy! as unknown as {
       dialogVisible: any;
       handleClose: () => void;
       openDialog: (arg0: string, arg1: string, arg2: string, arg3: string) => void;
     };
+    this.get_equip("equipment").then(() => {
+      //setup instance
+      today.setHours(0, 0, 0, 0);
 
-    today.setHours(0, 0, 0, 0);
+      const today_ = today.getTime();
+      //meeting get
+      const timeformat = formatTimestamp(today_);
 
-    const today_ = today.getTime();
-    //meeting get
-    const timeformat = this.formatTimestamp(today_);
-
-    this.get_today_meeting(timeformat, "SUBMITTED").then(() => {
-      series = meetingrooms.map(function (meetingroom, i) {
-        const data = meetingroom.deals.map(function (deal: { rentedTo: any; from: any; to: any }) {
+      this.get_today_equip(timeformat, "SUBMITTED").then(() => {
+        series = equipments.map(function (equipment, i) {
+          const data = equipment.deals.map(function (deal: { rentedTo: any; from: any; to: any }) {
+            return {
+              id: equipment.model,
+              rentedTo: deal.rentedTo,
+              start: deal.from,
+              end: deal.to,
+              y: i,
+            };
+          });
+          console.log("data:", data, equipments);
           return {
-            id: "会议室" + (i + 1),
-            rentedTo: deal.rentedTo,
-            start: deal.from,
-            end: deal.to,
-            y: i,
+            name: equipment.model,
+            data: data,
+            current: equipment.deals[equipment.current],
           };
         });
-        return {
-          name: meetingroom.model,
-          data: data,
-          current: meetingroom.deals[meetingroom.current],
-        };
-      });
 
-      Highcharts.ganttChart(this.$refs.container, {
-        series: series,
-        title: {
-          text: "会议室预约",
-        },
-        //credits
-        credits: {
-          //enabled: false
-          text: "吴健雄学院",
-          href: "",
-        },
-        tooltip: {
-          followPointer: true,
-          pointFormat:
-            "<span>借用者: {point.rentedTo}</span><br/>" +
-            "<span>开始时间: {point.start:%H: %M}</span><br/>" +
-            "<span>结束时间: {point.end:%H: %M}</span>",
-        },
-        xAxis: {
-          currentDateIndicator: false,
-          min: today_ + 20 * hour,
-          max: today_ + 30 * hour,
-        },
-        yAxis: {
-          type: "category",
-          grid: {
-            columns: [
-              {
-                title: {
-                  text: "物品",
-                },
-                categories: map(series, function (s: { name: any }) {
-                  return s.name;
-                }),
-              },
-              {
-                title: {
-                  text: "详细信息",
-                },
-                categories: map(series, function (s: { name: any }) {
-                  return s.name;
-                }),
-              },
-            ],
+        Highcharts.ganttChart(this.$refs.container, {
+          series: series,
+          title: {
+            text: "器材预约",
           },
-        },
-        plotOptions: {
-          series: {
-            point: {
-              events: {
-                click: (event: { point: any }) => {
-                  var point = event.point;
-                  openDialog(point.id, point.rentedTo, point.start, point.end);
+          //credits
+          credits: {
+            //enabled: false
+            text: "吴健雄学院",
+            href: "",
+          },
+          tooltip: {
+            followPointer: true,
+            //这边从00：00⏲
+            pointFormat:
+              "<span>借用者: {point.rentedTo}</span><br/>" +
+              "<span>开始时间: {point.start:%H: %M}</span><br/>" +
+              "<span>结束时间: {point.end:%H: %M}</span>",
+          },
+          xAxis: {
+            currentDateIndicator: false,
+            min: today_ + 20 * hour,
+            max: today_ + 30 * hour,
+          },
+          yAxis: {
+            type: "category",
+            grid: {
+              columns: [
+                {
+                  title: {
+                    text: "器材",
+                  },
+                  categories: map(series, (s: { name: any }) => {
+                    //https://www.baidu.com/
+                    const link = '<a href="javascript:console.log("1111")" ' + ">(详细信息)</a>";
+                    return s.name;
+                  }),
+                },
+              ],
+            },
+          },
+          plotOptions: {
+            series: {
+              point: {
+                events: {
+                  click: (event: { point: any }) => {
+                    var point = event.point;
+                    openDialog(point.id, point.rentedTo, point.start, point.end);
+                  },
                 },
               },
             },
           },
-        },
+        });
       });
     });
   },
 
   methods: {
-    async get_today_meeting(day: string, status: string) {
+    async get_today_equip(day: string, status: string) {
       try {
-        const data = await getAppoint_by_day(day, status);
+        const data = await getAppoint_by_day(day, status, "equipment");
         const appointlist: List<Appointment> = data as List<Appointment>;
         if (appointlist != undefined) {
           for (let i = 0; i < appointlist.length; i++) {
             const start = new Date(appointlist[i].appoint_start_time).getTime() + 8 * hour;
             const end = new Date(appointlist[i].appoint_end_time).getTime() + 8 * hour;
-            const newdeal = {
+            const newdeal: Deal = {
               rentedTo: appointlist[i].renter_name,
               from: start,
               to: end,
             };
-            meetingrooms[appointlist[i].available_id - 1].deals.push(newdeal);
+            equipments[appointlist[i].available_id - 7 - 1].deals.push(newdeal);
           }
         } else {
-          console.log("not run:", meetingrooms);
           const _today_ = new Date(day).getTime();
         }
-        meetingrooms[2].deals.push({ rentedTo: "test", from: 1, to: 1 });
-        meetingrooms[2].deals.push({ rentedTo: "test", from: 1, to: 1 });
-        meetingrooms[2].deals.push({ rentedTo: "test", from: 1, to: 1 });
+        for (let i = 0; i < numRooms; i++) {
+          const index: Deal = { rentedTo: "test", from: 1, to: 1 };
+          equipments[i].deals.push(index);
+        }
       } catch (error) {
         console.error(error);
       }
     },
 
-    formatTimestamp(timestamp: number) {
-      const date = new Date(timestamp);
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const day = String(date.getDate()).padStart(2, "0");
-      const formattedDateTime = `${year}-${month}-${day}`;
-      return formattedDateTime.toString();
+    async get_equip(equip: string) {
+      try {
+        const equipdata = (await get_avail_set(equip)).data;
+
+        const len = equipdata.length;
+
+        equipments.splice(0, equipments.length);
+        for (let i = 0; i < len; i++) {
+          const name = equipdata[i].available_name;
+          console.log("name", name);
+          const newequip: M_Equip = {
+            model: name,
+            current: 0,
+            deals: [],
+          };
+          equipments.push(newequip);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    handleLinkClick() {
+      // 处理点击事件
+      alert("你点击了链接!");
+      console.log("Link clicked!");
     },
   },
 };
@@ -353,6 +358,12 @@ export default {
 
 .dialog-footer button:first-child {
   margin-right: 10px;
+}
+
+.text:hover {
+  cursor: pointer;
+  color: #1890ff;
+  transition: color 0.3s;
 }
 </style>
 
