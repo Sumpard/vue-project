@@ -3,6 +3,7 @@
     <el-form-item label="上传图片：" label-width="100">
       <el-upload
           multiple
+          :class="{hide:hideUpload}"
           action=""
           :http-request="UploadImage"
           :show-file-list="true"
@@ -83,10 +84,17 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  router:{
+    type:String,
+    default:"/question/upload",
+  }
 });
+
+const emits = defineEmits(["uploadSuccess"]);
 
 const dialogVisible = ref(false);
 const BtnDisabled = ref(false);
+const hideUpload =ref(false);
 
 function handleExceed(files, fileList) {
   dialogVisible.value = true;
@@ -120,6 +128,7 @@ function handleAvatarChangeIcon(file){
   fileList.value.push(file); // 将文件添加到fileList数组中
   console.log("image appended to fileList.");
   console.log("fileList length: " + fileList.value.length +'\n');
+  hideUpload.value = fileList.value.length >= props.limit;//隐藏上传按钮
 }
 
 function handleRemove(file) {
@@ -127,23 +136,11 @@ function handleRemove(file) {
   console.log("image removed from fileList.");
   fileList.value.splice(index, 1);
   console.log("fileList length: " + fileList.value.length+'\n');
+  hideUpload.value = fileList.value.length >= props.limit;
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-const uploadUrl = "http://120.46.203.58:8080/question/upload";
+const uploadUrl = "http://120.46.203.58:8080";
 const $cookies = inject('$cookies')!;
 
 async function onBtn() {//点击按钮开始上传
@@ -200,7 +197,7 @@ async function onBtn() {//点击按钮开始上传
     await axios({
         timeout: 10000,
         method: 'POST',
-        url: uploadUrl,
+        url: uploadUrl+ props.router,
         data: dataForm,
 //设置请求参数的规则
         headers: {
@@ -215,6 +212,8 @@ async function onBtn() {//点击按钮开始上传
         message: '图片上传成功',
         type: 'success',
       });
+      onSuccess();
+      emits("uploadSuccess", res.data);
     }
   }).catch(function(error){console.log("Error:",error);});
 
@@ -225,3 +224,9 @@ function onSuccess(){
 }
 
 </script>
+
+<style>
+.hide .el-upload--picture-card {
+    display: none;
+}
+</style>
