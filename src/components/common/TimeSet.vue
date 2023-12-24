@@ -18,20 +18,14 @@
   />
 </template>
 
-<script lang="ts">
-export default {
-  data() {
-    return {
-      startTime: "",
-      endTime: "",
-      defalutValue: null,
-    };
-  },
-  methods: {
-    reset() {
-      this.startTime = "";
-      this.endTime = "";
-    },
-  },
+<script setup lang="ts">
+const startTime = ref("");
+const endTime = ref("");
+
+const reset = () => {
+  startTime.value = "";
+  endTime.value = "";
 };
+
+defineExpose({ startTime, endTime, reset });
 </script>
