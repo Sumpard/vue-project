@@ -9,7 +9,7 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: "/reservation",
-        component: () => import("@/views/Useview.vue"),
+        component: () => import("@/views/list/record.vue"),
       },
       {
         path: "/reserveroom",
@@ -37,8 +37,8 @@ const routes: RouteRecordRaw[] = [
         component: () => import("@/views/contact/response.vue"),
       },
       {
-        path:'/goodlist',
-        component:() => import("@/views/managegoods/goodlist.vue")
+        path: "/goodlist",
+        component: () => import("@/views/managegoods/goodlist.vue"),
       },
       {
         path: "/userlist",
@@ -62,8 +62,8 @@ const routes: RouteRecordRaw[] = [
         component: () => import("@/views/login/Register.vue"),
       },
       {
-        path:"/imgUpload",
-         component:()=> import("@/views/components/ImgUpload.vue")
+        path: "/imgUpload",
+        component: () => import("@/views/components/ImgUpload.vue"),
       },
     ],
   },
