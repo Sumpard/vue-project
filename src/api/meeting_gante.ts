@@ -2,6 +2,14 @@ import Message from "@/utils/message";
 
 import api from "./request";
 
+export interface avail {
+  available_description: string;
+  available_id: number;
+  available_image: string;
+  available_name: string;
+  available_status: string;
+  available_type_name: string;
+}
 export interface Appointment {
   appoint_end_time: string;
   appoint_start_time: string;
@@ -69,12 +77,11 @@ export interface appoint_sub {
   appoint_start_time: string;
 }
 
-//目前传参无效
-export async function getAppoint_by_day(day: string, appointstatus: string) {
+export async function getAppoint_by_day(day: string, appointstatus: string, type: string) {
   //Message.info("查询中");
   const appointbody: SearchBody = {
     appointment_status: appointstatus,
-    available_type_name: "会议室",
+    available_type_name: type,
     day: day,
     needSort: true,
     renterIdEmptyOrNull: false,
@@ -112,4 +119,16 @@ export async function submitAppoint(
     renter_phone: phone,
   };
   return (await api.post("appointment/insert", appointbody)).data;
+}
+
+export async function get_avail_set(avail: string) {
+  return (await api.post("/available/select-by-type", { type_description: "", type_id: 0, type_name: avail })).data;
+}
+
+export async function get_all() {
+  return (await api.post("available/select-all")).data;
+}
+
+export async function update_img(id: number, img: FormData) {
+  return await api.put("/available/update-image"), img, { params: { available_id: id } };
 }

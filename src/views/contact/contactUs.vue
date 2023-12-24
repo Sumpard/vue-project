@@ -1,55 +1,48 @@
 <template>
-    <div class="block-container">
-        <div class="head">
-            <h1>联系我们</h1>
-        </div>
-            <el-form-item label="反馈与建议">
-            </el-form-item>
-            <el-form-item>
-                <el-input type="textarea" rows="20" v-model="bookingForm.remark" placeholder="请留下您的宝贵意见"></el-input>
-            </el-form-item>
-            <div class="button-css">
-                <el-form-item>
-                    <el-button @click="submitBooking"><p>提交反馈</p></el-button>
-                </el-form-item>
-        </div>
+  <div class="block-container">
+    <div class="head">
+      <h1>联系我们</h1>
     </div>
-  </template>
-    
-  <script lang="ts">
-  
-  import BarChart1 from '@/views/chart/chart1.vue'
-  import BarChart2 from '@/views/chart/chart2.vue'
-  import Echart1 from '@/views/chart/echart1.vue'
-  import timeset from '@/views/room/time.vue'
-  
-  export default {
-    components: { Echart1, timeset },
-  
-    data() {
-      return {
-        bookingForm: {
-          room: '',
-          date: null,
-          booker: '',
-          theme:'',
-          remark:''
-        }
-      };
+    <el-form-item label="反馈与建议"> </el-form-item>
+    <el-form-item>
+      <el-input type="textarea" rows="20" v-model="bookingForm.remark" placeholder="请留下您的宝贵意见"></el-input>
+    </el-form-item>
+    <div class="button-css">
+      <el-form-item>
+        <el-button @click="submitBooking"><p>提交反馈</p></el-button>
+      </el-form-item>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import Echart1 from "@/views/chart/echart1.vue";
+import timeset from "@/views/room/time.vue";
+
+export default {
+  components: { Echart1, timeset },
+
+  data() {
+    return {
+      bookingForm: {
+        room: "",
+        date: null,
+        booker: "",
+        theme: "",
+        remark: "",
+      },
+    };
+  },
+
+  methods: {
+    submitBooking() {
+      // 在此处执行提交预约的逻辑
+      console.log("预约信息:", this.bookingForm);
+      // 可以发送数据到后端进行处理，或执行其他操作
     },
-  
-  
-  
-    methods: {
-      submitBooking() {
-        // 在此处执行提交预约的逻辑
-        console.log('预约信息:', this.bookingForm);
-        // 可以发送数据到后端进行处理，或执行其他操作
-      }
-    }
-  };
-  
-  </script>
+  },
+};
+</script>
 
 <style>
 .chart {
@@ -67,19 +60,19 @@
   height: calc(100% - 30px);
 }
 
-.head{
-    text-align: center;
-    font-size: 30px;
+.head {
+  text-align: center;
+  font-size: 30px;
 }
 
-.button-css{
-    position:relative;
-    left:45%
+.button-css {
+  position: relative;
+  left: 45%;
 }
 
-.block-container{
-    width: 80%;
-    margin: auto;
-    text-align: center;
+.block-container {
+  width: 80%;
+  margin: auto;
+  text-align: center;
 }
 </style>

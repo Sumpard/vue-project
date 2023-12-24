@@ -38,7 +38,6 @@
             dense
           />
         </q-tab-panel>
-
       </q-tab-panels>
       <div class="button-container text-center">
         <q-btn label="注册" type="submit" color="primary" />
@@ -51,7 +50,7 @@
 
 <script setup lang="ts">
 import { register } from "@/api/login";
-import { Notify } from "quasar";
+import Message from "@/utils/message";
 
 const $router = useRouter();
 const $route = useRoute();
@@ -65,22 +64,18 @@ const passwordRules = [(val: string) => val?.length > 0 || "请输入密码"];
 
 async function onSubmit1() {
   try {
-    Notify.create({ type: "info", message: "提交注册信息" });
+    Message.info("提交注册信息");
     const response = await register(form.userid, form.username, form.password);
     const userData = response;
     if (!userData) {
-      Notify.create({ type: "negative", message: "注册失败" });
+      Message.error("注册失败");
       return;
     }
-
-    Notify.create({
-      type: "positive",
-      message: `注册成功！`,
-    });
+    Message.success("注册成功！");
 
     $router.replace({ name: "login", query: $route.query });
   } catch (error) {
-    console.log("注册失败", error);
+    Message.error("注册失败");
   }
 }
 function onReset() {

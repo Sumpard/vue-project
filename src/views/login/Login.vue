@@ -12,10 +12,23 @@
     <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
       <q-tab-panels v-model="tab" animated class="custom-tab-panels">
         <q-tab-panel name="one">
-          <q-input filled v-model="form.username" label="用户id" lazy-rules
-            :rules="[(val: string | any[]) => val?.length > 0 || '请输入您的用户id']" dense />
-          <q-input filled type="password" v-model="form.password" label="密码" lazy-rules
-            :rules="[(val: string | any[]) => val?.length > 0 || '请输入您的密码']" dense />
+          <q-input
+            filled
+            v-model="form.username"
+            label="用户id"
+            lazy-rules
+            :rules="[(val: string | any[]) => val?.length > 0 || '请输入您的用户id']"
+            dense
+          />
+          <q-input
+            filled
+            type="password"
+            v-model="form.password"
+            label="密码"
+            lazy-rules
+            :rules="[(val: string | any[]) => val?.length > 0 || '请输入您的密码']"
+            dense
+          />
         </q-tab-panel>
 
         <!-- <q-tab-panel name="two">
@@ -26,10 +39,19 @@
         </q-tab-panel> -->
       </q-tab-panels>
       <div class="image-container">
-
-        <q-input filled v-model="form.verifycode" label="验证码" class="code-input" lazy-rules
-          :rules="[(val: string | any[]) => val?.length > 0 || '请输入验证码']" dense></q-input>
-        <img :src="verifyCodeImage" alt="验证码" class="code-img">
+        <q-input
+          filled
+          v-model="form.verifycode"
+          label="验证码"
+          class="code-input"
+          lazy-rules
+          :rules="[(val: string | any[]) => val?.length > 0 || '请输入验证码']"
+          dense
+        ></q-input>
+        <div class="verify-wrapper">
+          <img :src="verifyCodeImage" alt="验证码" class="code-img" />
+          <el-text class="text_" type="info" @click="update_img">看不清楚？换一张</el-text>
+        </div>
       </div>
       <div>
         <q-btn label="登录" type="submit" color="primary" />
@@ -41,31 +63,31 @@
 </template>
 
 <script setup lang="ts">
-import { login, getverifycode, getanswer, verifyanswer } from "@/api/login";
+import { getanswer, getverifycode, login, verifyanswer } from "@/api/login";
 import { getUserMe } from "@/api/user";
-import Message from "@/utils/message";
 import { useUserStore } from "@/stores/user";
+import Message from "@/utils/message";
 
 const $router = useRouter();
 const $route = useRoute();
 
 $router.push({
   query: {
-    redirect: '/homepage' // 目标URL中的 redirect 参数值
-  }
+    redirect: "/homepage", // 目标URL中的 redirect 参数值
+  },
 });
 
 const form = reactive({ username: "", password: "", verifycode: "" });
 let tab = ref("one");
 // 创建图片对象
 
-const verifyCodeImage = ref('');
+const verifyCodeImage = ref("");
 
 async function getcodeimg() {
   try {
     const verifyCodeData = await getverifycode();
-    verifyCodeImage.value = 'data:image/png;base64,' + verifyCodeData.img;
-    console.log("get verifycode", verifyCodeData);
+    verifyCodeImage.value = "data:image/png;base64," + verifyCodeData.img;
+    //console.log("get verifycode", verifyCodeData);
     // 处理验证码数据
   } catch (error) {
     console.error(error);
@@ -77,34 +99,38 @@ async function onSubmit() {
   try {
     Message.info("提交登录信息");
     // 获取token
-    const Ans = await getanswer();
-    console.log(Ans);
+    //const Ans = await getanswer();
+    //console.log(Ans);
     const Ans_check = await verifyanswer(form.verifycode);
-    console.log(Ans_check);
+    //console.log(Ans_check);
     if (Ans_check.code != "200") {
       Message.error(" 验证码错误");
-      console.log("验证码错误", Ans_check);
-    }
-    else {
-      console.log("登录信息： ", form.username, form.password, form.verifycode);
+      //console.log("验证码错误", Ans_check);
+      update_img();
+    } else {
+      //console.log("登录信息： ", form.username, form.password, form.verifycode);
       const { data } = await login(form.username, form.password, form.verifycode);
+      if (data != undefined) {
+        //Message.info("登录成功");
+        //console.log("登录成功", data);
+        const token = data;
+        userStore.login({ token }); // 存token
+        // 获取用户
+        const user = await getUserMe();
 
-      //Message.info("登录成功");
-      console.log("登录成功", data);
-      const token = data;
-      userStore.login({ token }); // 存token
-      // 获取用户
-      const user = await getUserMe();
+        //Message.info("获取用户");
+        //console.log("获取用户", user);
+        userStore.login({ token, user });
+        Message.success(`登录成功！`);
 
-      //Message.info("获取用户");
-      console.log("获取用户", user);
-      userStore.login({ token, user });
-      Message.success(`登录成功！`);
-
-      if ($route.query.redirect) {
-        $router.replace($route.query.redirect as string);
+        if ($route.query.redirect) {
+          $router.replace($route.query.redirect as string);
+        } else {
+          $router.replace({ name: "register" });
+        }
       } else {
-        $router.replace({ name: "register" });
+        //console.log("登录失败", data);
+        Message.error("登录失败,用户id或密码错误");
       }
     }
   } catch (error) {
@@ -120,8 +146,11 @@ function toRegister() {
   $router.replace({ name: "register", query: $route.query });
 }
 
-getcodeimg();
+function update_img() {
+  getcodeimg();
+}
 
+getcodeimg();
 </script>
 
 <style lang="scss">
@@ -143,5 +172,23 @@ getcodeimg();
   width: 120px;
   height: auto;
   margin-left: 10px;
+}
+
+.text_ {
+  font-size: 11px;
+  position: absolute;
+  top: 35px;
+  bottom: 0;
+  left: 10%;
+}
+
+.text_:hover {
+  cursor: pointer;
+  color: #1890ff;
+  transition: color 0.3s;
+}
+
+.verify-wrapper {
+  position: relative;
 }
 </style>
