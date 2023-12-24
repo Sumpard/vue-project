@@ -4,7 +4,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/",
     name: "index",
-    component: () => import("@/layouts/manage.vue"),
+    component: () => import("@/layouts/AppLayout.vue"),
     meta: { requireAuth: true },
     children: [
       {
