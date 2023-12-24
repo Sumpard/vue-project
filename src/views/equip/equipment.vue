@@ -9,7 +9,7 @@
       ></el-date-picker>
     </el-form-item>
     <div class="chart">
-      <Gante :timett="time_form.time_select" />
+      <Gante :timett="time_form.time_select" :map_="avail_map" />
     </div>
   </div>
 
@@ -86,6 +86,7 @@ import timeset from "@/views/room/time.vue";
 let equips: avail[] = [];
 const dialog_switch = ref(false);
 const activeName = ref("first");
+let avail_map: { [key: string]: [number, number] } = {};
 
 export default {
   components: { timeset, Gante },
@@ -110,6 +111,7 @@ export default {
       search: Search,
       dialog_switch,
       activeName,
+      avail_map,
       disabledDate(time: { getTime: () => number }) {
         //return time.getTime() > Date.now();
         const currentDate = new Date();
@@ -138,13 +140,11 @@ export default {
       const date_ = new Date(this.bookingForm_equip.date);
       const start_ = formatTimestamp(getTimeFormat(this.$refs.timeset.startTime, date_));
       const end_ = formatTimestamp(getTimeFormat(this.$refs.timeset.endTime, date_));
-      const temp = new Date();
-      const submit = formatTimestamp(temp.getTime());
       const des = this.bookingForm_equip.use;
       const temp_str = this.bookingForm_equip.equip;
-      const avail_id = parseInt(temp_str[temp_str.length - 1], 10);
+      const avail_id = avail_map[temp_str][0];
       const avail_type_name = "equipment";
-      const avail_name = temp_str[temp_str.length - 1];
+      const avail_name = temp_str;
       const user = useUserStore().user!;
       const user_id = user.user_id;
       const user_name = user.user_name;
@@ -165,7 +165,6 @@ export default {
         date_,
         start_,
         end_,
-        submit,
         des,
         avail_id,
         avail_type_name,
@@ -181,7 +180,10 @@ export default {
       try {
         const roomdata = (await get_avail_set("equipment")).data;
         this.equips = roomdata;
-        //console.log("room:",roomdata);
+        for (let i = 0; i < roomdata.length; i++) {
+          avail_map[roomdata[i].available_name] = [roomdata[i].available_id, i];
+        }
+        //console.log("maps:", avail_map);
       } catch (error) {
         console.error(error);
       }
