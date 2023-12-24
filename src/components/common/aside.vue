@@ -23,26 +23,25 @@
       </el-icon>
       <span>首页</span>
     </el-menu-item>
-    <el-sub-menu>
+    <el-sub-menu index="reserve">
       <template #title>
         <div>
           <el-icon><i-ep-edit /></el-icon>
-
           <span v-if="!isCollapse">预约管理</span>
         </div>
       </template>
-      <el-menu-item index="room" @click="$router.push('/reserveroom')"
-        ><el-icon><span class="iconfont icon-huiyishi"></span></el-icon>会议室预约</el-menu-item
-      >
-      <el-menu-item index="seat" @click="$router.push('/imgUpload')"
-        ><el-icon><span class="iconfont icon-zuowei"></span></el-icon>座位预约</el-menu-item
-      >
-      <el-menu-item index="equipment"
-        ><el-icon><i-ep-Camera /></el-icon>器材预约</el-menu-item
-      >
-      <el-menu-item index="record" @click="$router.push('/reservation')"
-        ><el-icon><i-ep-Collection /></el-icon>预约记录</el-menu-item
-      >
+      <el-menu-item index="reserveroom">
+        <el-icon><span class="iconfont icon-huiyishi"></span></el-icon>会议室预约
+      </el-menu-item>
+      <el-menu-item index="seat" @click="$router.push('/imgUpload')">
+        <el-icon><span class="iconfont icon-zuowei"></span></el-icon>座位预约
+      </el-menu-item>
+      <el-menu-item index="equipment">
+        <el-icon><i-ep-Camera /></el-icon>器材预约
+      </el-menu-item>
+      <el-menu-item index="reservation">
+        <el-icon><i-ep-Collection /></el-icon>预约记录
+      </el-menu-item>
     </el-sub-menu>
 
     <el-sub-menu index="contactus">
@@ -52,35 +51,24 @@
           <span v-if="!isCollapse">联系我们</span>
         </div>
       </template>
-      <el-menu-item index="feedback" @click="$router.push('/contact')"
-        ><el-icon><i-ep-Postcard /></el-icon>填写反馈</el-menu-item
-      >
-      <el-menu-item index="response" @click="$router.push('/response')"
-        ><el-icon><i-ep-Message /></el-icon>反馈记录</el-menu-item
-      >
+      <el-menu-item index="feedback" @click="$router.push('/contact')">
+        <el-icon><i-ep-Postcard /></el-icon>填写反馈
+      </el-menu-item>
+      <el-menu-item index="response" @click="$router.push('/response')">
+        <el-icon><i-ep-Message /></el-icon>反馈记录
+      </el-menu-item>
     </el-sub-menu>
   </el-menu>
 </template>
 
 <script lang="ts" setup>
-// import {ref} from "vue"
-
-/*   import {
-    Document,
-    Menu as IconMenu,
-    Location,
-    Setting,
-    Edit ,Notebook
-  } from '@element-plus/icons-vue' */
-
-const isCollapse = defineModel();
-isCollapse.value = false;
-// const modelValue = defineModel();
+const isCollapse = defineModel<boolean>({ default: false });
 
 function toggleCollapse() {
   isCollapse.value = !isCollapse.value;
 }
 </script>
+
 <style scoped>
 .changebutton {
   border-right: solid 1px #dcdfe6;

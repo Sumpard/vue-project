@@ -46,7 +46,7 @@ export async function getUserStats() {
 }
 
 export async function updatepassword(oldPassword : string, newPassword: string) {
-  return (await api.putForm("/user/update-password", {"old-pwd": oldPassword,"new-pwd": newPassword })).data;
+  return (await api.putForm("/user/update-password", {old_pwd: oldPassword,new_pwd: newPassword })).data;
 }
 
 export async function updateemail(email: string) {
