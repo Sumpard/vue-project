@@ -59,5 +59,6 @@ declare module 'vue' {
     IEpPostcard: typeof import('~icons/ep/postcard')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TimeSet: typeof import('./components/common/TimeSet.vue')['default']
   }
 }

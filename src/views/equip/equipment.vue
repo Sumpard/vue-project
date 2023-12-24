@@ -12,10 +12,6 @@
       <Gante :timett="time_form.time_select" />
     </div>
   </div>
-
-  <!-- <div>
-      <timeset />
-    </div> -->
   <div>
     <h5>器材预约</h5>
     <el-form :model="bookingForm_equip" label-width="120px">
@@ -35,7 +31,7 @@
       <el-form-item label="时间">
         <!-- <el-time-picker v-model="bookingForm_equip.time" placeholder="选择时间段"></el-time-picker> -->
         <div>
-          <timeset ref="timeset" />
+          <time-set ref="timeset" />
         </div>
       </el-form-item>
       <el-form-item label="手机号">
@@ -77,18 +73,16 @@ import type { TabsPaneContext } from "element-plus";
 
 import { avail, getAppoint_by_day, get_avail_set, submitAppoint } from "@/api/meeting_gante";
 import { formatTimestamp, getTimeFormat } from "@/api/timeformat";
-import { getUserMe } from "@/api/user";
 import { useUserStore } from "@/stores/user";
 import Message from "@/utils/message";
 import Gante from "@/views/chart/gante_equip.vue";
-import timeset from "@/views/room/time.vue";
 
 let equips: avail[] = [];
 const dialog_switch = ref(false);
 const activeName = ref("first");
 
 export default {
-  components: { timeset, Gante },
+  components: { Gante },
 
   async mounted() {
     this.equip_template();
