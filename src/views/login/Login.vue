@@ -49,7 +49,7 @@
           dense
         ></q-input>
         <div class="verify-wrapper">
-          <img :src="verifyCodeImage" alt="验证码" class="code-img" />
+          <img :src="verifyCodeImage" alt="验证码" class="code-img" @click="update_img" />
           <el-text class="text_" type="info" @click="update_img">看不清楚？换一张</el-text>
         </div>
       </div>
@@ -63,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { checkCaptcha, getCaptcha, getCaptchaAnswer, login } from "@/api/login";
+import { checkCaptcha, getCaptcha, login } from "@/api/login";
 import { getUserMe } from "@/api/user";
 import { useUserStore } from "@/stores/user";
 import Message from "@/utils/message";
