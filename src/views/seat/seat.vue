@@ -92,13 +92,13 @@
 import { Search } from "@element-plus/icons-vue";
 import type { TabsPaneContext } from "element-plus";
 
-import { avail, getAppoint_by_day, get_avail_set, submitAppoint } from "@/api/meeting_gante";
-import { formatTimestamp, getTimeFormat } from "@/api/timeformat";
+import { Avail, getAppoint_by_day, get_avail_set, submitAppoint } from "@/api/meeting_gante";
 import { useUserStore } from "@/stores/user";
 import Message from "@/utils/message";
+import { combineDateTime, formatTimestamp } from "@/utils/timeformat";
 import Gante from "@/views/chart/gante_seat.vue";
 
-let equips: avail[] = [];
+let equips: Avail[] = [];
 const dialog_switch = ref(false);
 const activeName = ref("first");
 let avail_map: { [key: string]: [number, number] } = {};
@@ -158,12 +158,12 @@ export default {
 
       Message.info("正在提交预约信息");
       const date_ = new Date(this.bookingForm_equip.date);
-      const start_ = formatTimestamp(getTimeFormat(this.$refs.timeset.startTime, date_));
-      const end_ = formatTimestamp(getTimeFormat(this.$refs.timeset.endTime, date_));
+      const start_ = formatTimestamp(combineDateTime(this.$refs.timeset.startTime, date_));
+      const end_ = formatTimestamp(combineDateTime(this.$refs.timeset.endTime, date_));
       const des = this.bookingForm_equip.use;
       const temp_str = this.bookingForm_equip.equip;
       const avail_id = avail_map[temp_str][0];
-      const avail_type_name = "seat";
+      const avail_type_name = "座位";
       const avail_name = temp_str;
       const user = useUserStore().user!;
       const user_id = user.user_id;
@@ -204,12 +204,13 @@ export default {
 
     async equip_template() {
       try {
-        const roomdata = (await get_avail_set("seat")).data;
+        const roomdata = (await get_avail_set("座位")).data;
         this.equips = roomdata;
+        console.log(roomdata);
         for (let i = 0; i < roomdata.length; i++) {
           avail_map[roomdata[i].available_name] = [roomdata[i].available_id, i];
         }
-        //console.log("maps:", avail_map);
+        console.log("maps:", avail_map);
       } catch (error) {
         console.error(error);
       }

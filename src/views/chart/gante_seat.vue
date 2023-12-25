@@ -27,7 +27,7 @@ import HighchartsSand from "highcharts/themes/sand-signika";
 import moment from "moment";
 
 import { Appointment, getAppoint_by_day, get_avail_set } from "@/api/meeting_gante";
-import { formatTimestamp } from "@/api/timeformat";
+import { formatTimestamp } from "@/utils/timeformat";
 
 type Deal = {
   rentedTo: string;
@@ -100,7 +100,7 @@ watch(
       //console.log("time_select changed:", newVal, today);
 
       const timeformat = formatTimestamp(today);
-      get_today_equip(timeformat, "SUBMITTED").then(() => {
+      get_today_equip(timeformat, "ACCEPTED").then(() => {
         //console.log("watch", equipments);
         series = equipments.map(function (equipment, i) {
           const data = equipment.deals.map(function (deal: { rentedTo: any; from: any; to: any }) {
@@ -165,7 +165,7 @@ watch(
                   click: (event: { point: any }) => {
                     //console.log("点击事件触发");
                     var point = event.point;
-                    console.log("watch click!");
+                    //console.log("watch click!");
                     openDialog(point.id, point.rentedTo, point.start, point.end);
                   },
                 },
@@ -186,7 +186,7 @@ onMounted(async () => {
       handleClose: () => void;
       openDialog: (arg0: string, arg1: string, arg2: string, arg3: string) => void;
     };*/
-  await get_equip("seat");
+  await get_equip("座位");
 
   //setup instance
   today.setHours(0, 0, 0, 0);
@@ -195,7 +195,7 @@ onMounted(async () => {
   //meeting get
   const timeformat = formatTimestamp(today_);
 
-  await get_today_equip(timeformat, "SUBMITTED");
+  await get_today_equip(timeformat, "ACCEPTED");
 
   series = equipments.map((equipment, i) => {
     const data = equipment.deals.map((deal) => {
@@ -274,8 +274,8 @@ onMounted(async () => {
 
 async function get_today_equip(day: string, status: string) {
   try {
-    const appointlist: Appointment[] = await getAppoint_by_day(day, status, "seat");
-    //console.log("appoint:", appointlist);
+    const appointlist: Appointment[] = await getAppoint_by_day(day, status, "座位");
+    console.log("appoint:", appointlist);
     if (appointlist) {
       for (const appoint of appointlist) {
         const start = new Date(appoint.appoint_start_time).getTime() + 8 * hour;

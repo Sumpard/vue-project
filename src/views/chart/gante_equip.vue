@@ -100,7 +100,7 @@ watch(
       //console.log("time_select changed:", newVal, today);
 
       const timeformat = formatTimestamp(today);
-      get_today_equip(timeformat, "SUBMITTED").then(() => {
+      get_today_equip(timeformat, "ACCEPTED").then(() => {
         //console.log("watch", equipments);
         series = equipments.map(function (equipment, i) {
           const data = equipment.deals.map(function (deal: { rentedTo: any; from: any; to: any }) {
@@ -165,7 +165,7 @@ watch(
                   click: (event: { point: any }) => {
                     //console.log("点击事件触发");
                     var point = event.point;
-                    console.log("watch click!");
+                    //console.log("watch click!");
                     openDialog(point.id, point.rentedTo, point.start, point.end);
                   },
                 },
@@ -195,7 +195,7 @@ onMounted(async () => {
   //meeting get
   const timeformat = formatTimestamp(today_);
 
-  await get_today_equip(timeformat, "SUBMITTED");
+  await get_today_equip(timeformat, "ACCEPTED");
 
   series = equipments.map((equipment, i) => {
     const data = equipment.deals.map((deal) => {

@@ -183,7 +183,12 @@ export default {
         user_name,
         phone
       );
-      console.log(
+      if (submit_info.code == 200) {
+        Message.success("提交成功！");
+      } else {
+        Message.success("提交失败");
+      }
+      /* console.log(
         "预约信息:",
         date_,
         start_,
@@ -197,7 +202,7 @@ export default {
         user_name,
         phone,
         user
-      );
+      ); */
     },
 
     async room_template() {

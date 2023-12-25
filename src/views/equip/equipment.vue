@@ -98,7 +98,7 @@ import Message from "@/utils/message";
 import { combineDateTime, formatTimestamp } from "@/utils/timeformat";
 import Gante from "@/views/chart/gante_equip.vue";
 
-let equips: avail[] = [];
+let equips: Avail[] = [];
 const dialog_switch = ref(false);
 const activeName = ref("first");
 let avail_map: { [key: string]: [number, number] } = {};

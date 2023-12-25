@@ -111,7 +111,7 @@ export default {
         timestamp = new Date(this.timett).getTime();
         const today = timestamp;
         const timeformat = formatTimestamp(today);
-        this.get_today_meeting(timeformat, "SUBMITTED").then(() => {
+        this.get_today_meeting(timeformat, "ACCEPTED").then(() => {
           //console.log("watch", meetingrooms);
           series = meetingrooms.map(function (meetingroom, i) {
             const data = meetingroom.deals.map(function (deal: { themes: any; rentedTo: any; from: any; to: any }) {
@@ -205,7 +205,7 @@ export default {
       //meeting get
       const timeformat = formatTimestamp(today_);
 
-      this.get_today_meeting(timeformat, "SUBMITTED").then(() => {
+      this.get_today_meeting(timeformat, "ACCEPTED").then(() => {
         series = meetingrooms.map(function (meetingroom, i) {
           const data = meetingroom.deals.map(function (deal: { themes: any; rentedTo: any; from: any; to: any }) {
             return {
