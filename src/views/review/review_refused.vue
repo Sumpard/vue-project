@@ -3,39 +3,30 @@
     <el-table
       :header-cell-style="{ 'text-align': 'center' }"
       :cell-style="{ 'text-align': 'center' }"
-      :data="filterTableData"
+      :data="tableData"
       max-height="550"
       highlight-current-row
       :default-sort="{ prop: 'score', order: 'descending' }"
+      @selection-change="handleSelectionChange"
     >
+      <el-table-column type="selection" width="55" />
       <el-table-column prop="available_name" label="预约名称"></el-table-column>
       <el-table-column prop="available_type_name" label="预约类型"> </el-table-column>
+      <el-table-column prop="renter_name" label="预约人"> </el-table-column>
+      <el-table-column prop="renter_phone" label="联系电话"> </el-table-column>
       <el-table-column label="预约时间">
-        <template v-slot="{ row }">
-          {{ row.appoint_start_time }}
-          <br />-{{ row.appoint_end_time }}
-        </template>
+        <template v-slot="{ row }"> {{ row.appoint_start_time }}——{{ row.appoint_end_time }} </template>
       </el-table-column>
-      <el-table-column
-        prop="appointment_status"
-        label="预约状态"
-        :filters="[
-          { text: '审核中', value: 'SUBMITTED' },
-          { text: '已通过', value: 'ACCEPTED' },
-          { text: '已拒绝', value: 'REFUSED' },
-        ]"
-        :filter-method="filterTag"
-        filter-placement="bottom-end"
-      >
+      <el-table-column prop="appointment_status" label="预约状态">
         <template v-slot="{ row }">
           {{ mapstatus(row.appointment_status) }}
         </template>
       </el-table-column>
       <el-table-column prop="appointment_description" label="预约描述"></el-table-column>
+      <el-table-column prop="reviewer_name" label="审核人"></el-table-column>
+      <el-table-column prop="submit_time" sortable label="预约提交时间"></el-table-column>
 
-      <el-table-column prop="submit_time" sortable label="提交时间"></el-table-column>
-
-      <el-table-column label="预约回复" fixed="right" width="200">
+      <el-table-column label="预约回复" fixed="right" width="100">
         <template v-slot="{ row }">
           <template v-if="!row.reply"> 暂无回复 </template>
           <template v-else>
@@ -48,31 +39,27 @@
         </template>
       </el-table-column>
     </el-table>
+    <div class="divide">
+      <el-button type="danger" @click="handleDelete">删除记录</el-button>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { FormInstance, FormRules } from "element-plus";
+import { computed, onMounted, ref } from "vue";
 
-import { getAppointself } from "@/api/record";
+import { deleterecord, getAppointall, reviewacc, reviewref } from "@/api/review";
 import { useUserStore } from "@/stores/user";
 
-const userStore = useUserStore();
-const ruleFormRef = ref<FormInstance>();
-const tableData = ref<any[]>([]);
-const search = ref("");
-const filterTableData = computed(() =>
-  tableData.value.filter(
-    (data) =>
-      !search.value ||
-      data.user_id.toLowerCase().includes(search.value.toLowerCase()) ||
-      data.user_name.toLowerCase().includes(search.value.toLowerCase())
-  )
-);
+export interface Appointment {
+  appointment_id: number;
+}
 
-const filterTag = (value: string, row: any) => {
-  return row.appointment_status === value;
-};
+const tableData = ref([]);
+const search = ref("");
+const selectedRows = ref<Appointment[]>([]);
+const disableAuditButton = ref(false);
 
 const mapstatus = (appointment_status: any) => {
   // 映射user_role到相应的文本
@@ -85,20 +72,44 @@ const mapstatus = (appointment_status: any) => {
         : "";
 };
 
+const handleSelectionChange = (selection: Appointment[]) => {
+  selectedRows.value = selection;
+  disableAuditButton.value = selectedRows.value.length > 1;
+};
+
+const handleDelete = async () => {
+  if (selectedRows.value.length === 0) {
+    // 没有选中的行
+    return;
+  }
+  for (const row of selectedRows.value) {
+    // 替换为实际的 API 调用，逐个调用 API
+    const response = await deleterecord(row.appointment_id);
+    // 模拟删除成功
+    console.log(response);
+    console.log("Deleting row with ID:", row.appointment_id);
+    if (response.code === 200) {
+      ElMessage({ message: "删除预约记录成功", type: "success" });
+    }
+  }
+
+  tableData.value = tableData.value.filter((row) => !selectedRows.value.includes(row));
+  selectedRows.value = [];
+};
+
 onMounted(async () => {
   // 通过 API 请求获取数据
   try {
-    const response1 = await getAppointself("SUBMITTED", userStore.user!.user_id);
-    console.log(response1);
+    const response = await getAppointall("REFUSED");
+    console.log(response);
 
-    const response2 = await getAppointself("ACCEPTED", userStore.user!.user_id);
-    console.log(response2);
-
-    const response3 = await getAppointself("REFUSED", userStore.user!.user_id);
-    const arr = [...response1, ...response2, ...response3];
-    tableData.value = arr;
-    // console.log(tableData.value)
-    ElMessage({ message: "获取成功", type: "success" });
+    if (response.code === 200) {
+      tableData.value = response.data;
+      // console.log(tableData.value)
+      ElMessage({ message: "获取成功", type: "success" });
+    } else {
+      console.error("Failed to fetch data:", response.msg);
+    }
   } catch (error) {
     console.error("API request failed:", error);
   }
@@ -108,12 +119,12 @@ onMounted(async () => {
 <style scoped>
 @import url("https://cdn.jsdelivr.net/gh/AyagawaSeirin/homepage@latest/mdui/css/mdui.min.css");
 .divide {
-  margin: 15px 0px 0px;
+  margin: 15px 30px 15px;
 }
 .my-info {
   width: 100%;
   overflow: hidden;
-  min-height: 570px;
+  min-height: 600px;
   transition: all 0.8s ease;
   background-color: rgb(255, 255, 255);
 

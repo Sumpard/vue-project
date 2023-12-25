@@ -56,6 +56,18 @@ const routes: RouteRecordRaw[] = [
         path: "/upload-image",
         component: () => import("@/views/fun/UploadImage.vue"),
       },
+      {
+        path: "/review1",
+        component: () => import("@/views/review/review_submitted.vue"),
+      },
+      {
+        path: "/review2",
+        component: () => import("@/views/review/review_accepted.vue"),
+      },
+      {
+        path: "/review3",
+        component: () => import("@/views/review/review_refused.vue"),
+      },
     ],
   },
   {
