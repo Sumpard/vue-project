@@ -40,14 +40,11 @@
           </el-select>
         </el-form-item> -->
     </el-form>
-    <span class="dialog-footer">
-      <el-button @click="resetForm(ruleFormRef)">重置</el-button>
-      <el-button type="primary" @click="submitForm(ruleFormRef)"> 提交 </el-button>
-    </span>
+
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false"> Confirm </el-button>
+        <el-button @click="resetForm(ruleFormRef)">重置</el-button>
+        <el-button type="primary" @click="submitForm(ruleFormRef)"> 提交 </el-button>
       </span>
     </template>
   </el-dialog>
