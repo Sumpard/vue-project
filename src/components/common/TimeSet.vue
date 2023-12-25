@@ -2,11 +2,11 @@
   <el-time-select
     v-model="startTime"
     :max-time="endTime"
-    class="mr-4"
     placeholder="开始时间"
     start="12:00"
     step="00:15"
     end="22:00"
+    class="time"
   />
   <el-time-select
     v-model="endTime"
@@ -29,3 +29,9 @@ const reset = () => {
 
 defineExpose({ startTime, endTime, reset });
 </script>
+
+<style>
+.time {
+  margin-bottom: 10px;
+}
+</style>

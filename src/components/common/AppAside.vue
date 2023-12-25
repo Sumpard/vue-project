@@ -33,7 +33,7 @@
       <el-menu-item index="reserveroom">
         <el-icon><span class="iconfont icon-huiyishi"></span></el-icon>会议室预约
       </el-menu-item>
-      <el-menu-item index="seat" @click="$router.push('/imgUpload')">
+      <el-menu-item index="seat">
         <el-icon><span class="iconfont icon-zuowei"></span></el-icon>座位预约
       </el-menu-item>
       <el-menu-item index="equipment">

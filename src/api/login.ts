@@ -2,20 +2,17 @@ import api from "./request";
 
 export interface AccessToken {
   access_token: string;
-  //token_type: string;
 }
 
-export interface verifyRes {
+export interface VerifyResult {
   msg: string;
   img: string;
   code: string;
-  //token_type: string;
 }
 
-export interface verifyAns {
+export interface VerifyAnswer {
   msg: string;
   code: string;
-  //token_type: string;
 }
 
 export async function register(user_id: string, user_name: string, password: string) {
@@ -34,14 +31,14 @@ export async function verifyToken(token: string) {
   return (await api.post("/user/verify-token", null, { params: { token } })).data;
 }
 
-export async function getverifycode() {
-  return (await api.get<verifyRes>("/captchaImage/get")).data;
+export async function getCaptcha() {
+  return (await api.get<VerifyResult>("/captchaImage/get")).data;
 }
 
-export async function getanswer() {
-  return (await api.get<verifyAns>("/captchaImage/show")).data;
+export async function getCaptchaAnswer() {
+  return (await api.get<VerifyAnswer>("/captchaImage/show")).data;
 }
 
-export async function verifyanswer(verifyCode: string) {
-  return (await api.get<verifyAns>("/captchaImage/check", { params: { verifyCode } })).data;
+export async function checkCaptcha(verifyCode: string) {
+  return (await api.get<VerifyAnswer>("/captchaImage/check", { params: { verifyCode } })).data;
 }
