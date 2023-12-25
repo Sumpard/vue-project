@@ -97,7 +97,7 @@ async function getcodeimg() {
 async function onSubmit() {
   const userStore = useUserStore();
   try {
-    Message.info("提交登录信息");
+    //Message.info("提交登录信息");
     // 获取token
     //const Ans = await getanswer();
     //console.log(Ans);
@@ -121,7 +121,8 @@ async function onSubmit() {
         //Message.info("获取用户");
         //console.log("获取用户", user);
         userStore.login({ token, user });
-        Message.success(`登录成功！`);
+        //Message.success(`登录成功！`);
+        Message.success("欢迎你，" + user.user_name + "!");
 
         if ($route.query.redirect) {
           $router.replace($route.query.redirect as string);

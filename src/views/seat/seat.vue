@@ -21,15 +21,15 @@
     </div>
     <div class="form">
       <div class="wrapp">
-        <el-text tag="b" size="large" class="m-text">器材预约</el-text>
+        <el-text tag="b" size="large" class="m-text">座位预约</el-text>
         <el-button size="small" class="text-bu" type="primary" :icon="search" @click="dialog_switch = true"
-          >器材详情</el-button
+          >座位详情</el-button
         >
       </div>
       <el-form :model="bookingForm_equip" label-width="120px">
         <div class="flex">
-          <el-form-item label="器材">
-            <el-select v-model="bookingForm_equip.equip" placeholder="选择器材">
+          <el-form-item label="座位">
+            <el-select v-model="bookingForm_equip.equip" placeholder="选择座位">
               <el-option v-for="equip in equips" :value="equip.available_name"> </el-option>
             </el-select>
           </el-form-item>
@@ -49,10 +49,10 @@
           </div>
         </el-form-item>
         <el-form-item label="手机号">
-          <el-input v-model="bookingForm_equip.booker" clearable placeholder="请输入手机号"></el-input>
+          <el-input v-model="bookingForm_equip.booker" placeholder="请输入手机号" clearable></el-input>
         </el-form-item>
         <el-form-item label="用途">
-          <el-input v-model="bookingForm_equip.use" clearable placeholder="请输入器材用途"></el-input>
+          <el-input v-model="bookingForm_equip.use" clearable placeholder="请输入座位用途"></el-input>
         </el-form-item>
         <el-form-item label="备注">
           <el-input
@@ -73,13 +73,13 @@
 
   <div>
     <el-drawer v-model="dialog_switch" title="I am the title" :with-header="false" direction="ltr">
-      <span>健雄书院器材</span>
+      <span>健雄书院座位</span>
       <div>
-        <el-tabs v-model="activeName" type="card" class="demo-tabs" @tab-click="handleClick">
+        <el-tabs v-model="activeName" type="card" class="demo-tabs">
           <el-tab-pane v-for="equip in equips" :key="equip.available_id" :label="equip.available_name">
-            <p>{{ "器材名称：" + equip.available_name }}</p>
-            <p>{{ "器材当前状态:" + equip.available_status }}</p>
-            <p>{{ "器材信息:" + equip.available_description }}</p>
+            <p>{{ "座位名称：" + equip.available_name }}</p>
+            <p>{{ "座位当前状态:" + equip.available_status }}</p>
+            <p>{{ "座位信息:" + equip.available_description }}</p>
             <p>{{ "图片:" + equip.available_image }}</p>
           </el-tab-pane>
         </el-tabs>
@@ -96,7 +96,7 @@ import { Avail, getAppoint_by_day, get_avail_set, submitAppoint } from "@/api/me
 import { useUserStore } from "@/stores/user";
 import Message from "@/utils/message";
 import { combineDateTime, formatTimestamp } from "@/utils/timeformat";
-import Gante from "@/views/chart/gante_equip.vue";
+import Gante from "@/views/chart/gante_seat.vue";
 
 let equips: Avail[] = [];
 const dialog_switch = ref(false);
@@ -150,6 +150,11 @@ export default {
         alert("请填写所有必填项");
         return;
       }
+      if (this.bookingForm_equip.booker.length != 11) {
+        console.log(this.bookingForm_equip.booker.length);
+        Message.error("手机号码填写不合规范！");
+        return;
+      }
 
       Message.info("正在提交预约信息");
       const date_ = new Date(this.bookingForm_equip.date);
@@ -158,7 +163,7 @@ export default {
       const des = this.bookingForm_equip.use;
       const temp_str = this.bookingForm_equip.equip;
       const avail_id = avail_map[temp_str][0];
-      const avail_type_name = "equipment";
+      const avail_type_name = "座位";
       const avail_name = temp_str;
       const user = useUserStore().user!;
       const user_id = user.user_id;
@@ -175,7 +180,13 @@ export default {
         user_name,
         phone
       );
-      console.log(
+      //console.log(submit_info);
+      if (submit_info.code == 200) {
+        Message.success("提交成功！");
+      } else {
+        Message.error("提交失败！");
+      }
+      /* console.log(
         "预约信息:",
         date_,
         start_,
@@ -188,17 +199,18 @@ export default {
         user_name,
         phone,
         user
-      );
+      ); */
     },
 
     async equip_template() {
       try {
-        const roomdata = (await get_avail_set("equipment")).data;
+        const roomdata = (await get_avail_set("座位")).data;
         this.equips = roomdata;
+        console.log(roomdata);
         for (let i = 0; i < roomdata.length; i++) {
           avail_map[roomdata[i].available_name] = [roomdata[i].available_id, i];
         }
-        //console.log("maps:", avail_map);
+        console.log("maps:", avail_map);
       } catch (error) {
         console.error(error);
       }
@@ -213,17 +225,14 @@ export default {
         remark: "",
       };
       /* this.time_form = {
-        time_select: "",
-      }; */
+          time_select: "",
+        }; */
 
       this.$refs.timeset.reset();
     },
 
     getdate() {
       return this.time_form.time_select;
-    },
-    handleClick(tab: TabsPaneContext, event: Event) {
-      //console.log(tab, event);
     },
   },
 };
