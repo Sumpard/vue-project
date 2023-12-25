@@ -53,14 +53,13 @@
 
 <script setup lang="ts">
 import type { FormInstance, FormRules } from "element-plus";
-import { computed, onMounted, ref } from "vue";
 
 import { getAppointself } from "@/api/record";
 import { useUserStore } from "@/stores/user";
 
 const userStore = useUserStore();
 const ruleFormRef = ref<FormInstance>();
-const tableData = ref([]);
+const tableData = ref<any[]>([]);
 const search = ref("");
 const filterTableData = computed(() =>
   tableData.value.filter(
@@ -89,16 +88,17 @@ const mapstatus = (appointment_status: any) => {
 onMounted(async () => {
   // 通过 API 请求获取数据
   try {
-    const response = await getAppointself(userStore.user!.user_id);
-    console.log(response);
+    const response1 = await getAppointself("SUBMITTED", userStore.user!.user_id);
+    console.log(response1);
 
-    if (response.code === 200) {
-      tableData.value = response.data;
-      // console.log(tableData.value)
-      ElMessage({ message: "获取成功", type: "success" });
-    } else {
-      console.error("Failed to fetch data:", response.msg);
-    }
+    const response2 = await getAppointself("ACCEPTED", userStore.user!.user_id);
+    console.log(response2);
+
+    const response3 = await getAppointself("REFUSED", userStore.user!.user_id);
+    const arr = [...response1, ...response2, ...response3];
+    tableData.value = arr;
+    // console.log(tableData.value)
+    ElMessage({ message: "获取成功", type: "success" });
   } catch (error) {
     console.error("API request failed:", error);
   }
