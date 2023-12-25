@@ -29,11 +29,11 @@ const routes: RouteRecordRaw[] = [
         component: () => import("@/views/home/homeindex.vue"),
       },
       {
-        path: "/contact",
+        path: "/questionsub",
         component: () => import("@/views/contact/contactUs02.vue"),
       },
       {
-        path: "/response",
+        path: "/questionlist",
         component: () => import("@/views/contact/response.vue"),
       },
       {

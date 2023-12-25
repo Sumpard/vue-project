@@ -51,10 +51,10 @@
           <span v-if="!isCollapse">联系我们</span>
         </div>
       </template>
-      <el-menu-item index="feedback" @click="$router.push('/contact')">
+      <el-menu-item index="questionsub">
         <el-icon><i-ep-Postcard /></el-icon>填写反馈
       </el-menu-item>
-      <el-menu-item index="response" @click="$router.push('/response')">
+      <el-menu-item index="questionlist">
         <el-icon><i-ep-Message /></el-icon>反馈记录
       </el-menu-item>
     </el-sub-menu>
