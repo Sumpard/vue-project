@@ -1,123 +1,124 @@
 <template>
-  <div class="my-info">
-    <el-table
-      :data="filterTableData"
-      max-height="550"
-      highlight-current-row
-      :default-sort="{ prop: 'score', order: 'descending' }"
-    >
-      <el-table-column prop="propose_time" label="反馈时间">
-        <template v-slot="{ row }">
-          {{ formatISO(row.propose_time) }}
-        </template>
-      </el-table-column>
-      <el-table-column prop="question_texts" label="反馈内容摘要">
-        <template v-slot="{ row }">
-          {{ truncateText(row.question_texts, 15) }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="question_status"
-        label="反馈状态"
-        :filters="[
-          { text: '已提交', value: 'SUBMITTED' },
-          { text: '已答复', value: 'FINISHED' },
-        ]"
-        :filter-method="filterTag"
-        filter-placement="bottom-end"
+  <div class="outer">
+    <div class="my-info">
+      <el-table
+        :data="filterTableData"
+        max-height="550"
+        highlight-current-row
+        :default-sort="{ prop: 'propose_time', order: 'descending' }"
       >
-        <template v-slot="{ row }">
-          {{ mapstatus(row.question_status) }}
-        </template>
-      </el-table-column>
+        <el-table-column prop="propose_time" label="反馈时间" sortable>
+          <template v-slot="{ row }">
+            {{ formatISO(row.propose_time) }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="question_texts" label="反馈内容摘要">
+          <template v-slot="{ row }">
+            {{ truncateText(row.question_texts, 15) }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="question_status"
+          label="反馈状态"
+          :filters="[
+            { text: '已提交', value: 'SUBMITTED' },
+            { text: '已答复', value: 'FINISHED' },
+          ]"
+          :filter-method="filterTag"
+          filter-placement="bottom-end"
+        >
+          <template #default="scope">
+            <el-tag :type="scope.row.question_status === 'SUBMITTED' ? '' : 'success'" disable-transitions>{{
+              mapstatus(scope.row.question_status)
+            }}</el-tag>
+          </template>
+        </el-table-column>
 
-      <el-table-column fixed="right" label="查看详情" width="120">
-        <template #default="scope">
-          <el-button link type="primary" size="large" @click="openDialog(scope.row)">
-            <el-icon><i-ep-DArrowRight /></el-icon>
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+        <el-table-column fixed="right" label="查看详情" width="120">
+          <template #default="scope">
+            <el-button link type="primary" size="large" @click="openDialog(scope.row)">
+              <el-icon><i-ep-DArrowRight /></el-icon>
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
 
-    <!-- 会话框查看详情 -->
-    <el-dialog v-model="dialogVisible" title="反馈详情" width="70%">
-      <div v-if="selectedRow">
-        <el-form>
-          <el-divider>您的反馈</el-divider>
-          <el-form-item class="form-item-with-margin">
-            <div class="details-container">
-              <!-- 用户侧 -->
-              <el-row>
-                <el-form-item label="反馈时间：">
-                  <p>{{ formatISO(selectedRow.propose_time) }}</p>
-                </el-form-item>
-              </el-row>
-              <el-row>
-                <el-form-item label="反馈内容：">
-                  <p>{{ selectedRow.question_texts }}</p>
-                </el-form-item>
-              </el-row>
-              <el-row>
-                <el-form-item label="反馈处理状态：">
-                  <p style="color: rgb(37, 165, 250)">{{ mapstatus(selectedRow.question_status) }}</p>
-                </el-form-item>
-              </el-row>
-              <!-- 添加其他需要显示的详情 -->
-              <!-- 显示图片 -->
-              <el-row v-if="selectedRow.question_images.length >= 1 && selectedRow.question_images[0] != ''">
-                <el-form-item label="反馈图片：">
+      <!-- 会话框查看详情 -->
+      <el-dialog v-model="dialogVisible" title="反馈详情" width="50%">
+        <div v-if="selectedRow">
+          <el-form>
+            <el-divider>您的反馈</el-divider>
+            <el-form-item class="form-item-with-margin">
+              <div class="details-container">
+                <!-- 用户侧 -->
+                <el-row>
+                  <el-form-item label="反馈时间：">
+                    <p>{{ formatISO(selectedRow.propose_time) }}</p>
+                  </el-form-item>
+                </el-row>
+                <el-row>
+                  <el-form-item label="反馈内容：">
+                    <p>{{ selectedRow.question_texts }}</p>
+                  </el-form-item>
+                </el-row>
+                <el-row>
+                  <el-form-item label="反馈处理状态：">
+                    <p style="color: rgb(37, 165, 250)">{{ mapstatus(selectedRow.question_status) }}</p>
+                  </el-form-item>
+                </el-row>
+                <!-- 添加其他需要显示的详情 -->
+                <!-- 显示图片 -->
+                <el-row v-if="selectedRow.question_images.length >= 1 && selectedRow.question_images[0] != ''">
+                  <el-form-item label="反馈图片：">
+                    <div class="img-container">
+                      <div v-for="(image, index) in selectedRow.question_images" :key="index">
+                        <img :src="'data:image/png;base64,' + image" alt="Image" class="img" />
+                      </div>
+                    </div>
+                  </el-form-item>
+                </el-row>
+                <el-row v-else>
+                  <el-form-item label="反馈图片：">
+                    <p>未上传图片</p>
+                  </el-form-item>
+                </el-row>
+              </div>
+            </el-form-item>
+
+            <el-divider>院长回复</el-divider>
+            <el-form-item class="form-item-with-margin">
+              <div class="details-container">
+                <!--院长回复侧  -->
+                <el-row>
+                  <el-form-item label="院长回复内容：" v-if="selectedRow.reply_texts != null">
+                    <p>{{ selectedRow.reply_texts }}</p>
+                  </el-form-item>
+                  <el-form-item label="院长回复内容：" v-else>
+                    <p>院长暂未回复</p>
+                  </el-form-item>
+                </el-row>
+                <el-form-item label="反馈回复图片：" v-if="selectedRow.reply_images[0] != ''">
                   <div class="img-container">
-                    <div v-for="(image, index) in selectedRow.question_images" :key="index">
+                    <div v-for="(image, index) in selectedRow.reply_images" :key="index">
                       <img :src="'data:image/png;base64,' + image" alt="Image" class="img" />
                     </div>
                   </div>
                 </el-form-item>
-              </el-row>
-              <el-row v-else>
-                <el-form-item label="反馈图片：">
-                  <p>未上传图片</p>
+                <el-form-item label="反馈回复图片：" v-else>
+                  <p>院长未上传图片</p>
                 </el-form-item>
-              </el-row>
-            </div>
-          </el-form-item>
+              </div>
+            </el-form-item>
+          </el-form>
+        </div>
 
-          <el-divider>院长回复</el-divider>
-          <el-form-item class="form-item-with-margin">
-            <div class="details-container">
-              <!--院长回复侧  -->
-              <el-row>
-                <el-form-item label="院长回复内容：" v-if="selectedRow.reply_texts != null">
-                  <p>{{ selectedRow.reply_texts }}</p>
-                </el-form-item>
-                <el-form-item label="院长回复内容：" v-else>
-                  <p>院长暂未回复</p>
-                </el-form-item>
-              </el-row>
-              <el-form-item
-                label="反馈回复图片："
-                v-if="selectedRow.reply_images.length >= 1 && selectedRow.reply_images[0] != ''"
-              >
-                <div class="img-container">
-                  <div v-for="(image, index) in selectedRow.reply_images" :key="index">
-                    <img :src="'data:image/png;base64,' + image" alt="Image" class="img" />
-                  </div>
-                </div>
-              </el-form-item>
-              <el-form-item label="反馈回复图片：" v-else>
-                <p>院长未上传图片</p>
-              </el-form-item>
-            </div>
-          </el-form-item>
-        </el-form>
-      </div>
-
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button type="primary" @click="dialogVisible = false"> 关闭 </el-button>
-        </span>
-      </template>
-    </el-dialog>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button type="primary" @click="dialogVisible = false"> 关闭 </el-button>
+          </span>
+        </template>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -192,8 +193,13 @@ onMounted(async () => {
 .divide {
   margin: 15px 0px 0px;
 }
+
+.outer {
+  display: flex;
+  justify-content: center; /* 子元素水平居中 */
+}
 .my-info {
-  width: 100%;
+  width: 90%;
   overflow: hidden;
   min-height: 570px;
   transition: all 0.8s ease;
@@ -204,6 +210,7 @@ onMounted(async () => {
   border: 0.1rem solid #dcdfe6;
   border-radius: 1rem;
   border-width: 1px;
+  display: flex;
 }
 .rin-card {
   /*margin: 20px 0;*/
