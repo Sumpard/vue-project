@@ -47,9 +47,8 @@
 
 <script setup lang="ts">
 import type { FormInstance, FormRules } from "element-plus";
-import { computed, onMounted, ref } from "vue";
 
-import { deleterecord, getAppointall, reviewacc, reviewref } from "@/api/review";
+import { deleteRecord, getAppointAll, reviewAppointmentRefuse } from "@/api/review";
 import { useUserStore } from "@/stores/user";
 
 const ruleFormRef = ref<FormInstance>();
@@ -95,7 +94,7 @@ const handleDelete = async () => {
   }
   for (const row of selectedRows.value) {
     // 替换为实际的 API 调用，逐个调用 API
-    const response = await deleterecord(row.appointment_id);
+    const response = await deleteRecord(row.appointment_id);
     // 模拟删除成功
     console.log(response);
     console.log("Deleting row with ID:", row.appointment_id);
@@ -123,7 +122,12 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       try {
         const id = selectedRows.value[0].appointment_id;
         console.log(form.reply);
-        const response = await reviewref(id, form.reply, userStore.user!.user_id, userStore.user!.user_name);
+        const response = await reviewAppointmentRefuse(
+          id,
+          form.reply,
+          userStore.user!.user_id,
+          userStore.user!.user_name
+        );
         console.log(response);
 
         if (response.code === 200) {
@@ -157,7 +161,7 @@ const handleClose = (done: () => void) => {
 onMounted(async () => {
   // 通过 API 请求获取数据
   try {
-    const response = await getAppointall("ACCEPTED");
+    const response = await getAppointAll("ACCEPTED");
     console.log(response);
 
     if (response.code === 200) {

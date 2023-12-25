@@ -1,8 +1,6 @@
-import Message from "@/utils/message";
-
 import api from "./request";
 
-export interface avail {
+export interface Avail {
   available_description: string;
   available_id: number;
   available_image: string;
@@ -10,6 +8,7 @@ export interface avail {
   available_status: string;
   available_type_name: string;
 }
+
 export interface Appointment {
   appoint_end_time: string;
   appoint_start_time: string;
@@ -50,7 +49,7 @@ export interface SearchBody {
   typeNull: boolean;
 }
 
-export interface appoint_order {
+export interface AppointOrder {
   appoint_end_time: string;
   appoint_start_time: string;
   appointment: Appointment;
@@ -65,7 +64,7 @@ export interface appoint_order {
   type: string;
 }
 
-export interface appoint_sub {
+export interface AppointCreate {
   renter_id: string;
   renter_name: string;
   renter_phone: string;
@@ -77,10 +76,9 @@ export interface appoint_sub {
   appoint_start_time: string;
 }
 
-export async function getAppoint_by_day(day: string, appointstatus: string, type: string) {
-  //Message.info("查询中");
-  const appointbody: SearchBody = {
-    appointment_status: appointstatus,
+export async function getAppoint_by_day(day: string, appoint_status: string, type: string) {
+  const body: SearchBody = {
+    appointment_status: appoint_status,
     available_type_name: type,
     day: day,
     needSort: true,
@@ -92,7 +90,7 @@ export async function getAppoint_by_day(day: string, appointstatus: string, type
     sorted: true,
     typeNull: true,
   };
-  return (await api.post("appointment/select-condition", appointbody)).data.data;
+  return (await api.post("appointment/select-condition", body)).data.data;
 }
 
 export async function submitAppoint(
@@ -106,8 +104,7 @@ export async function submitAppoint(
   user_name: string,
   phone: string
 ) {
-  Message.info("提交中……");
-  const appointbody: appoint_sub = {
+  const body: AppointCreate = {
     appoint_end_time: end_time,
     appoint_start_time: start_time,
     appointment_description: description,
@@ -118,7 +115,7 @@ export async function submitAppoint(
     renter_name: user_name,
     renter_phone: phone,
   };
-  return (await api.post("appointment/insert", appointbody)).data;
+  return (await api.post("appointment/insert", body)).data;
 }
 
 export async function get_avail_set(avail: string) {

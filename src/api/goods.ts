@@ -1,12 +1,10 @@
 import api from "./request";
-import Message from "@/utils/message";
+
 export interface AccessToken {
   access_token: string;
-  //token_type: string;
 }
 
-
-export async function addgoods(
+export async function addGoods(
   available_description: string,
   available_id: string,
   available_image: string,
@@ -26,49 +24,31 @@ export async function addgoods(
   ).data;
 }
 
+export async function getAllGoods() {
+  return (await api.post("/available/select-all")).data;
+}
 
-export async function getallgoods() {
-    return (await api.post("/available/select-all")).data;
-  }
+export async function editdescription(available_id: int, des: string) {
+  return (await api.putForm("/available/update-description ", { "available-id": available_id, des })).data;
+}
+export async function editstatus(available_id: int, status: string) {
+  return (await api.putForm("/available/update-status", { "available-id": available_id, status })).data;
+}
+export async function deletegood(id: int) {
+  return (await api.delete("/available/delete", { params: { id } })).data;
+}
 
-  export async function getalluser() {
-    return (await api.post("/user/select-all")).data;
-  }
-  
-  export async function editscore(id:string,score:int) {
-    console.log(typeof score)
-    return (await api.putForm("/user/update-score ",{id,score })).data;
-  }
-
-  export async function editrole(id:string,role:string) {
-    
-    return (await api.putForm("/user/update-role ",{id,role })).data;
-  }
-  export async function editdescription(available_id:int,des:string) {
-   
-    return (await api.putForm("/available/update-description ",{"available-id":available_id,des })).data;
-  }
-  export async function editstatus(available_id:int,status:string) {
-    
-    return (await api.putForm("/available/update-status",{"available-id":available_id,status})).data;
-  }
-  export async function deletegood(id:int) {
-    
-    return (await api.delete("/available/delete",{params:{id}})).data;
-  }
- 
-
-  
-  export async function adduser(
-    avatar: string,
-    email: string,
-    password: string,
-    score:int,
-    user_id: string,
-    user_name: string,
-    user_role: string,
-  ) {
-    return (await api.post("/user/insert-single",{
+export async function adduser(
+  avatar: string,
+  email: string,
+  password: string,
+  score: int,
+  user_id: string,
+  user_name: string,
+  user_role: string
+) {
+  return (
+    await api.post("/user/insert-single", {
       avatar,
       email,
       password,
@@ -76,6 +56,6 @@ export async function getallgoods() {
       user_id,
       user_name,
       user_role,
-    })).data;
-  }
- 
+    })
+  ).data;
+}

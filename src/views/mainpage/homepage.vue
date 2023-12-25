@@ -3,7 +3,7 @@
     <el-col :span="24">
       <el-carousel :interval="4000" type="card" height="400px">
         <el-carousel-item v-for="item in imageUrl" :key="item">
-          <img :src="item.url" alt="" />
+          <img :src="item" alt="" />
         </el-carousel-item>
       </el-carousel>
     </el-col>
@@ -16,13 +16,9 @@
 </template>
 
 <script setup lang="ts">
-import image1 from "@/assets/1.jpg";
-import image2 from "@/assets/2.jpg";
-import image3 from "@/assets/3.jpg";
-import image4 from "@/assets/4.png";
 import cols from "@/views/components/cols.vue";
 
-const imageUrl = [{ url: image1 }, { url: image2 }, { url: image3 }, { url: image4 }];
+const imageUrl = ["1.jpg", "2.jpg", "3.jpg", "4.png"].map((t) => `img/carousel/${t}`);
 </script>
 
 <style lang="scss" scoped>

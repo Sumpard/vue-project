@@ -46,11 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import type { FormInstance, FormRules } from "element-plus";
-import { computed, onMounted, ref } from "vue";
-
-import { deleterecord, getAppointall, reviewacc, reviewref } from "@/api/review";
-import { useUserStore } from "@/stores/user";
+import { deleteRecord, getAppointAll } from "@/api/review";
 
 export interface Appointment {
   appointment_id: number;
@@ -84,7 +80,7 @@ const handleDelete = async () => {
   }
   for (const row of selectedRows.value) {
     // 替换为实际的 API 调用，逐个调用 API
-    const response = await deleterecord(row.appointment_id);
+    const response = await deleteRecord(row.appointment_id);
     // 模拟删除成功
     console.log(response);
     console.log("Deleting row with ID:", row.appointment_id);
@@ -100,7 +96,7 @@ const handleDelete = async () => {
 onMounted(async () => {
   // 通过 API 请求获取数据
   try {
-    const response = await getAppointall("REFUSED");
+    const response = await getAppointAll("REFUSED");
     console.log(response);
 
     if (response.code === 200) {
