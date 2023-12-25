@@ -34,7 +34,7 @@ export async function submitQuestion(
   submit_img: string,
   submit_text: string
 ) {
-  Message.info("正在提交……");
+  //Message.info("正在提交……");
   const questionbody: question_submit = {
     propose_time: submit_time,
     proposer_name: submit_name,
