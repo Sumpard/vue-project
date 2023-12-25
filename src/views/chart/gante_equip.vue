@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div ref="container" class="scrolling-container"></div>
+    <div ref="containerRef" class="scrolling-container"></div>
     <el-dialog v-model="dialogVisible" title="预约信息" width="30%">
       <span>{{ roomid }}</span>
       <p>{{ rentedToData }}</p>
@@ -15,7 +15,8 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import dayjs from "dayjs";
 import { ElMessageBox } from "element-plus";
 import Highcharts from "highcharts";
 import HighchartsExporting from "highcharts/modules/exporting";
@@ -24,9 +25,6 @@ import Highchartsavocado from "highcharts/themes/avocado";
 import Highchartsgray from "highcharts/themes/gray";
 import HighchartsGridLight from "highcharts/themes/grid-light";
 import HighchartsSand from "highcharts/themes/sand-signika";
-import moment from "moment";
-import { List } from "typescript-collections";
-import { getCurrentInstance, ref } from "vue";
 
 import { Appointment, getAppoint_by_day, get_avail_set } from "@/api/meeting_gante";
 import { formatTimestamp } from "@/api/timeformat";
@@ -45,169 +43,65 @@ type M_Equip = {
 
 HighchartsGantt(Highcharts);
 //HighchartsExporting(Highcharts);
-HighchartsSand(Highcharts);
+HighchartsGridLight(Highcharts);
 //Highcharts.AST.allowedAttributes.push("@click");
 /* Highcharts.setOptions({
   bypassHTMLFiltering: true 
 }) */
 
+const containerRef = ref();
+
 var timestamp: number;
 var today = new Date();
 const hour = 1000 * 60 * 60;
 const map = Highcharts.map;
-let numRooms = 7;
+let numequips = 7;
 let series: { name: string; data: any; current: any }[];
 let equipments: M_Equip[] = [];
 //console.log(meetingrooms);
 
-export default {
-  props: {
-    timett: {
-      type: String,
-      required: true,
-    },
-  },
+const props = defineProps<{
+  timett: string;
+  map_: { [key: string]: [number, number] };
+}>();
 
-  setup() {
-    const dialogVisible = ref(false);
-    const roomid = ref("");
-    const rentedToData = ref("");
-    const starttime = ref("");
-    const endtime = ref("");
-    const handleClose = (done: () => void) => {
-      ElMessageBox.confirm("Are you sure to close this dialog?")
-        .then(() => {
-          done();
-        })
-        .catch(() => {
-          // catch error
-        });
-    };
-    const openDialog = (data1: string, data2: string, data3: string, data4: string) => {
-      const num3 = parseInt(data3, 10) - 28800000;
-      const num4 = parseInt(data4, 10) - 28800000;
-      roomid.value = data1;
-      rentedToData.value = "借用者：" + data2;
-      starttime.value = "开始时间：" + moment(num3).format("YYYY-MM-DD HH:mm");
-      endtime.value = "结束时间：" + moment(num4).format("YYYY-MM-DD HH:mm");
-      dialogVisible.value = true; //- 28800000
-    };
-    return {
-      dialogVisible, // 添加类型注解
-      roomid,
-      rentedToData,
-      starttime,
-      endtime,
-      handleClose,
-      openDialog,
-    };
-  },
-  watch: {
-    timett(newVal, oldVal) {
-      // todo
-      if (newVal == null) return;
-      else {
-        timestamp = new Date(this.timett).getTime();
-        const today = timestamp;
-        console.log("time_select changed:", newVal, today);
+const dialogVisible = ref(false);
+const roomid = ref("");
+const rentedToData = ref("");
+const starttime = ref("");
+const endtime = ref("");
+const handleClose = (done: () => void) => {
+  ElMessageBox.confirm("Are you sure to close this dialog?")
+    .then(() => {
+      done();
+    })
+    .catch(() => {
+      // catch error
+    });
+};
+const openDialog = (data1: string, data2: string, data3: string, data4: string) => {
+  const num3 = parseInt(data3, 10) - 28800000;
+  const num4 = parseInt(data4, 10) - 28800000;
+  roomid.value = data1;
+  rentedToData.value = "借用者：" + data2;
+  starttime.value = "开始时间：" + dayjs(num3).format("YYYY-MM-DD HH:mm");
+  endtime.value = "结束时间：" + dayjs(num4).format("YYYY-MM-DD HH:mm");
+  dialogVisible.value = true; //- 28800000
+};
 
-        const timeformat = formatTimestamp(today);
-        this.get_today_equip(timeformat, "SUBMITTED").then(() => {
-          //console.log("watch", equipments);
-          series = equipments.map(function (equipment, i) {
-            const data = equipment.deals.map(function (deal: { rentedTo: any; from: any; to: any }) {
-              return {
-                id: equipment.model,
-                rentedTo: deal.rentedTo,
-                start: deal.from,
-                end: deal.to,
-                y: i,
-              };
-            });
-            //console.log("data:", data, meetingroom, meetingroom.model, meetingroom.deals[meetingroom.current]);
-            return {
-              name: equipment.model,
-              data: data,
-              current: equipment.deals[equipment.current],
-            };
-          });
-          Highcharts.ganttChart(this.$refs.container, {
-            series: series,
-            title: {
-              text: "器材预约",
-            },
-            //credits
-            credits: {
-              //enabled: false
-              text: "吴健雄学院",
-              href: "",
-            },
-            tooltip: {
-              followPointer: true,
-              //这边从00：00⏲
-              pointFormat:
-                "<span>借用者: {point.rentedTo}</span><br/>" +
-                "<span>开始时间: {point.start:%H: %M}</span><br/>" +
-                "<span>结束时间: {point.end:%H: %M}</span>",
-            },
-            xAxis: {
-              currentDateIndicator: false,
-              min: today + 20 * hour,
-              max: today + 30 * hour,
-            },
-            yAxis: {
-              type: "category",
-              grid: {
-                columns: [
-                  {
-                    title: {
-                      text: "器材",
-                    },
-                    categories: map(series, function (s: { name: any }) {
-                      return s.name;
-                    }),
-                  },
-                ],
-              },
-            },
-            plotOptions: {
-              series: {
-                point: {
-                  events: {
-                    click: (event: { point: any }) => {
-                      //console.log("点击事件触发");
-                      var point = event.point;
-                      //console.log(dialogVisible.value);
-                      //console.log(point.rentedTo, point.start, today, this.timett, timestamp);
-                      this.openDialog(point.id, point.rentedTo, point.start, point.end);
-                    },
-                  },
-                },
-              },
-            },
-          });
-        });
-      }
-    },
-  },
+watch(
+  () => props.timett,
+  (newVal, oldVal) => {
+    // todo
+    if (newVal == null) return;
+    else {
+      timestamp = new Date(props.timett).getTime();
+      const today = timestamp;
+      //console.log("time_select changed:", newVal, today);
 
-  mounted() {
-    console.log("mounted");
-    const instance = getCurrentInstance()!;
-    const { dialogVisible, handleClose, openDialog } = instance.proxy! as unknown as {
-      dialogVisible: any;
-      handleClose: () => void;
-      openDialog: (arg0: string, arg1: string, arg2: string, arg3: string) => void;
-    };
-    this.get_equip("equipment").then(() => {
-      //setup instance
-      today.setHours(0, 0, 0, 0);
-
-      const today_ = today.getTime();
-      //meeting get
-      const timeformat = formatTimestamp(today_);
-
-      this.get_today_equip(timeformat, "SUBMITTED").then(() => {
+      const timeformat = formatTimestamp(today);
+      get_today_equip(timeformat, "SUBMITTED").then(() => {
+        //console.log("watch", equipments);
         series = equipments.map(function (equipment, i) {
           const data = equipment.deals.map(function (deal: { rentedTo: any; from: any; to: any }) {
             return {
@@ -218,15 +112,14 @@ export default {
               y: i,
             };
           });
-          console.log("data:", data, equipments);
+          //console.log("data:", data, meetingroom, meetingroom.model, meetingroom.deals[meetingroom.current]);
           return {
             name: equipment.model,
             data: data,
             current: equipment.deals[equipment.current],
           };
         });
-
-        Highcharts.ganttChart(this.$refs.container, {
+        Highcharts.ganttChart(containerRef.value, {
           series: series,
           title: {
             text: "器材预约",
@@ -247,8 +140,8 @@ export default {
           },
           xAxis: {
             currentDateIndicator: false,
-            min: today_ + 20 * hour,
-            max: today_ + 30 * hour,
+            min: today + 20 * hour,
+            max: today + 30 * hour,
           },
           yAxis: {
             type: "category",
@@ -258,9 +151,7 @@ export default {
                   title: {
                     text: "器材",
                   },
-                  categories: map(series, (s: { name: any }) => {
-                    //https://www.baidu.com/
-                    const link = '<a href="javascript:console.log("1111")" ' + ">(详细信息)</a>";
+                  categories: map(series, function (s: { name: any }) {
                     return s.name;
                   }),
                 },
@@ -272,7 +163,9 @@ export default {
               point: {
                 events: {
                   click: (event: { point: any }) => {
+                    //console.log("点击事件触发");
                     var point = event.point;
+                    console.log("watch click!");
                     openDialog(point.id, point.rentedTo, point.start, point.end);
                   },
                 },
@@ -281,66 +174,162 @@ export default {
           },
         });
       });
+    }
+  }
+);
+
+onMounted(async () => {
+  //console.log("mounted");
+  /*const instance = getCurrentInstance()!;
+  const { dialogVisible, handleClose, openDialog } = instance.proxy! as unknown as {
+    dialogVisible: any;
+    handleClose: () => void;
+    openDialog: (arg0: string, arg1: string, arg2: string, arg3: string) => void;
+  };*/
+  await get_equip("equipment");
+
+  //setup instance
+  today.setHours(0, 0, 0, 0);
+
+  const today_ = today.getTime();
+  //meeting get
+  const timeformat = formatTimestamp(today_);
+
+  await get_today_equip(timeformat, "SUBMITTED");
+
+  series = equipments.map((equipment, i) => {
+    const data = equipment.deals.map((deal) => {
+      return {
+        id: equipment.model,
+        rentedTo: deal.rentedTo,
+        start: deal.from,
+        end: deal.to,
+        y: i,
+      };
     });
-  },
+    //console.log("data:", data, equipments);
+    return {
+      name: equipment.model,
+      data: data,
+      current: equipment.deals[equipment.current],
+    };
+  });
 
-  methods: {
-    async get_today_equip(day: string, status: string) {
-      try {
-        const data = await getAppoint_by_day(day, status, "equipment");
-        const appointlist: List<Appointment> = data as List<Appointment>;
-        if (appointlist != undefined) {
-          for (let i = 0; i < appointlist.length; i++) {
-            const start = new Date(appointlist[i].appoint_start_time).getTime() + 8 * hour;
-            const end = new Date(appointlist[i].appoint_end_time).getTime() + 8 * hour;
-            const newdeal: Deal = {
-              rentedTo: appointlist[i].renter_name,
-              from: start,
-              to: end,
-            };
-            equipments[appointlist[i].available_id - 7 - 1].deals.push(newdeal);
-          }
-        } else {
-          const _today_ = new Date(day).getTime();
-        }
-        for (let i = 0; i < numRooms; i++) {
-          const index: Deal = { rentedTo: "test", from: 1, to: 1 };
-          equipments[i].deals.push(index);
-        }
-      } catch (error) {
-        console.error(error);
+  Highcharts.ganttChart(containerRef.value, {
+    series: series,
+    title: {
+      text: "器材预约",
+    },
+    //credits
+    credits: {
+      //enabled: false
+      text: "吴健雄学院",
+      href: "",
+    },
+    tooltip: {
+      followPointer: true,
+      //这边从00：00⏲
+      pointFormat:
+        "<span>借用者: {point.rentedTo}</span><br/>" +
+        "<span>开始时间: {point.start:%H: %M}</span><br/>" +
+        "<span>结束时间: {point.end:%H: %M}</span>",
+    },
+    xAxis: {
+      currentDateIndicator: false,
+      min: today_ + 20 * hour,
+      max: today_ + 30 * hour,
+    },
+    yAxis: {
+      type: "category",
+      grid: {
+        columns: [
+          {
+            title: {
+              text: "器材",
+            },
+            categories: map(series, (s: { name: any }) => {
+              //https://www.baidu.com/
+              const link = '<a href="javascript:console.log("1111")" ' + ">(详细信息)</a>";
+              return s.name;
+            }),
+          },
+        ],
+      },
+    },
+    plotOptions: {
+      series: {
+        point: {
+          events: {
+            click: (event: { point: any }) => {
+              var point = event.point;
+              console.log("mounted click");
+              openDialog(point.id, point.rentedTo, point.start, point.end);
+            },
+          },
+        },
+      },
+    },
+  });
+});
+
+async function get_today_equip(day: string, status: string) {
+  try {
+    const appointlist: Appointment[] = await getAppoint_by_day(day, status, "equipment");
+    //console.log("appoint:", appointlist);
+    if (appointlist) {
+      for (const appoint of appointlist) {
+        const start = new Date(appoint.appoint_start_time).getTime() + 8 * hour;
+        const end = new Date(appoint.appoint_end_time).getTime() + 8 * hour;
+        const newdeal: Deal = {
+          rentedTo: appoint.renter_name,
+          from: start,
+          to: end,
+        };
+        //equipments[appointlist[i].available_id].deals.push(newdeal);
+        //console.log(props.map_, appoint);
+        equipments[props.map_[appoint.available_name][1]].deals.push(newdeal);
       }
-    },
+    } else {
+      const _today_ = new Date(day).getTime();
+    }
+    for (let i = 0; i < numequips; i++) {
+      const index: Deal = { rentedTo: "test", from: 1, to: 1 };
+      equipments[i].deals.push(index);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
 
-    async get_equip(equip: string) {
-      try {
-        const equipdata = (await get_avail_set(equip)).data;
+async function get_equip(equip: string) {
+  try {
+    const equipdata = (await get_avail_set(equip)).data;
 
-        const len = equipdata.length;
+    const len = equipdata.length;
 
-        equipments.splice(0, equipments.length);
-        for (let i = 0; i < len; i++) {
-          const name = equipdata[i].available_name;
-          console.log("name", name);
-          const newequip: M_Equip = {
-            model: name,
-            current: 0,
-            deals: [],
-          };
-          equipments.push(newequip);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    },
+    numequips = len;
 
-    handleLinkClick() {
-      // 处理点击事件
-      alert("你点击了链接!");
-      console.log("Link clicked!");
-    },
-  },
-};
+    equipments.splice(0, equipments.length);
+    for (let i = 0; i < len; i++) {
+      const name = equipdata[i].available_name;
+      //console.log("name", name);
+      const newequip: M_Equip = {
+        model: name,
+        current: 0,
+        deals: [],
+      };
+      equipments.push(newequip);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+function handleLinkClick() {
+  // 处理点击事件
+  alert("你点击了链接!");
+  console.log("Link clicked!");
+}
 </script>
 
 <style>

@@ -3,10 +3,10 @@
     <el-radio-button :label="false" v-if="isCollapse"><el-icon ><i-ep-Expand /></el-icon></el-radio-button>
     <el-radio-button :label="true" v-else><el-icon ><i-ep-Fold /></el-icon></el-radio-button>
   </el-radio-group> -->
-  <div class="changebutton" @click="toggleCollapse" v-if="isCollapse">
+  <div v-if="isCollapse" class="changebutton" @click="toggleCollapse">
     <el-icon><i-ep-Expand /></el-icon>
   </div>
-  <div class="changebutton" @click="toggleCollapse" v-else>
+  <div v-else class="changebutton" @click="toggleCollapse">
     <el-icon><i-ep-Fold /></el-icon>
   </div>
   <el-menu
@@ -33,7 +33,7 @@
       <el-menu-item index="reserveroom">
         <el-icon><span class="iconfont icon-huiyishi"></span></el-icon>会议室预约
       </el-menu-item>
-      <el-menu-item index="seat" @click="$router.push('/imgUpload')">
+      <el-menu-item index="seat">
         <el-icon><span class="iconfont icon-zuowei"></span></el-icon>座位预约
       </el-menu-item>
       <el-menu-item index="equipment">

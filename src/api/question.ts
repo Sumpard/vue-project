@@ -18,7 +18,6 @@ export interface question_submit {
     proposer_name: string;
     proposer_phone_number: string;
     question_images: string;
-    question_status: "SUBMITTED" | "FINISHED"
     question_texts: string;
 }
 
@@ -40,7 +39,6 @@ export async function submitQuestion(
         proposer_name: submit_name,
         proposer_phone_number: submit_phone,
         question_images: submit_img,
-        question_status: "SUBMITTED",
         question_texts: submit_text,
     };
     return (await api.post("question/insertQuestion", questionbody)).data;

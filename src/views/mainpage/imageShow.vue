@@ -1,30 +1,28 @@
 <template>
   <el-carousel :interval="4000" type="card" height="400px">
     <el-carousel-item v-for="item in imgList" :key="item.id">
-      <img :src="item.idView" class="image">
+      <img :src="item.idView" class="image" />
     </el-carousel-item>
   </el-carousel>
   <div class="trangle"><h1>abcde</h1></div>
-<!--设置样式让其自适应：-->
-
+  <!--设置样式让其自适应：-->
 </template>
 
-<script>
-  export default {
-    name: 'index',
-    data(){
-        return {
-            imgList: [
-                {id:0,idView: "/img/seu01.jpg"},
-                {id:1,idView:"/img/seu02.png"},
-                {id:2,idView: "/img/seu03.png"},
-                {id:3,idView:"/img/wjx.png"}            
-            ]
-        };
-        },
-    methods: { 
-    }
-  }
+<script lang="ts">
+export default {
+  name: "index",
+  data() {
+    return {
+      imgList: [
+        { id: 0, idView: "/img/seu01.jpg" },
+        { id: 1, idView: "/img/seu02.png" },
+        { id: 2, idView: "/img/seu03.png" },
+        { id: 3, idView: "/img/wjx.png" },
+      ],
+    };
+  },
+  methods: {},
+};
 </script>
 
 <style scoped>
@@ -44,22 +42,14 @@
   background-color: #d3dce6;
 }
 
-.block-wrap{
-    display: flex;
-    justify-content: space-around;
+.block-wrap {
+  display: flex;
+  justify-content: space-around;
 }
 
-.trangle{
-  height:0;
-  width:100%;
-  padding-top:75%;
+.trangle {
+  height: 0;
+  width: 100%;
+  padding-top: 75%;
 }
 </style>
-
-
-
-         
-          
-         
-          
- 
