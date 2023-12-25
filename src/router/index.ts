@@ -19,6 +19,10 @@ router.beforeEach(async (to, from, next) => {
     if (userStore.user && userStore.token) {
       try {
         await verifyToken(userStore.token);
+        if (to.meta.requiresAdmin && userStore.user.user_role !== "MANAGER") {
+          ElMessage.error("无法访问页面");
+          return false;
+        }
         next();
       } catch (e) {
         const err = e as AxiosError;

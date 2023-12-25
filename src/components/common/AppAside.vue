@@ -39,7 +39,7 @@
         <el-icon><i-ep-Collection /></el-icon>预约记录
       </el-menu-item>
     </el-sub-menu>
-    <el-sub-menu index="review">
+    <el-sub-menu index="review" v-if="isAdmin">
       <template #title>
         <div>
           <el-icon><i-ep-edit /></el-icon>
@@ -56,13 +56,13 @@
         <el-icon><i-ep-Edit /></el-icon>已拒绝预约
       </el-menu-item>
     </el-sub-menu>
-    <el-menu-item index="goodlist">
+    <el-menu-item index="goodlist" v-if="isAdmin">
       <el-icon>
         <i-ep-Box />
       </el-icon>
       <span>物品列表</span>
     </el-menu-item>
-    <el-menu-item index="userlist">
+    <el-menu-item index="userlist" v-if="isAdmin">
       <el-icon>
         <i-ep-User />
       </el-icon>
@@ -86,11 +86,16 @@
 </template>
 
 <script lang="ts" setup>
+import { useUserStore } from "@/stores/user";
+
 const isCollapse = defineModel<boolean>({ default: false });
 
 function toggleCollapse() {
   isCollapse.value = !isCollapse.value;
 }
+
+const userStore = useUserStore();
+const { isAdmin } = userStore;
 </script>
 
 <style scoped>
