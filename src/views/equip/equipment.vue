@@ -1,57 +1,78 @@
 <template>
-  <div class="chart-container">
-    <el-form-item label="日期">
-      <el-date-picker
-        v-model="time_form.time_select"
-        type="date"
-        placeholder="选择日期"
-        :disabled-date="disabledDate"
-      ></el-date-picker>
-    </el-form-item>
-    <div class="chart">
-      <Gante :timett="time_form.time_select" :map_="avail_map" />
-    </div>
-  </div>
-  <div>
-    <h5>器材预约</h5>
-    <el-form :model="bookingForm_equip" label-width="120px">
-      <div class="flex">
-        <el-form-item label="器材">
-          <el-select v-model="bookingForm_equip.equip" placeholder="选择器材">
-            <el-option v-for="equip in equips" :value="equip.available_name"> </el-option>
-          </el-select>
+  <div class="all_contain">
+    <div class="chart-container">
+      <div class="picker">
+        <el-form-item label="日期">
+          <el-date-picker
+            v-model="time_form.time_select"
+            type="date"
+            placeholder="选择日期"
+            :disabled-date="disabledDate"
+          ></el-date-picker>
         </el-form-item>
+      </div>
+      <div class="scroll">
+        <el-scrollbar>
+          <div class="chart">
+            <Gante :timett="time_form.time_select" :map_="avail_map" />
+          </div>
+        </el-scrollbar>
+      </div>
+    </div>
+    <div class="form">
+      <div class="wrapp">
+        <el-text tag="b" size="large" class="m-text">器材预约</el-text>
         <el-button size="small" class="text-bu" type="primary" :icon="search" @click="dialog_switch = true"
-          >详细信息</el-button
+          >器材详情</el-button
         >
       </div>
-      <el-form-item label="日期">
-        <el-date-picker v-model="bookingForm_equip.date" type="date" placeholder="选择日期"></el-date-picker>
-      </el-form-item>
-      <el-form-item label="时间">
-        <!-- <el-time-picker v-model="bookingForm_equip.time" placeholder="选择时间段"></el-time-picker> -->
-        <div>
-          <time-set ref="timeset" />
+      <el-form :model="bookingForm_equip" label-width="120px">
+        <div class="flex">
+          <el-form-item label="器材">
+            <el-select v-model="bookingForm_equip.equip" placeholder="选择器材">
+              <el-option v-for="equip in equips" :value="equip.available_name"> </el-option>
+            </el-select>
+          </el-form-item>
         </div>
-      </el-form-item>
-      <el-form-item label="手机号">
-        <el-input v-model="bookingForm_equip.booker" placeholder="请输入手机号"></el-input>
-      </el-form-item>
-      <el-form-item label="用途">
-        <el-input v-model="bookingForm_equip.use" placeholder="请输入会议主题"></el-input>
-      </el-form-item>
-      <el-form-item label="备注">
-        <el-input type="textarea" v-model="bookingForm_equip.remark" placeholder="请输入备注"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button @click="submitBooking">提交预约</el-button>
-        <el-button type="primary" @click="resetForm">重置</el-button>
-      </el-form-item>
-    </el-form>
+        <el-form-item label="日期">
+          <el-date-picker
+            v-model="bookingForm_equip.date"
+            type="date"
+            placeholder="选择日期"
+            :disabled-date="disabledDate"
+          ></el-date-picker>
+        </el-form-item>
+        <el-form-item label="时间">
+          <!-- <el-time-picker v-model="bookingForm_equip.time" placeholder="选择时间段"></el-time-picker> -->
+          <div>
+            <time-set ref="timeset" />
+          </div>
+        </el-form-item>
+        <el-form-item label="手机号">
+          <el-input v-model="bookingForm_equip.booker" placeholder="请输入手机号"></el-input>
+        </el-form-item>
+        <el-form-item label="用途">
+          <el-input v-model="bookingForm_equip.use" placeholder="请输入器材用途"></el-input>
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input
+            type="textarea"
+            maxlength="100"
+            v-model="bookingForm_equip.remark"
+            show-word-limit
+            placeholder="请输入备注"
+          ></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="submitBooking">提交预约</el-button>
+          <el-button type="primary" @click="resetForm">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
   </div>
 
   <div>
-    <el-drawer v-model="dialog_switch" title="I am the title" :with-header="false">
+    <el-drawer v-model="dialog_switch" title="I am the title" :with-header="false" direction="ltr">
       <span>健雄书院器材</span>
       <div>
         <el-tabs v-model="activeName" type="card" class="demo-tabs" @tab-click="handleClick">
@@ -191,9 +212,9 @@ export default {
         use: "",
         remark: "",
       };
-      this.time_form = {
+      /* this.time_form = {
         time_select: "",
-      };
+      }; */
 
       this.$refs.timeset.reset();
     },
@@ -221,7 +242,47 @@ export default {
   align-items: center;
   justify-content: center;
   /*height: calc(100% - 30px);*/
-  height: 66vh;
+  height: 100%;
   background-color: #ffffff;
+  flex: 2.5;
+}
+.form {
+  flex: 1;
+  height: 100%;
+  justify-content: center;
+  margin-right: 20px;
+  margin-left: 0px;
+  margin-top: 0px;
+  align-items: center;
+  background-color: #ffffff;
+}
+.all_contain {
+  display: flex;
+  height: 90vh;
+  background-color: #ffffff;
+}
+
+.scroll {
+  width: 100%;
+  height: 800px;
+  background-color: #ffffff;
+}
+
+.wrapp {
+  display: flex;
+  align-items: center;
+  margin-left: 80px;
+  margin-bottom: 20px;
+  margin-top: 80px;
+}
+
+.text-bu {
+  margin-top: 3px;
+  margin-left: 15px;
+}
+
+.picker {
+  margin-top: 30px;
+  margin-bottom: 10px;
 }
 </style>

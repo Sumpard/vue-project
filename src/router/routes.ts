@@ -20,6 +20,10 @@ const routes: RouteRecordRaw[] = [
         component: () => import("@/views/equip/equipment.vue"),
       },
       {
+        path: "/seat",
+        component: () => import("@/views/seat/seat.vue"),
+      },
+      {
         path: "/homepage",
         name: "homepage",
         component: () => import("@/views/mainpage/homepage.vue"),
@@ -31,6 +35,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: "/contact",
         component: () => import("@/views/contact/contactUs02.vue"),
+      },
+      {
+        path: "/img",
+        component: () => import("@/views/components/ImgUpload.vue"),
       },
       {
         path: "/response",

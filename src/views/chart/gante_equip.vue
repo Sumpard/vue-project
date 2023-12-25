@@ -43,7 +43,7 @@ type M_Equip = {
 
 HighchartsGantt(Highcharts);
 //HighchartsExporting(Highcharts);
-HighchartsSand(Highcharts);
+HighchartsGridLight(Highcharts);
 //Highcharts.AST.allowedAttributes.push("@click");
 /* Highcharts.setOptions({
   bypassHTMLFiltering: true 
@@ -97,7 +97,7 @@ watch(
     else {
       timestamp = new Date(props.timett).getTime();
       const today = timestamp;
-      console.log("time_select changed:", newVal, today);
+      //console.log("time_select changed:", newVal, today);
 
       const timeformat = formatTimestamp(today);
       get_today_equip(timeformat, "SUBMITTED").then(() => {
@@ -165,8 +165,7 @@ watch(
                   click: (event: { point: any }) => {
                     //console.log("点击事件触发");
                     var point = event.point;
-                    //console.log(dialogVisible.value);
-                    //console.log(point.rentedTo, point.start, today, this.timett, timestamp);
+                    console.log("watch click!");
                     openDialog(point.id, point.rentedTo, point.start, point.end);
                   },
                 },
@@ -180,13 +179,13 @@ watch(
 );
 
 onMounted(async () => {
-  console.log("mounted");
-  const instance = getCurrentInstance()!;
+  //console.log("mounted");
+  /*const instance = getCurrentInstance()!;
   const { dialogVisible, handleClose, openDialog } = instance.proxy! as unknown as {
     dialogVisible: any;
     handleClose: () => void;
     openDialog: (arg0: string, arg1: string, arg2: string, arg3: string) => void;
-  };
+  };*/
   await get_equip("equipment");
 
   //setup instance
@@ -208,7 +207,7 @@ onMounted(async () => {
         y: i,
       };
     });
-    console.log("data:", data, equipments);
+    //console.log("data:", data, equipments);
     return {
       name: equipment.model,
       data: data,
@@ -263,6 +262,7 @@ onMounted(async () => {
           events: {
             click: (event: { point: any }) => {
               var point = event.point;
+              console.log("mounted click");
               openDialog(point.id, point.rentedTo, point.start, point.end);
             },
           },
@@ -275,7 +275,7 @@ onMounted(async () => {
 async function get_today_equip(day: string, status: string) {
   try {
     const appointlist: Appointment[] = await getAppoint_by_day(day, status, "equipment");
-    console.log("appoint:", appointlist);
+    //console.log("appoint:", appointlist);
     if (appointlist) {
       for (const appoint of appointlist) {
         const start = new Date(appoint.appoint_start_time).getTime() + 8 * hour;
@@ -286,7 +286,7 @@ async function get_today_equip(day: string, status: string) {
           to: end,
         };
         //equipments[appointlist[i].available_id].deals.push(newdeal);
-        console.log(props.map_, appoint);
+        //console.log(props.map_, appoint);
         equipments[props.map_[appoint.available_name][1]].deals.push(newdeal);
       }
     } else {

@@ -43,7 +43,7 @@ type M_Room = {
 
 HighchartsGantt(Highcharts);
 //HighchartsExporting(Highcharts);
-HighchartsSand(Highcharts);
+HighchartsGridLight(Highcharts);
 
 var timestamp: number;
 var today = new Date();
