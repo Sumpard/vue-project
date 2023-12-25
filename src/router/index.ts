@@ -14,11 +14,15 @@ const router: Router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   console.log("beforeEach", from, to, to.meta);
-  if (to.meta.requireAuth) {
+  if (to.meta.requiresAuth) {
     const userStore = useUserStore();
     if (userStore.user && userStore.token) {
       try {
         await verifyToken(userStore.token);
+        if (to.meta.requiresAdmin && userStore.user.user_role !== "MANAGER") {
+          ElMessage.error("无法访问页面");
+          return false;
+        }
         next();
       } catch (e) {
         const err = e as AxiosError;

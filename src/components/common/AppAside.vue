@@ -1,8 +1,4 @@
 <template>
-  <!-- <el-radio-group v-model="isCollapse" style="margin-bottom: 20px" >
-    <el-radio-button :label="false" v-if="isCollapse"><el-icon ><i-ep-Expand /></el-icon></el-radio-button>
-    <el-radio-button :label="true" v-else><el-icon ><i-ep-Fold /></el-icon></el-radio-button>
-  </el-radio-group> -->
   <div v-if="isCollapse" class="changebutton" @click="toggleCollapse">
     <el-icon><i-ep-Expand /></el-icon>
   </div>
@@ -43,7 +39,35 @@
         <el-icon><i-ep-Collection /></el-icon>预约记录
       </el-menu-item>
     </el-sub-menu>
-
+    <el-sub-menu index="review" v-if="isAdmin">
+      <template #title>
+        <div>
+          <el-icon><i-ep-edit /></el-icon>
+          <span v-if="!isCollapse">预约审核</span>
+        </div>
+      </template>
+      <el-menu-item index="review1">
+        <el-icon><i-ep-Edit /></el-icon>待审核预约
+      </el-menu-item>
+      <el-menu-item index="review2">
+        <el-icon><i-ep-Edit /></el-icon>已审核预约
+      </el-menu-item>
+      <el-menu-item index="review3">
+        <el-icon><i-ep-Edit /></el-icon>已拒绝预约
+      </el-menu-item>
+    </el-sub-menu>
+    <el-menu-item index="goodlist" v-if="isAdmin">
+      <el-icon>
+        <i-ep-Box />
+      </el-icon>
+      <span>物品列表</span>
+    </el-menu-item>
+    <el-menu-item index="userlist" v-if="isAdmin">
+      <el-icon>
+        <i-ep-User />
+      </el-icon>
+      <span>用户列表</span>
+    </el-menu-item>
     <el-sub-menu index="contactus">
       <template #title>
         <div>
@@ -62,11 +86,16 @@
 </template>
 
 <script lang="ts" setup>
+import { useUserStore } from "@/stores/user";
+
 const isCollapse = defineModel<boolean>({ default: false });
 
 function toggleCollapse() {
   isCollapse.value = !isCollapse.value;
 }
+
+const userStore = useUserStore();
+const { isAdmin } = userStore;
 </script>
 
 <style scoped>
