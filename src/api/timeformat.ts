@@ -16,3 +16,21 @@ export function formatTimestamp(timestamp: number) {
   const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}`;
   return formattedDateTime;
 }
+
+export function formatISO(isoString: string) {
+  //ISO转北京时间
+  const utcDate = new Date(isoString);
+  const offsetInMinutes = -480; // 北京时间是 UTC+8，即 8 小时，乘以 -60 得到分钟
+  const beijingTime = new Date(utcDate.getTime() + offsetInMinutes * 60 * 1000);
+  // 格式化日期和时间
+  const formatter = new Intl.DateTimeFormat("zh-CN", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: "Asia/Shanghai",
+  });
+  return formatter.format(beijingTime);
+}

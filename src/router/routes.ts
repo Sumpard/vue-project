@@ -34,7 +34,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: "/questionlist",
-        component: () => import("@/views/contact/response.vue"),
+        component: () => import("@/views/list/questionlist.vue"),
       },
       {
         path: "/goodlist",

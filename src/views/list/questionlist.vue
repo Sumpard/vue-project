@@ -1,65 +1,137 @@
 <template>
   <div class="my-info">
     <el-table
-      :header-cell-style="{ 'text-align': 'center' }"
-      :cell-style="{ 'text-align': 'center' }"
       :data="filterTableData"
       max-height="550"
       highlight-current-row
       :default-sort="{ prop: 'score', order: 'descending' }"
     >
-      <el-table-column prop="available_name" label="预约名称"></el-table-column>
-      <el-table-column prop="available_type_name" label="预约类型"> </el-table-column>
-      <el-table-column label="预约时间">
+      <el-table-column prop="propose_time" label="反馈时间">
         <template v-slot="{ row }">
-          {{ row.appoint_start_time }}
-          <br />-{{ row.appoint_end_time }}
+          {{ formatISO(row.propose_time) }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="question_texts" label="反馈内容摘要">
+        <template v-slot="{ row }">
+          {{ truncateText(row.question_texts, 15) }}
         </template>
       </el-table-column>
       <el-table-column
-        prop="appointment_status"
-        label="预约状态"
+        prop="question_status"
+        label="反馈状态"
         :filters="[
-          { text: '审核中', value: 'SUBMITTED' },
-          { text: '已通过', value: 'ACCEPTED' },
-          { text: '已拒绝', value: 'REFUSED' },
+          { text: '已提交', value: 'SUBMITTED' },
+          { text: '已答复', value: 'FINISHED' },
         ]"
         :filter-method="filterTag"
         filter-placement="bottom-end"
       >
         <template v-slot="{ row }">
-          {{ mapstatus(row.appointment_status) }}
+          {{ mapstatus(row.question_status) }}
         </template>
       </el-table-column>
-      <el-table-column prop="appointment_description" label="预约描述"></el-table-column>
 
-      <el-table-column prop="submit_time" sortable label="提交时间"></el-table-column>
-
-      <el-table-column label="预约回复" fixed="right" width="200">
-        <template v-slot="{ row }">
-          <template v-if="!row.reply"> 暂无回复 </template>
-          <template v-else>
-            <el-popover placement="bottom" title="回复" :width="200" trigger="click" :content="row.reply">
-              <template #reference>
-                <el-button type="primary" link size="small">查看</el-button>
-              </template>
-            </el-popover>
-          </template>
+      <el-table-column fixed="right" label="查看详情" width="120">
+        <template #default="scope">
+          <el-button link type="primary" size="large" @click="openDialog(scope.row)">
+            <el-icon><i-ep-DArrowRight /></el-icon>
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
+
+    <!-- 会话框查看详情 -->
+    <el-dialog v-model="dialogVisible" title="反馈详情" width="70%">
+      <div v-if="selectedRow">
+        <el-form>
+          <el-divider>您的反馈</el-divider>
+          <el-form-item class="form-item-with-margin">
+            <div class="details-container">
+              <!-- 用户侧 -->
+              <el-row>
+                <el-form-item label="反馈时间：">
+                  <p>{{ formatISO(selectedRow.propose_time) }}</p>
+                </el-form-item>
+              </el-row>
+              <el-row>
+                <el-form-item label="反馈内容：">
+                  <p>{{ selectedRow.question_texts }}</p>
+                </el-form-item>
+              </el-row>
+              <el-row>
+                <el-form-item label="反馈处理状态：">
+                  <p style="color: rgb(37, 165, 250)">{{ mapstatus(selectedRow.question_status) }}</p>
+                </el-form-item>
+              </el-row>
+              <!-- 添加其他需要显示的详情 -->
+              <!-- 显示图片 -->
+              <el-row v-if="selectedRow.question_images.length >= 1 && selectedRow.question_images[0] != ''">
+                <el-form-item label="反馈图片：">
+                  <div class="img-container">
+                    <div v-for="(image, index) in selectedRow.question_images" :key="index">
+                      <img :src="'data:image/png;base64,' + image" alt="Image" class="img" />
+                    </div>
+                  </div>
+                </el-form-item>
+              </el-row>
+              <el-row v-else>
+                <el-form-item label="反馈图片：">
+                  <p>未上传图片</p>
+                </el-form-item>
+              </el-row>
+            </div>
+          </el-form-item>
+
+          <el-divider>院长回复</el-divider>
+          <el-form-item class="form-item-with-margin">
+            <div class="details-container">
+              <!--院长回复侧  -->
+              <el-row>
+                <el-form-item label="院长回复内容：" v-if="selectedRow.reply_texts != null">
+                  <p>{{ selectedRow.reply_texts }}</p>
+                </el-form-item>
+                <el-form-item label="院长回复内容：" v-else>
+                  <p>院长暂未回复</p>
+                </el-form-item>
+              </el-row>
+              <el-form-item
+                label="反馈回复图片："
+                v-if="selectedRow.reply_images.length >= 1 && selectedRow.reply_images[0] != ''"
+              >
+                <div class="img-container">
+                  <div v-for="(image, index) in selectedRow.reply_images" :key="index">
+                    <img :src="'data:image/png;base64,' + image" alt="Image" class="img" />
+                  </div>
+                </div>
+              </el-form-item>
+              <el-form-item label="反馈回复图片：" v-else>
+                <p>院长未上传图片</p>
+              </el-form-item>
+            </div>
+          </el-form-item>
+        </el-form>
+      </div>
+
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button type="primary" @click="dialogVisible = false"> 关闭 </el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { FormInstance, FormRules } from "element-plus";
 import { computed, onMounted, ref } from "vue";
 
-import { getAppointself } from "@/api/record";
+import { getQuestion } from "@/api/question";
+import { formatISO } from "@/api/timeformat";
 import { useUserStore } from "@/stores/user";
 
+const dialogVisible = ref(false); //会话框显示
+const selectedRow = ref(null); //会话框内容
+
 const userStore = useUserStore();
-const ruleFormRef = ref<FormInstance>();
 const tableData = ref([]);
 const search = ref("");
 const filterTableData = computed(() =>
@@ -71,25 +143,35 @@ const filterTableData = computed(() =>
   )
 );
 
-const filterTag = (value: string, row: any) => {
-  return row.appointment_status === value;
+const openDialog = (row) => {
+  //获取会话框内容
+  selectedRow.value = row;
+  console.log(selectedRow.value);
+  dialogVisible.value = true;
 };
 
-const mapstatus = (appointment_status: any) => {
+const truncateText = (text: string, maxLength: number) => {
+  //截断text以防内容过长
+  if (text.length > maxLength) {
+    return text.substring(0, maxLength) + "...";
+  }
+  return text;
+};
+
+const filterTag = (value: string, row: any) => {
+  return row.question_status === value;
+};
+
+const mapstatus = (question_status: any) => {
   // 映射user_role到相应的文本
-  return appointment_status === "SUBMITTED"
-    ? "审核中"
-    : appointment_status === "ACCEPTED"
-      ? "已通过"
-      : appointment_status === "REFUSED"
-        ? "已拒绝"
-        : "";
+  return question_status === "SUBMITTED" ? "已提交" : question_status === "FINISHED" ? "已答复" : "";
 };
 
 onMounted(async () => {
   // 通过 API 请求获取数据
   try {
-    const response = await getAppointself(userStore.user!.user_id);
+    console.log("user_name:", userStore.user!.user_name);
+    const response = await getQuestion(userStore.user!.user_name);
     console.log(response);
 
     if (response.code === 200) {
@@ -121,6 +203,7 @@ onMounted(async () => {
   font-weight: 500;
   border: 0.1rem solid #dcdfe6;
   border-radius: 1rem;
+  border-width: 1px;
 }
 .rin-card {
   /*margin: 20px 0;*/
@@ -141,5 +224,27 @@ onMounted(async () => {
 .centered-label .el-form-item__content {
   padding: 0px;
   margin-left: 50%; /*不加这行的话，label会出现很难选中复制的情况。*/
+}
+.img-container {
+  display: table;
+  float: left;
+  width: 20%;
+  text-align: center;
+  line-height: 27px;
+  color: blue;
+}
+.img-container img {
+  margin: auto;
+  width: 53px;
+  height: 53px;
+}
+.form-item-with-margin {
+  margin-left: 15%; /* 适当调整间距 */
+  margin-right: 20px;
+}
+.details-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* 将元素垂直对齐方式设置为 flex-start */
 }
 </style>
