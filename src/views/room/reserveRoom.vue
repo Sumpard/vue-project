@@ -50,10 +50,10 @@
             </div>
           </el-form-item>
           <el-form-item label="手机号">
-            <el-input v-model="bookingForm.booker" placeholder="请输入手机号"></el-input>
+            <el-input v-model="bookingForm.booker" clearable placeholder="请输入手机号"></el-input>
           </el-form-item>
           <el-form-item label="会议主题">
-            <el-input v-model="bookingForm.theme" placeholder="请输入会议主题"></el-input>
+            <el-input v-model="bookingForm.theme" clearable placeholder="请输入会议主题"></el-input>
           </el-form-item>
           <el-form-item label="备注">
             <el-input v-model="bookingForm.remark" maxlength="100" placeholder="请输入备注" show-word-limit></el-input>

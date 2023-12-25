@@ -106,7 +106,7 @@ export async function submitAppoint(
   user_name: string,
   phone: string
 ) {
-  Message.info("提交中……");
+  //Message.info("提交中……");
   const appointbody: appoint_sub = {
     appoint_end_time: end_time,
     appoint_start_time: start_time,
