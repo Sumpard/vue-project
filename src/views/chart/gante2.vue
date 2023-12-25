@@ -16,6 +16,7 @@
 </template>
 
 <script lang="ts">
+import dayjs from "dayjs";
 import { ElMessageBox } from "element-plus";
 import Highcharts from "highcharts";
 import HighchartsExporting from "highcharts/modules/exporting";
@@ -24,9 +25,6 @@ import Highchartsavocado from "highcharts/themes/avocado";
 import Highchartsgray from "highcharts/themes/gray";
 import HighchartsGridLight from "highcharts/themes/grid-light";
 import HighchartsSand from "highcharts/themes/sand-signika";
-import moment from "moment";
-//import { List } from "typescript-collections";
-import { getCurrentInstance, ref } from "vue";
 
 import { Appointment, getAppoint_by_day, get_avail_set } from "@/api/meeting_gante";
 import { formatTimestamp } from "@/api/timeformat";
@@ -86,8 +84,8 @@ export default {
       //console.log("num: ",num3,num4,num3.toString());
       roomid.value = data1;
       rentedToData.value = "借用者：" + data2;
-      starttime.value = "开始时间：" + moment(num3).format("YYYY-MM-DD HH:mm");
-      endtime.value = "结束时间：" + moment(num4).format("YYYY-MM-DD HH:mm");
+      starttime.value = "开始时间：" + dayjs(num3).format("YYYY-MM-DD HH:mm");
+      endtime.value = "结束时间：" + dayjs(num4).format("YYYY-MM-DD HH:mm");
       dialogVisible.value = true; //- 28800000
     };
     return {
