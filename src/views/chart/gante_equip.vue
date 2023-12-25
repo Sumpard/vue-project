@@ -16,6 +16,7 @@
 </template>
 
 <script setup lang="ts">
+import dayjs from "dayjs";
 import { ElMessageBox } from "element-plus";
 import Highcharts from "highcharts";
 import HighchartsExporting from "highcharts/modules/exporting";
@@ -24,10 +25,9 @@ import Highchartsavocado from "highcharts/themes/avocado";
 import Highchartsgray from "highcharts/themes/gray";
 import HighchartsGridLight from "highcharts/themes/grid-light";
 import HighchartsSand from "highcharts/themes/sand-signika";
-import moment from "moment";
 
 import { Appointment, getAppoint_by_day, get_avail_set } from "@/api/meeting_gante";
-import { formatTimestamp } from "@/api/timeformat";
+import { formatTimestamp } from "@/utils/timeformat";
 
 type Deal = {
   rentedTo: string;
@@ -84,8 +84,8 @@ const openDialog = (data1: string, data2: string, data3: string, data4: string) 
   const num4 = parseInt(data4, 10) - 28800000;
   roomid.value = data1;
   rentedToData.value = "借用者：" + data2;
-  starttime.value = "开始时间：" + moment(num3).format("YYYY-MM-DD HH:mm");
-  endtime.value = "结束时间：" + moment(num4).format("YYYY-MM-DD HH:mm");
+  starttime.value = "开始时间：" + dayjs(num3).format("YYYY-MM-DD HH:mm");
+  endtime.value = "结束时间：" + dayjs(num4).format("YYYY-MM-DD HH:mm");
   dialogVisible.value = true; //- 28800000
 };
 
@@ -355,9 +355,3 @@ function handleLinkClick() {
   transition: color 0.3s;
 }
 </style>
-
-/* meetingrooms = [ { model: '会议室1', current: 1, deals: [ { rentedTo: '卢婷', from: today_ + 21 * hour, to: today_ +
-22 * hour }, // more deals... { rentedTo: '许睿', from: today_ + 26 * hour, to: today_ + 26.5 * hour }, ] }, // more {
-model: '会议室2', current: 0, deals: [ { rentedTo: '历婷', from: today_ + 22 * hour, to: today_ + 23 * hour }, // more
-deals... { rentedTo: '勾睿', from: today_ + 26 * hour, to: today_ + 27.5 * hour }, ] }, { model: '会议室3', current: 0,
-deals: [ { rentedTo: '历闻', from: today_ + 22 * hour, to: today_ + 24 * hour }, ] }, ]; */

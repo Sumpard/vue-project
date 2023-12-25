@@ -92,10 +92,10 @@
 import { Search } from "@element-plus/icons-vue";
 import type { TabsPaneContext } from "element-plus";
 
-import { avail, getAppoint_by_day, get_avail_set, submitAppoint } from "@/api/meeting_gante";
-import { formatTimestamp, getTimeFormat } from "@/api/timeformat";
+import { Avail, getAppoint_by_day, get_avail_set, submitAppoint } from "@/api/meeting_gante";
 import { useUserStore } from "@/stores/user";
 import Message from "@/utils/message";
+import { combineDateTime, formatTimestamp } from "@/utils/timeformat";
 import Gante from "@/views/chart/gante_equip.vue";
 
 let equips: avail[] = [];
@@ -153,8 +153,8 @@ export default {
 
       Message.info("正在提交预约信息");
       const date_ = new Date(this.bookingForm_equip.date);
-      const start_ = formatTimestamp(getTimeFormat(this.$refs.timeset.startTime, date_));
-      const end_ = formatTimestamp(getTimeFormat(this.$refs.timeset.endTime, date_));
+      const start_ = formatTimestamp(combineDateTime(this.$refs.timeset.startTime, date_));
+      const end_ = formatTimestamp(combineDateTime(this.$refs.timeset.endTime, date_));
       const des = this.bookingForm_equip.use;
       const temp_str = this.bookingForm_equip.equip;
       const avail_id = avail_map[temp_str][0];

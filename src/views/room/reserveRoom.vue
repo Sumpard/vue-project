@@ -88,10 +88,10 @@
 import { Search } from "@element-plus/icons-vue";
 import type { TabsPaneContext } from "element-plus";
 
-import { avail, get_all, get_avail_set, submitAppoint } from "@/api/meeting_gante";
-import { formatTimestamp, getTimeFormat } from "@/api/timeformat";
+import { Avail, get_all, get_avail_set, submitAppoint } from "@/api/meeting_gante";
 import { useUserStore } from "@/stores/user";
 import Message from "@/utils/message";
+import { combineDateTime, formatTimestamp } from "@/utils/timeformat";
 import Gante2 from "@/views/chart/gante2.vue";
 
 /* interface room {
@@ -116,7 +116,7 @@ export default {
   },
 
   data() {
-    let rooms: avail[] = [];
+    let rooms: Avail[] = [];
     return {
       bookingForm: {
         room: "",
@@ -159,8 +159,8 @@ export default {
 
       Message.info("正在提交预约信息");
       const date_ = new Date(this.bookingForm.date);
-      const start_ = formatTimestamp(getTimeFormat(this.$refs.timeset.startTime, date_));
-      const end_ = formatTimestamp(getTimeFormat(this.$refs.timeset.endTime, date_));
+      const start_ = formatTimestamp(combineDateTime(this.$refs.timeset.startTime, date_));
+      const end_ = formatTimestamp(combineDateTime(this.$refs.timeset.endTime, date_));
       const temp = new Date();
       const submit = formatTimestamp(temp.getTime());
       const des = this.bookingForm.theme;

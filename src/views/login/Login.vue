@@ -63,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { getanswer, getverifycode, login, verifyanswer } from "@/api/login";
+import { checkCaptcha, getCaptcha, getCaptchaAnswer, login } from "@/api/login";
 import { getUserMe } from "@/api/user";
 import { useUserStore } from "@/stores/user";
 import Message from "@/utils/message";
@@ -85,7 +85,7 @@ const verifyCodeImage = ref("");
 
 async function getcodeimg() {
   try {
-    const verifyCodeData = await getverifycode();
+    const verifyCodeData = await getCaptcha();
     verifyCodeImage.value = "data:image/png;base64," + verifyCodeData.img;
     //console.log("get verifycode", verifyCodeData);
     // 处理验证码数据
@@ -101,7 +101,7 @@ async function onSubmit() {
     // 获取token
     //const Ans = await getanswer();
     //console.log(Ans);
-    const Ans_check = await verifyanswer(form.verifycode);
+    const Ans_check = await checkCaptcha(form.verifycode);
     //console.log(Ans_check);
     if (Ans_check.code != "200") {
       Message.error(" 验证码错误");

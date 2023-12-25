@@ -40,14 +40,11 @@
           </el-select>
         </el-form-item> -->
     </el-form>
-    <span class="dialog-footer">
-      <el-button @click="resetForm(ruleFormRef)">重置</el-button>
-      <el-button type="primary" @click="submitForm(ruleFormRef)"> 提交 </el-button>
-    </span>
+
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false"> Confirm </el-button>
+        <el-button @click="resetForm(ruleFormRef)">重置</el-button>
+        <el-button type="primary" @click="submitForm(ruleFormRef)"> 提交 </el-button>
       </span>
     </template>
   </el-dialog>
@@ -57,7 +54,7 @@
 import type { FormInstance, FormRules } from "element-plus";
 import { reactive, ref } from "vue";
 
-import { addgoods, getallgoods, getalluser } from "@/api/goods";
+import { addGoods, getAllGoods } from "@/api/goods";
 
 const uploadedImage = ref<string | null>(null);
 const uploadApi = "/api/upload";
@@ -110,7 +107,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     // 校验成功
     if (valid) {
       try {
-        const result = await addgoods(form.description, form.id, form.image, form.name, form.status, form.type_name);
+        const result = await addGoods(form.description, form.id, form.image, form.name, form.status, form.type_name);
         console.log(result);
         if (!result) {
           ElMessage.error("增加失败");
@@ -139,7 +136,7 @@ const handleClose = (done: () => void) => {
 };
 
 const look = async () => {
-  const list = await getallgoods();
+  const list = await getAllGoods();
 
   console.log(list);
 };
