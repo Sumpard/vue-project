@@ -14,9 +14,8 @@ export interface SearchBody {
   typeNull: boolean;
 }
 
-export async function getAppointself(status: string, id: string) {
-  //Message.info("查询中");
-  const appointbody: SearchBody = {
+export async function getAppointSelf(status: string, id: string) {
+  const body: SearchBody = {
     appointment_status: status,
     available_type_name: "",
     day: "",
@@ -29,5 +28,5 @@ export async function getAppointself(status: string, id: string) {
     sorted: true,
     typeNull: true,
   };
-  return (await api.post("appointment/select-self", appointbody)).data.data;
+  return (await api.post("appointment/select-self", body)).data.data;
 }

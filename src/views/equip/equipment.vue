@@ -92,7 +92,7 @@
 import { Search } from "@element-plus/icons-vue";
 import type { TabsPaneContext } from "element-plus";
 
-import { avail, getAppoint_by_day, get_avail_set, submitAppoint } from "@/api/meeting_gante";
+import { Avail, getAppoint_by_day, get_avail_set, submitAppoint } from "@/api/meeting_gante";
 import { formatTimestamp, getTimeFormat } from "@/api/timeformat";
 import { useUserStore } from "@/stores/user";
 import Message from "@/utils/message";

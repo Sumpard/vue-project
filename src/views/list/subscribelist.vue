@@ -161,7 +161,7 @@
 </template>
 
 <script lang="ts">
-import { addPost, delPost, getPost, listPost, updatePost } from "@/api/system/post";
+import { addPost, delPost, getPost, listPost, updatePost } from "@/api/system";
 
 export default {
   name: "Post",

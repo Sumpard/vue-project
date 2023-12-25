@@ -14,22 +14,23 @@ export async function getUserMe() {
   return (await api.post<Result<User>>("/user/select-self")).data.data;
 }
 
-export async function updateUser(user_id: string, user_data: any) {
-  return (await api.put(`/users/${user_id}`, user_data)).data;
-}
-
-export async function updateUserMe(user_data: any) {
-  return (await api.putForm<User>("/users/me", user_data)).data;
-}
-
-export async function updateUserMeAvatar(user_avatar: File) {
-  return (await api.postForm<User>("/users/me/avatar", { file: user_avatar })).data;
-}
-
 export async function updatepassword(oldPassword: string, newPassword: string) {
   return (await api.putForm("/user/update-password", { old_pwd: oldPassword, new_pwd: newPassword })).data;
 }
 
 export async function updateemail(email: string) {
   return (await api.putForm("/user/update-email", { email })).data;
+}
+
+export async function getAllUsers() {
+  return (await api.post("/user/select-all")).data;
+}
+
+export async function updateUserScore(id: string, score: int) {
+  console.log(typeof score);
+  return (await api.putForm("/user/update-score ", { id, score })).data;
+}
+
+export async function updateUserRole(id: string, role: string) {
+  return (await api.putForm("/user/update-role ", { id, role })).data;
 }

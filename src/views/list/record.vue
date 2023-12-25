@@ -54,7 +54,7 @@
 <script setup lang="ts">
 import type { FormInstance, FormRules } from "element-plus";
 
-import { getAppointself } from "@/api/record";
+import { getAppointSelf } from "@/api/record";
 import { useUserStore } from "@/stores/user";
 
 const userStore = useUserStore();
@@ -88,13 +88,13 @@ const mapstatus = (appointment_status: any) => {
 onMounted(async () => {
   // 通过 API 请求获取数据
   try {
-    const response1 = await getAppointself("SUBMITTED", userStore.user!.user_id);
+    const response1 = await getAppointSelf("SUBMITTED", userStore.user!.user_id);
     console.log(response1);
 
-    const response2 = await getAppointself("ACCEPTED", userStore.user!.user_id);
+    const response2 = await getAppointSelf("ACCEPTED", userStore.user!.user_id);
     console.log(response2);
 
-    const response3 = await getAppointself("REFUSED", userStore.user!.user_id);
+    const response3 = await getAppointSelf("REFUSED", userStore.user!.user_id);
     const arr = [...response1, ...response2, ...response3];
     tableData.value = arr;
     // console.log(tableData.value)

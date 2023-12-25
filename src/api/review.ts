@@ -13,6 +13,7 @@ export interface SearchBody {
   sorted: boolean;
   typeNull: boolean;
 }
+
 export interface Review {
   appointment_id: number;
   appointment_status: string;
@@ -21,9 +22,9 @@ export interface Review {
   reviewer_id: string;
   reviewer_name: string;
 }
-export async function getAppointall(status: string) {
-  //Message.info("查询中");
-  const appointbody: SearchBody = {
+
+export async function getAppointAll(status: string) {
+  const body: SearchBody = {
     appointment_status: status,
     available_type_name: "",
     day: "",
@@ -36,15 +37,15 @@ export async function getAppointall(status: string) {
     sorted: true,
     typeNull: true,
   };
-  return (await api.post("appointment/select-condition", appointbody)).data;
+  return (await api.post("appointment/select-condition", body)).data;
 }
 
-export async function deleterecord(id: int) {
+export async function deleteRecord(id: int) {
   return (await api.delete("/appointment/delete", { params: { id } })).data;
 }
 
-export async function reviewacc(id: int, reviewer_id: string, reviewer_name: string) {
-  const reviewbody: Review = {
+export async function reviewAppointmentAccept(id: int, reviewer_id: string, reviewer_name: string) {
+  const body: Review = {
     appointment_id: id,
     appointment_status: "ACCEPTED",
     reply: "",
@@ -52,11 +53,11 @@ export async function reviewacc(id: int, reviewer_id: string, reviewer_name: str
     reviewer_id: reviewer_id,
     reviewer_name: reviewer_name,
   };
-  return (await api.put("/appointment/review", reviewbody)).data;
+  return (await api.put("/appointment/review", body)).data;
 }
 
-export async function reviewref(id: int, reply: string, reviewer_id: string, reviewer_name: string) {
-  const reviewbody2: Review = {
+export async function reviewAppointmentRefuse(id: int, reply: string, reviewer_id: string, reviewer_name: string) {
+  const body: Review = {
     appointment_id: id,
     appointment_status: "REFUSED",
     reply: reply,
@@ -64,5 +65,5 @@ export async function reviewref(id: int, reply: string, reviewer_id: string, rev
     reviewer_id: reviewer_id,
     reviewer_name: reviewer_name,
   };
-  return (await api.put("/appointment/review", reviewbody2)).data;
+  return (await api.put("/appointment/review", body)).data;
 }
