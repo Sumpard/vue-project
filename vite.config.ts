@@ -1,15 +1,14 @@
-import * as path from "path";
-
 import { quasar, transformAssetUrls } from "@quasar/vite-plugin";
 import vue from "@vitejs/plugin-vue";
-import Icons from 'unplugin-icons/vite'
-import IconsResolver from 'unplugin-icons/resolver'
+import * as path from "path";
 import AutoImport from "unplugin-auto-import/vite";
+import IconsResolver from "unplugin-icons/resolver";
+import Icons from "unplugin-icons/vite";
 import { QuasarResolver } from "unplugin-vue-components/resolvers";
+import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import Components from "unplugin-vue-components/vite";
 import { ConfigEnv, defineConfig, loadEnv } from "vite";
 import viteCompression from "vite-plugin-compression";
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 const pathSrc = path.resolve(__dirname, "src");
 
@@ -27,12 +26,6 @@ export default ({ mode }: ConfigEnv) =>
     css: {
       preprocessorOptions: {
         scss: { additionalData: `` },
-        // less: {
-        //   charset: false,
-        //   javascriptEnabled: true,
-        //   // 这样就能全局使用 src/assets/styles/mixins.less 定义的 变量
-        //   additionalData: '@import "./src/assets/mixins.less";',
-        // }
       },
       postcss: {
         plugins: [require("tailwindcss"), require("autoprefixer")],
@@ -56,8 +49,9 @@ export default ({ mode }: ConfigEnv) =>
           // Auto import icon components
           // 自动导入图标组件
           // IconsResolver({ prefix: "Icon" }),
-          ElementPlusResolver(), IconsResolver({
-            prefix: 'Icon',
+          ElementPlusResolver(),
+          IconsResolver({
+            prefix: "Icon",
           }),
         ],
 
@@ -69,11 +63,14 @@ export default ({ mode }: ConfigEnv) =>
         extensions: ["vue", "md"],
         // allow auto import and register components used in markdown
         include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
-        resolvers: [QuasarResolver(),IconsResolver({
-          enabledCollections: ['ep', 'mdi'],
-        }), ElementPlusResolver()],
+        resolvers: [
+          QuasarResolver(),
+          IconsResolver({
+            enabledCollections: ["ep", "mdi"],
+          }),
+          ElementPlusResolver(),
+        ],
         dts: "src/components.d.ts",
-        
       }),
 
       // Icons({ autoInstall: true }),
@@ -89,7 +86,7 @@ export default ({ mode }: ConfigEnv) =>
         "/api": {
           target: loadEnv(mode, process.cwd()).VITE_APP_BASE_API,
           changeOrigin: true,
-          rewrite: path => path.replace(/^\/api/, ""),
+          rewrite: (path) => path.replace(/^\/api/, ""),
         },
       },
     },
