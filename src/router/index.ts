@@ -12,34 +12,29 @@ const router: Router = createRouter({
   routes,
 });
 
-router.beforeEach(async (to, from, next) => {
-  console.log("beforeEach", from, to, to.meta);
-  if (to.meta.requiresAuth) {
-    const userStore = useUserStore();
-    if (userStore.user && userStore.token) {
-      try {
-        await verifyToken(userStore.token);
-        if (to.meta.requiresAdmin && userStore.user.user_role !== "MANAGER") {
-          ElMessage.error("无法访问页面");
-          return false;
-        }
-        next();
-      } catch (e) {
-        const err = e as AxiosError;
-        console.log(e);
-        if (err.response?.status == 400) {
-          next({ name: "404" }); // Pretend that the page is not existent
-        } else {
-          ElMessage.error("登录状态过期，请重新登录！");
-          next({ name: "login", query: { redirect: to.fullPath } }); // Need login
-        }
-      }
+router.beforeEach(async (to, from) => {
+  console.log("beforeEach", from, to);
+  if (!to.meta.requiresAuth) return true;
+  const userStore = useUserStore();
+  if (!(userStore.user && userStore.token)) {
+    ElMessage.error("未登录！");
+    return { name: "login", query: { redirect: to.fullPath } };
+  }
+  try {
+    await verifyToken(userStore.token);
+  } catch (e) {
+    const err = e as AxiosError;
+    console.log(e);
+    if (err.response?.status == 400) {
+      return { name: "404" }; // Pretend that the page is not existent
     } else {
-      ElMessage.error("未登录！");
-      next({ name: "login", query: { redirect: to.fullPath } });
+      ElMessage.error("登录状态过期，请重新登录！");
+      return { name: "login", query: { redirect: to.fullPath } }; // Need login
     }
-  } else {
-    next();
+  }
+  if (to.meta.requiresAdmin && userStore.user.user_role !== "MANAGER") {
+    ElMessage.error("无法访问页面");
+    return { name: "404" };
   }
 });
 
