@@ -33,16 +33,12 @@ const routes: RouteRecordRaw[] = [
         component: () => import("@/views/home/homeindex.vue"),
       },
       {
-        path: "/contact",
+        path: "/questionsub",
         component: () => import("@/views/contact/contactUs02.vue"),
       },
       {
-        path: "/img",
-        component: () => import("@/views/components/ImgUpload.vue"),
-      },
-      {
-        path: "/response",
-        component: () => import("@/views/contact/response.vue"),
+        path: "/questionlist",
+        component: () => import("@/views/list/questionlist.vue"),
       },
       {
         path: "/goodlist",
