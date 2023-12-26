@@ -82,7 +82,14 @@
             <p>{{ "座位信息:" + seat.available_description }}</p>
             <p>{{ "图片:" + seat.available_image }}</p>
             <div class="tab-img-container">
-              <el-image :src="'data:image/png;base64,' + seat.available_image" alt="picture" class="tab-img" />
+              <el-image :src="'data:image/png;base64,' + seat.available_image" alt="picture" class="tab-img">
+                <template #error>
+                  <div class="image-slot">
+                    <el-text>啊？图片丢失了捏</el-text>
+                    <el-icon class="icon"><i-ep-picture /></el-icon>
+                  </div>
+                </template>
+              </el-image>
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -307,5 +314,26 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.image-slot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 200px;
+  background: var(--el-fill-color-light);
+  color: var(--el-text-color-secondary);
+}
+
+.icon {
+  font-size: 30px;
+}
+
+.image-slot.error {
+  background-color: #f00;
+  color: #fff;
+  height: 200px;
 }
 </style>
