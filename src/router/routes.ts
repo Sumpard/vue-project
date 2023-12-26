@@ -54,6 +54,10 @@ const routes: RouteRecordRaw[] = [
         component: () => import("@/views/fun/UploadImage.vue"),
       },
       {
+        path: "/feedbackQuestion",
+        component: () => import("@/views/list/feedbackQuestion.vue"),
+      },
+      {
         path: "/review1",
         component: () => import("@/views/review/review_submitted.vue"),
         meta: { requiresAdmin: true },
