@@ -3,9 +3,8 @@ import { RouteRecordRaw } from "vue-router";
 const routes: RouteRecordRaw[] = [
   {
     path: "/",
-    name: "index",
     component: () => import("@/layouts/AppLayout.vue"),
-    meta: { requireAuth: true },
+    meta: { requiresAuth: true },
     children: [
       {
         path: "/reservation",
@@ -43,10 +42,12 @@ const routes: RouteRecordRaw[] = [
       {
         path: "/goodlist",
         component: () => import("@/views/managegoods/goodlist.vue"),
+        meta: { requiresAdmin: true },
       },
       {
         path: "/userlist",
         component: () => import("@/views/list/userlist.vue"),
+        meta: { requiresAdmin: true },
       },
       {
         path: "/upload-image",
@@ -59,14 +60,17 @@ const routes: RouteRecordRaw[] = [
       {
         path: "/review1",
         component: () => import("@/views/review/review_submitted.vue"),
+        meta: { requiresAdmin: true },
       },
       {
         path: "/review2",
         component: () => import("@/views/review/review_accepted.vue"),
+        meta: { requiresAdmin: true },
       },
       {
         path: "/review3",
         component: () => import("@/views/review/review_refused.vue"),
+        meta: { requiresAdmin: true },
       },
     ],
   },

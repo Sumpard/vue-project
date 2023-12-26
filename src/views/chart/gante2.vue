@@ -4,6 +4,7 @@
     <el-dialog v-model="dialogVisible" title="会议信息" width="30%">
       <span>{{ roomid }}</span>
       <p>{{ rentedToData }}</p>
+      <p>{{ theme }}</p>
       <p>{{ starttime }}</p>
       <p>{{ endtime }}</p>
       <template #footer>
@@ -30,6 +31,7 @@ import { Appointment, getAppoint_by_day, get_avail_set } from "@/api/meeting_gan
 import { formatTimestamp } from "@/utils/timeformat";
 
 type Deal = {
+  themes: string;
   rentedTo: string;
   from: number;
   to: number;
@@ -67,6 +69,7 @@ export default {
     const dialogVisible = ref(false);
     const roomid = ref("");
     const rentedToData = ref("");
+    const theme = ref("");
     const starttime = ref("");
     const endtime = ref("");
     const handleClose = (done: () => void) => {
@@ -78,11 +81,12 @@ export default {
           // catch error
         });
     };
-    const openDialog = (data1: string, data2: string, data3: string, data4: string) => {
+    const openDialog = (data1: string, data2: string, data3: string, data4: string, data5: string) => {
       const num3 = parseInt(data3, 10) - 28800000;
       const num4 = parseInt(data4, 10) - 28800000;
       //console.log("num: ",num3,num4,num3.toString());
       roomid.value = data1;
+      theme.value = "会议主题：" + data5;
       rentedToData.value = "借用者：" + data2;
       starttime.value = "开始时间：" + dayjs(num3).format("YYYY-MM-DD HH:mm");
       endtime.value = "结束时间：" + dayjs(num4).format("YYYY-MM-DD HH:mm");
@@ -91,6 +95,7 @@ export default {
     return {
       dialogVisible, // 添加类型注解
       roomid,
+      theme,
       rentedToData,
       starttime,
       endtime,
@@ -106,12 +111,13 @@ export default {
         timestamp = new Date(this.timett).getTime();
         const today = timestamp;
         const timeformat = formatTimestamp(today);
-        this.get_today_meeting(timeformat, "SUBMITTED").then(() => {
+        this.get_today_meeting(timeformat, "ACCEPTED").then(() => {
           //console.log("watch", meetingrooms);
           series = meetingrooms.map(function (meetingroom, i) {
-            const data = meetingroom.deals.map(function (deal: { rentedTo: any; from: any; to: any }) {
+            const data = meetingroom.deals.map(function (deal: { themes: any; rentedTo: any; from: any; to: any }) {
               return {
                 id: meetingroom.model,
+                m_theme: deal.themes,
                 rentedTo: deal.rentedTo,
                 start: deal.from,
                 end: deal.to,
@@ -171,7 +177,7 @@ export default {
                     click: (event: { point: any }) => {
                       console.log("点击事件触发");
                       var point = event.point;
-                      this.openDialog(point.id, point.rentedTo, point.start, point.end);
+                      this.openDialog(point.id, point.rentedTo, point.start, point.end, point.m_theme);
                     },
                   },
                 },
@@ -188,7 +194,7 @@ export default {
     const { dialogVisible, handleClose, openDialog } = instance.proxy! as unknown as {
       dialogVisible: any;
       handleClose: () => void;
-      openDialog: (arg0: string, arg1: string, arg2: string, arg3: string) => void;
+      openDialog: (arg0: string, arg1: string, arg2: string, arg3: string, arg4: string) => void;
     };
     this.get_room("会议室").then(() => {
       //setup instance
@@ -199,11 +205,12 @@ export default {
       //meeting get
       const timeformat = formatTimestamp(today_);
 
-      this.get_today_meeting(timeformat, "SUBMITTED").then(() => {
+      this.get_today_meeting(timeformat, "ACCEPTED").then(() => {
         series = meetingrooms.map(function (meetingroom, i) {
-          const data = meetingroom.deals.map(function (deal: { rentedTo: any; from: any; to: any }) {
+          const data = meetingroom.deals.map(function (deal: { themes: any; rentedTo: any; from: any; to: any }) {
             return {
               id: meetingroom.model,
+              m_theme: deal.themes,
               rentedTo: deal.rentedTo,
               start: deal.from,
               end: deal.to,
@@ -264,7 +271,7 @@ export default {
                 events: {
                   click: (event: { point: any }) => {
                     var point = event.point;
-                    openDialog(point.id, point.rentedTo, point.start, point.end);
+                    openDialog(point.id, point.rentedTo, point.start, point.end, point.m_theme);
                   },
                 },
               },
@@ -283,7 +290,7 @@ export default {
         console.log("appoint:", appointlist);
         console.log("meetingrooms:", meetingrooms);
         for (let i = 0; i < numRooms; i++) {
-          const index: Deal = { rentedTo: "test", from: 1, to: 1 };
+          const index: Deal = { themes: "", rentedTo: "test", from: 1, to: 1 };
           meetingrooms[i].deals.splice(0, meetingrooms[i].deals.length);
           meetingrooms[i].deals.push(index);
         }
@@ -293,6 +300,7 @@ export default {
             const start = new Date(appointlist[i].appoint_start_time).getTime() + 8 * hour;
             const end = new Date(appointlist[i].appoint_end_time).getTime() + 8 * hour;
             const newdeal: Deal = {
+              themes: appointlist[i].appointment_description,
               rentedTo: appointlist[i].renter_name,
               from: start,
               to: end,

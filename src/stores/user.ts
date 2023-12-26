@@ -1,4 +1,5 @@
 import type { VueCookies } from "vue-cookies";
+
 import { User, getUserMe } from "@/api/user";
 
 export const useUserStore = defineStore("user", () => {
@@ -28,15 +29,15 @@ export const useUserStore = defineStore("user", () => {
   const fetch = async () => {
     try {
       user.value = await getUserMe();
-      console.log(user)
+      console.log(user);
     } catch (e) {}
     return user.value;
   };
-  const hasPerm = () => {
+  const isAdmin = computed(() => {
     return user.value?.user_role == "MANAGER";
-  };
+  });
 
   fetch();
 
-  return { user, token, avatar, login, logout, fetch, hasPerm };
+  return { user, token, avatar, login, logout, fetch, isAdmin };
 });

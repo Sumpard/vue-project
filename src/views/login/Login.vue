@@ -49,7 +49,7 @@
           dense
         ></q-input>
         <div class="verify-wrapper">
-          <img :src="verifyCodeImage" alt="验证码" class="code-img" />
+          <img :src="verifyCodeImage" alt="验证码" class="code-img" @click="update_img" />
           <el-text class="text_" type="info" @click="update_img">看不清楚？换一张</el-text>
         </div>
       </div>
@@ -63,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { checkCaptcha, getCaptcha, getCaptchaAnswer, login } from "@/api/login";
+import { checkCaptcha, getCaptcha, login } from "@/api/login";
 import { getUserMe } from "@/api/user";
 import { useUserStore } from "@/stores/user";
 import Message from "@/utils/message";
@@ -97,7 +97,7 @@ async function getcodeimg() {
 async function onSubmit() {
   const userStore = useUserStore();
   try {
-    Message.info("提交登录信息");
+    //Message.info("提交登录信息");
     // 获取token
     //const Ans = await getanswer();
     //console.log(Ans);
@@ -121,7 +121,8 @@ async function onSubmit() {
         //Message.info("获取用户");
         //console.log("获取用户", user);
         userStore.login({ token, user });
-        Message.success(`登录成功！`);
+        //Message.success(`登录成功！`);
+        Message.success("欢迎你，" + user.user_name + "!");
 
         if ($route.query.redirect) {
           $router.replace($route.query.redirect as string);
