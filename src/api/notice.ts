@@ -10,7 +10,7 @@ export interface notice_submit {
   publisher_name: string;
 }
 
-export async function postNotice(
+export async function postNotice( //发布notice
   put_content: string,
   put_title: string,
   put_type: string,
@@ -25,4 +25,17 @@ export async function postNotice(
     publisher_name: put_publisher,
   };
   return (await api.post("notice/insertNotice", noticePostBody)).data;
+}
+
+export async function getNotice(get_type: string) {
+  //以notice_type查找notice
+  return (
+    await api.get("/notice/selectNoticeList", {
+      params: {
+        beginTime: "",
+        endTime: "",
+        notice_type: get_type,
+      },
+    })
+  ).data;
 }

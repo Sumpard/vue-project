@@ -32,6 +32,14 @@ const routes: RouteRecordRaw[] = [
         component: () => import("@/views/mainpage/editnotice.vue"),
       },
       {
+        path: "/noticelist",
+        component: () => import("@/views/list/noticelist.vue"),
+      },
+      {
+        path: "/noticepreview",
+        component: () => import("@/views/mainpage/noticepreview.vue"),
+      },
+      {
         path: "/homeindex",
         component: () => import("@/views/home/homeindex.vue"),
       },
