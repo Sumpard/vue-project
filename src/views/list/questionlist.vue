@@ -47,7 +47,7 @@
       <el-dialog v-model="dialogVisible" title="反馈详情" width="50%">
         <div v-if="selectedRow">
           <el-form>
-            <el-divider>您的反馈</el-divider>
+            <el-divider content-position="left">您的反馈</el-divider>
             <el-form-item class="form-item-with-margin">
               <div class="details-container">
                 <!-- 用户侧 -->
@@ -85,7 +85,7 @@
               </div>
             </el-form-item>
 
-            <el-divider>院长回复</el-divider>
+            <el-divider content-position="left">院长回复</el-divider>
             <el-form-item class="form-item-with-margin">
               <div class="details-container">
                 <!--院长回复侧  -->
@@ -253,5 +253,9 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   align-items: flex-start; /* 将元素垂直对齐方式设置为 flex-start */
+}
+.el-divider {
+  width: 80%;
+  margin-left: 2000px auto;
 }
 </style>
