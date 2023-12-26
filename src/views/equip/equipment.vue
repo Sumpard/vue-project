@@ -80,7 +80,10 @@
             <p>{{ "器材名称：" + equip.available_name }}</p>
             <p>{{ "器材当前状态:" + equip.available_status }}</p>
             <p>{{ "器材信息:" + equip.available_description }}</p>
-            <p>{{ "图片:" + equip.available_image }}</p>
+            <p>{{ "图片:" }}</p>
+            <div class="tab-img-container">
+              <el-image :src="'data:image/png;base64,' + equip.available_image" alt="picture" class="tab-img" />
+            </div>
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -284,5 +287,16 @@ export default {
 .picker {
   margin-top: 30px;
   margin-bottom: 10px;
+}
+
+.tab-img {
+  width: 75%;
+  height: auto;
+}
+
+.tab-img-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
