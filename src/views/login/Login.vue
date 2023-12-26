@@ -6,7 +6,6 @@
     </q-card-section>
     <q-tabs v-model="tab" class="text-primary">
       <q-tab label="用户登录" name="one" />
-      <!-- <q-tab label="手机号登录" name="two" /> -->
     </q-tabs>
     <q-separator />
     <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
@@ -30,18 +29,11 @@
             dense
           />
         </q-tab-panel>
-
-        <!-- <q-tab-panel name="two">
-          <q-input filled v-model="form.username" label="用户名" lazy-rules
-            :rules="[(val: string | any[]) => val?.length > 0 || '请输入您的用户名']" />
-          <q-input filled type="password" v-model="form.password" label="手机号" lazy-rules
-            :rules="[(val: string | any[]) => val?.length > 0 || '请输入您的手机号']" />
-        </q-tab-panel> -->
       </q-tab-panels>
       <div class="image-container">
         <q-input
           filled
-          v-model="form.verifycode"
+          v-model="form.verifyCode"
           label="验证码"
           class="code-input"
           lazy-rules
@@ -49,8 +41,8 @@
           dense
         ></q-input>
         <div class="verify-wrapper">
-          <img :src="verifyCodeImage" alt="验证码" class="code-img" @click="update_img" />
-          <el-text class="text_" type="info" @click="update_img">看不清楚？换一张</el-text>
+          <img :src="captcha" alt="验证码" class="code-img" @click="refreshCaptcha" />
+          <el-text class="text_" type="info" @click="refreshCaptcha">看不清楚？换一张</el-text>
         </div>
       </div>
       <div>
@@ -71,74 +63,47 @@ import Message from "@/utils/message";
 const $router = useRouter();
 const $route = useRoute();
 
-$router.push({
-  query: {
-    redirect: "/homepage", // 目标URL中的 redirect 参数值
-  },
-});
-
-const form = reactive({ username: "", password: "", verifycode: "" });
+const form = reactive({ username: "", password: "", verifyCode: "" });
 let tab = ref("one");
-// 创建图片对象
 
-const verifyCodeImage = ref("");
+const captcha = ref("");
 
-async function getcodeimg() {
-  try {
-    const verifyCodeData = await getCaptcha();
-    verifyCodeImage.value = "data:image/png;base64," + verifyCodeData.img;
-    //console.log("get verifycode", verifyCodeData);
-    // 处理验证码数据
-  } catch (error) {
-    console.error(error);
-  }
+onMounted(refreshCaptcha);
+
+async function refreshCaptcha() {
+  const verifyCodeData = await getCaptcha();
+  captcha.value = "data:image/png;base64," + verifyCodeData.img;
 }
 
 async function onSubmit() {
   const userStore = useUserStore();
-  try {
-    //Message.info("提交登录信息");
-    // 获取token
-    //const Ans = await getanswer();
-    //console.log(Ans);
-    const Ans_check = await checkCaptcha(form.verifycode);
-    //console.log(Ans_check);
-    if (Ans_check.code != "200") {
-      Message.error(" 验证码错误");
-      //console.log("验证码错误", Ans_check);
-      update_img();
-    } else {
-      //console.log("登录信息： ", form.username, form.password, form.verifycode);
-      const { data } = await login(form.username, form.password, form.verifycode);
-      if (data != undefined) {
-        //Message.info("登录成功");
-        //console.log("登录成功", data);
-        const token = data;
-        userStore.login({ token }); // 存token
-        // 获取用户
-        const user = await getUserMe();
 
-        //Message.info("获取用户");
-        //console.log("获取用户", user);
-        userStore.login({ token, user });
-        //Message.success(`登录成功！`);
-        Message.success("欢迎你，" + user.user_name + "!");
+  const precheckResult = await checkCaptcha(form.verifyCode);
+  if (precheckResult.code !== 200) {
+    Message.error("验证码错误");
+    refreshCaptcha();
+    return;
+  }
 
-        if ($route.query.redirect) {
-          $router.replace($route.query.redirect as string);
-        } else {
-          $router.replace({ name: "register" });
-        }
-      } else {
-        //console.log("登录失败", data);
-        Message.error("登录失败,用户id或密码错误");
-      }
-    }
-  } catch (error) {
-    console.log("登录失败", error);
+  const { code, data } = await login(form.username, form.password, form.verifyCode);
+  if (code != 200) {
+    Message.error("登录失败，用户id或密码错误");
+    return;
+  }
+
+  const token = data;
+  userStore.login({ token }); // 存token
+  const user = await getUserMe();
+  userStore.login({ token, user });
+  Message.success("欢迎你，" + user.user_name + "!");
+
+  if ($route.query.redirect) {
+    $router.replace($route.query.redirect as string);
+  } else {
+    $router.replace("/");
   }
 }
-// Submit2手机号
+
 function onReset() {
   form.username = "";
   form.password = "";
@@ -146,12 +111,6 @@ function onReset() {
 function toRegister() {
   $router.replace({ name: "register", query: $route.query });
 }
-
-function update_img() {
-  getcodeimg();
-}
-
-getcodeimg();
 </script>
 
 <style lang="scss">

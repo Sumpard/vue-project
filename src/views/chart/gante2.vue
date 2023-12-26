@@ -50,7 +50,6 @@ HighchartsGridLight(Highcharts);
 var timestamp: number;
 var today = new Date();
 const hour = 1000 * 60 * 60;
-const map = Highcharts.map;
 let numRooms = 7;
 let series: { name: string; data: any; current: any }[];
 let meetingrooms: M_Room[] = [];
@@ -163,9 +162,7 @@ export default {
                     title: {
                       text: "会议室",
                     },
-                    categories: map(series, function (s: { name: any }) {
-                      return s.name;
-                    }),
+                    categories: series.map((s) => s.name),
                   },
                 ],
               },
@@ -256,11 +253,7 @@ export default {
                   title: {
                     text: "会议室",
                   },
-                  categories: map(series, (s: { name: any }) => {
-                    //https://www.baidu.com/
-                    const link = '<a href="javascript:console.log("1111")" ' + ">(详细信息)</a>";
-                    return s.name;
-                  }),
+                  categories: series.map((s) => s.name),
                 },
               ],
             },
