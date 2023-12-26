@@ -16,7 +16,6 @@
 </template>
 
 <script setup lang="ts">
-import dayjs from "dayjs";
 import { ElMessageBox } from "element-plus";
 import Highcharts from "highcharts";
 import HighchartsExporting from "highcharts/modules/exporting";
@@ -25,6 +24,7 @@ import Highchartsavocado from "highcharts/themes/avocado";
 import Highchartsgray from "highcharts/themes/gray";
 import HighchartsGridLight from "highcharts/themes/grid-light";
 import HighchartsSand from "highcharts/themes/sand-signika";
+import moment from "moment";
 
 import { Appointment, getAppoint_by_day, get_avail_set } from "@/api/meeting_gante";
 import { formatTimestamp } from "@/utils/timeformat";
@@ -46,8 +46,8 @@ HighchartsGantt(Highcharts);
 HighchartsGridLight(Highcharts);
 //Highcharts.AST.allowedAttributes.push("@click");
 /* Highcharts.setOptions({
-  bypassHTMLFiltering: true 
-}) */
+    bypassHTMLFiltering: true 
+  }) */
 
 const containerRef = ref();
 
@@ -84,8 +84,8 @@ const openDialog = (data1: string, data2: string, data3: string, data4: string) 
   const num4 = parseInt(data4, 10) - 28800000;
   roomid.value = data1;
   rentedToData.value = "借用者：" + data2;
-  starttime.value = "开始时间：" + dayjs(num3).format("YYYY-MM-DD HH:mm");
-  endtime.value = "结束时间：" + dayjs(num4).format("YYYY-MM-DD HH:mm");
+  starttime.value = "开始时间：" + moment(num3).format("YYYY-MM-DD HH:mm");
+  endtime.value = "结束时间：" + moment(num4).format("YYYY-MM-DD HH:mm");
   dialogVisible.value = true; //- 28800000
 };
 
@@ -122,7 +122,7 @@ watch(
         Highcharts.ganttChart(containerRef.value, {
           series: series,
           title: {
-            text: "器材预约",
+            text: "健雄书院座位预约",
           },
           //credits
           credits: {
@@ -149,7 +149,7 @@ watch(
               columns: [
                 {
                   title: {
-                    text: "器材",
+                    text: "座位",
                   },
                   categories: map(series, function (s: { name: any }) {
                     return s.name;
@@ -181,12 +181,12 @@ watch(
 onMounted(async () => {
   //console.log("mounted");
   /*const instance = getCurrentInstance()!;
-  const { dialogVisible, handleClose, openDialog } = instance.proxy! as unknown as {
-    dialogVisible: any;
-    handleClose: () => void;
-    openDialog: (arg0: string, arg1: string, arg2: string, arg3: string) => void;
-  };*/
-  await get_equip("equipment");
+    const { dialogVisible, handleClose, openDialog } = instance.proxy! as unknown as {
+      dialogVisible: any;
+      handleClose: () => void;
+      openDialog: (arg0: string, arg1: string, arg2: string, arg3: string) => void;
+    };*/
+  await get_equip("座位");
 
   //setup instance
   today.setHours(0, 0, 0, 0);
@@ -218,7 +218,7 @@ onMounted(async () => {
   Highcharts.ganttChart(containerRef.value, {
     series: series,
     title: {
-      text: "器材预约",
+      text: "健雄书院座位预约",
     },
     //credits
     credits: {
@@ -245,7 +245,7 @@ onMounted(async () => {
         columns: [
           {
             title: {
-              text: "器材",
+              text: "座位",
             },
             categories: map(series, (s: { name: any }) => {
               //https://www.baidu.com/
@@ -262,7 +262,7 @@ onMounted(async () => {
           events: {
             click: (event: { point: any }) => {
               var point = event.point;
-              console.log("mounted click");
+              //console.log("mounted click");
               openDialog(point.id, point.rentedTo, point.start, point.end);
             },
           },
@@ -274,8 +274,8 @@ onMounted(async () => {
 
 async function get_today_equip(day: string, status: string) {
   try {
-    const appointlist: Appointment[] = await getAppoint_by_day(day, status, "equipment");
-    //console.log("appoint:", appointlist);
+    const appointlist: Appointment[] = await getAppoint_by_day(day, status, "座位");
+    console.log("appoint:", appointlist);
     if (appointlist) {
       for (const appoint of appointlist) {
         const start = new Date(appoint.appoint_start_time).getTime() + 8 * hour;
@@ -355,3 +355,9 @@ function handleLinkClick() {
   transition: color 0.3s;
 }
 </style>
+
+/* meetingrooms = [ { model: '会议室1', current: 1, deals: [ { rentedTo: '卢婷', from: today_ + 21 * hour, to: today_ +
+22 * hour }, // more deals... { rentedTo: '许睿', from: today_ + 26 * hour, to: today_ + 26.5 * hour }, ] }, // more {
+model: '会议室2', current: 0, deals: [ { rentedTo: '历婷', from: today_ + 22 * hour, to: today_ + 23 * hour }, // more
+deals... { rentedTo: '勾睿', from: today_ + 26 * hour, to: today_ + 27.5 * hour }, ] }, { model: '会议室3', current: 0,
+deals: [ { rentedTo: '历闻', from: today_ + 22 * hour, to: today_ + 24 * hour }, ] }, ]; */
