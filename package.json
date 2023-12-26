@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
+    "@kangc/v-md-editor": "^1.7.12",
     "@quasar/extras": "^1.16.9",
     "axios": "^1.6.2",
     "dayjs": "^1.11.10",
