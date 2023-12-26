@@ -58,7 +58,7 @@
     <el-dialog v-model="dialogVisible" title="反馈详情" width="50%">
       <div v-if="selectedRow">
         <el-form :row-style="{ height: '200px' }" :cell-style="{ padding: '0px' }">
-          <el-divider>用户反馈</el-divider>
+          <el-divider content-position="left">用户反馈</el-divider>
           <el-form-item class="form-item-with-margin">
             <div class="details-container">
               <!-- 用户侧 -->
@@ -101,7 +101,7 @@
             </div>
           </el-form-item>
 
-          <el-divider>院长回复</el-divider>
+          <el-divider content-position="left">院长回复</el-divider>
           <el-form-item class="form-item-with-margin">
             <div class="details-container">
               <!--院长回复侧  -->
@@ -339,5 +339,9 @@ onMounted(async () => {
 }
 .dialog-footer {
   text-align: center;
+}
+.el-divider {
+  width: 80%;
+  margin-left: 2000px auto;
 }
 </style>
