@@ -13,6 +13,7 @@
     :auto-upload="false"
     :on-success="onSuccess"
     accept=".jpg,.jpeg,.png"
+    :file-list="fileList"
     ><el-icon><Plus /></el-icon>
   </el-upload>
 
@@ -28,7 +29,7 @@
     </template>
   </el-dialog>
   <div class="el-upload__tip" slot="tip" v-if="isShowTip">
-    请上传不多于
+    你可以上传不多于
     <template v-if="limit"
       ><b>{{ limit }}</b></template
     >
@@ -78,12 +79,13 @@ const props = defineProps({
   },
 });
 
-const emits = defineEmits(["uploadSuccess", "update:toBeUp"]); //成功上传图片传给父组件data[]
+const emits = defineEmits(["uploadSuccess", "update:toBeUp", "forbid"]); //成功上传图片传给父组件data[]
 
 const dialogVisible = ref(false);
 const BtnDisabled = ref(false);
 const hideUpload = ref(false);
 const toBeUp = ref(false); //是否已有图片被选择上传
+const forbidden = ref(false);
 
 function handleExceed(files, fileList) {
   dialogVisible.value = true;
@@ -100,6 +102,8 @@ function handleAvatarChangeIcon(file) {
 
   if (!isPNG && !isJPG && !isJPEG) {
     ElMessage.error("上传图片只能是 JPG/PNG/JPEG 格式!");
+    forbidden.value = true; //图片参数错误，禁止继续上传
+    emits("forbid", forbidden);
     return false;
   }
   if (props.fileSize) {
@@ -110,6 +114,8 @@ function handleAvatarChangeIcon(file) {
         message: `${file.name}图片的大小过大`,
         type: "warning",
       });
+      forbidden.value = true; //图片参数错误，禁止继续上传
+      emits("forbid", forbidden);
       fileList.value.push(file);
       return false;
     }

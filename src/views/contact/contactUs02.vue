@@ -36,7 +36,7 @@
       <el-form-item label="上传图片：（可选）" label-width="100">
         <!-- 图片上传组件 -->
 
-        <ImgUpload @update:toBeUp="ImgSelected" @uploadSuccess="ImgUpSuccess" ref="childRef" />
+        <ImgUpload @update:toBeUp="ImgSelected" @uploadSuccess="ImgUpSuccess" @forbid="NoUpload" ref="childRef" />
       </el-form-item>
 
       <el-button @click="callChildMethod" size="large" type="primary" :disabled="BtnDisabled">提交反馈</el-button>
@@ -94,6 +94,10 @@ export default {
     };
   },
   methods: {
+    NoUpload(forbidden) {
+      this.BtnDisabled = forbidden;
+    },
+
     ImgUpSuccess(data) {
       //接收图片上传的地址数组
       console.log("图片已上传成功,返回值data将进行赋值,data:", data.data);
@@ -112,7 +116,7 @@ export default {
         Message.warning("请填写所有项目后再提交");
         return;
       }
-      Message.info("正在提反馈内容");
+      Message.info("正在提交反馈内容");
 
       const time_ = new Date().toISOString();
       const name_ = this.questionForm.proposer_name;

@@ -16,6 +16,7 @@
 </template>
 
 <script setup lang="ts">
+import dayjs from "dayjs";
 import { ElMessageBox } from "element-plus";
 import Highcharts from "highcharts";
 import HighchartsExporting from "highcharts/modules/exporting";
@@ -24,7 +25,6 @@ import Highchartsavocado from "highcharts/themes/avocado";
 import Highchartsgray from "highcharts/themes/gray";
 import HighchartsGridLight from "highcharts/themes/grid-light";
 import HighchartsSand from "highcharts/themes/sand-signika";
-import moment from "moment";
 
 import { Appointment, getAppoint_by_day, get_avail_set } from "@/api/meeting_gante";
 import { formatTimestamp } from "@/utils/timeformat";
@@ -54,7 +54,6 @@ const containerRef = ref();
 var timestamp: number;
 var today = new Date();
 const hour = 1000 * 60 * 60;
-const map = Highcharts.map;
 let numequips = 7;
 let series: { name: string; data: any; current: any }[];
 let equipments: M_Equip[] = [];
@@ -84,8 +83,8 @@ const openDialog = (data1: string, data2: string, data3: string, data4: string) 
   const num4 = parseInt(data4, 10) - 28800000;
   roomid.value = data1;
   rentedToData.value = "借用者：" + data2;
-  starttime.value = "开始时间：" + moment(num3).format("YYYY-MM-DD HH:mm");
-  endtime.value = "结束时间：" + moment(num4).format("YYYY-MM-DD HH:mm");
+  starttime.value = "开始时间：" + dayjs(num3).format("YYYY-MM-DD HH:mm");
+  endtime.value = "结束时间：" + dayjs(num4).format("YYYY-MM-DD HH:mm");
   dialogVisible.value = true; //- 28800000
 };
 
@@ -151,9 +150,7 @@ watch(
                   title: {
                     text: "座位",
                   },
-                  categories: map(series, function (s: { name: any }) {
-                    return s.name;
-                  }),
+                  categories: series.map((s) => s.name),
                 },
               ],
             },
@@ -247,11 +244,7 @@ onMounted(async () => {
             title: {
               text: "座位",
             },
-            categories: map(series, (s: { name: any }) => {
-              //https://www.baidu.com/
-              const link = '<a href="javascript:console.log("1111")" ' + ">(详细信息)</a>";
-              return s.name;
-            }),
+            categories: series.map((s) => s.name),
           },
         ],
       },
