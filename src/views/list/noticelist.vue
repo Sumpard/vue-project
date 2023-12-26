@@ -39,10 +39,10 @@
             </el-button>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" label="Operations" width="120">
-          <template #default>
+        <el-table-column fixed="right" label="操作" width="120">
+          <template #default="scope">
             <el-button link type="primary" size="small" @click="handleClick">修改</el-button>
-            <el-button link type="primary" size="small">删除</el-button>
+            <el-button link type="primary" size="small" @click="onDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -51,12 +51,13 @@
 </template>
 
 <script setup lang="ts">
+import { ElMessageBox } from "element-plus";
 import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 
-import { getNotice } from "@/api/notice";
-import { formatISO } from "@/api/timeformat";
+import { deletNotice, getNotice } from "@/api/notice";
 import { useUserStore } from "@/stores/user";
+import Message from "@/utils/message";
 
 const selectedRow = ref(null); //所选notice的内容
 const router = useRouter(); // 获取路由对象
@@ -90,6 +91,23 @@ const openPreview = (row) => {
       time: row.publish_time,
       name: row.publisher_name,
     },
+  });
+};
+
+const onDelete = async (row) => {
+  console.log("notice to be delete: ", row.notice_id, row.notice_title);
+  await ElMessageBox.confirm("此操作将删除该通知, 是否继续?", "提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  }).then(async () => {
+    console.log("delete request submitting");
+    const response = await deletNotice(parseInt(row.notice_id));
+    if (response.code === 200) {
+      Message.success("删除成功");
+    } else {
+      Message.error(response.msg || "删除失败");
+    }
   });
 };
 

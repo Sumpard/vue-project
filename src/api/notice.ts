@@ -10,6 +10,11 @@ export interface notice_submit {
   publisher_name: string;
 }
 
+export interface notice_modify {
+  notice_id: number;
+  notice_content: string;
+}
+
 export async function postNotice( //发布notice
   put_content: string,
   put_title: string,
@@ -38,4 +43,16 @@ export async function getNotice(get_type: string) {
       },
     })
   ).data;
+}
+
+export async function deletNotice(del_id: int) {
+  return (await api.delete("/notice/deleteNotice", { params: { del_id } })).data;
+}
+
+export async function modifyNotice(modify_id: string, modify_content: string) {
+  const noticeModifyBody: notice_modify = {
+    notice_id: parseInt(modify_id),
+    notice_content: modify_content,
+  };
+  return (await api.put("notice/insertNotice", noticeModifyBody)).data;
 }
