@@ -9,21 +9,9 @@
     </el-col>
   </el-row>
   <el-row>
-    <cols>
-      <template v-slot:card-title>
-        <p>管理安排</p>
-      </template>
-    </cols>
-    <cols>
-      <template v-slot:card-title>
-        <p>活动通知</p>
-      </template>
-    </cols>
-    <cols>
-      <template v-slot:card-title>
-        <p>书院介绍</p>
-      </template>
-    </cols>
+    <cols noticetype="活动通知" />
+    <cols noticetype="管理安排" />
+    <cols noticetype="书院介绍" />
   </el-row>
 </template>
 

@@ -117,7 +117,7 @@ export default {
           });
         })
         .catch(() => {
-          this.router.push({ path: "/noticelist" });
+          this.router.push({ path: "/adminnoticelist" });
         });
     },
   },

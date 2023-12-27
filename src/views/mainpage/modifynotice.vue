@@ -1,5 +1,8 @@
 <template>
-  <h>编辑通知</h>
+  <el-button @click="goBack"
+    ><el-icon><i-ep-ArrowLeft /></el-icon>返回</el-button
+  ><br />
+  <h>编辑通知</h><br />
   <el-form>
     <el-form-item label="选择通知类型:">
       <el-select v-model="type" placeholder="通知类型">
@@ -59,6 +62,10 @@ export default {
     };
   },
   methods: {
+    goBack() {
+      this.$router.back();
+    },
+
     handleUploadImage(event, insertImage, files) {
       // 拿到 files 之后上传到文件服务器，然后向编辑框中插入对应的内容
       console.log(files);
