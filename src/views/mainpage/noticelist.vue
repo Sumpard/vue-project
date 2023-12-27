@@ -53,18 +53,11 @@
             <el-tag :type="''" disable-transitions>{{ scope.row.notice_type }}</el-tag>
           </template>
         </el-table-column>
-
         <el-table-column fixed="right" label="查看详情" width="120">
           <template #default="scope">
             <el-button link type="primary" size="large" @click="openPreview(scope.row)">
               <el-icon><i-ep-DArrowRight /></el-icon>
             </el-button>
-          </template>
-        </el-table-column>
-        <el-table-column fixed="right" label="操作" width="120">
-          <template #default="scope">
-            <el-button link type="primary" size="small" @click="openModify(scope.row)">修改</el-button>
-            <el-button link type="primary" size="small" @click="onDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -73,13 +66,11 @@
 </template>
 
 <script setup lang="ts">
-import { ElMessageBox } from "element-plus";
+import { Search } from "@element-plus/icons-vue";
 import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 
-import { deletNotice, getNotice } from "@/api/notice";
-import { useUserStore } from "@/stores/user";
-import Message from "@/utils/message";
+import { getNotice } from "@/api/notice";
 
 const selectedRow = ref(null); //所选notice的内容
 const router = useRouter(); // 获取路由对象
@@ -122,42 +113,6 @@ const openPreview = (row) => {
   });
 };
 
-const openModify = (row) => {
-  //获取会话框内容
-  selectedRow.value = row;
-  console.log("本条通知： ", selectedRow.value);
-  router.push({
-    path: "/noticemodify",
-    query: {
-      content: row.notice_content,
-      type: row.notice_type,
-      title: row.notice_title,
-      time: row.publish_time,
-      name: row.publisher_name,
-      id: row.notice_id,
-    },
-  });
-};
-
-const onDelete = async (row) => {
-  console.log("notice to be delete(id title): ", row.notice_id, row.notice_title);
-  await ElMessageBox.confirm("此操作将删除该通知, 是否继续?", "提示", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
-  }).then(async () => {
-    console.log("delete request submitting");
-    const response = await deletNotice(parseInt(row.notice_id));
-    console.log("response:", response);
-    if (response.code === 200) {
-      Message.success("删除成功");
-    } else {
-      Message.error(response.msg || "删除失败");
-    }
-    location.reload();
-  });
-};
-
 onMounted(async () => {
   // 通过 API 请求获取数据
   try {
@@ -182,7 +137,11 @@ onMounted(async () => {
 .divide {
   margin: 15px 0px 0px;
 }
-
+.chart-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 垂直居中 */
+}
 .outer {
   display: flex;
   justify-content: center; /* 子元素水平居中 */
