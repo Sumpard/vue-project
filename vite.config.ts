@@ -88,6 +88,16 @@ export default ({ mode }: ConfigEnv) =>
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ""),
         },
+        "/sm": {
+          target: "https://sm.ms",
+          secure: true,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/sm/, ""),
+          // headers: {
+          //   //（如果不加会检测到当前发送的域名不在它的服务器地址下采取安全措施返回500）
+          //   Referer: 'https://sm.ms/'
+          // }
+        },
       },
     },
     build: {

@@ -30,7 +30,7 @@
         <div class="flex">
           <el-form-item label="座位">
             <el-select v-model="bookingForm_equip.equip" placeholder="选择座位">
-              <el-option v-for="equip in equips" :value="equip.available_name"> </el-option>
+              <el-option v-for="equip in seats" :value="equip.available_name"> </el-option>
             </el-select>
           </el-form-item>
         </div>
@@ -76,11 +76,21 @@
       <span>健雄书院座位</span>
       <div>
         <el-tabs v-model="activeName" type="card" class="demo-tabs">
-          <el-tab-pane v-for="equip in equips" :key="equip.available_id" :label="equip.available_name">
-            <p>{{ "座位名称：" + equip.available_name }}</p>
-            <p>{{ "座位当前状态:" + equip.available_status }}</p>
-            <p>{{ "座位信息:" + equip.available_description }}</p>
-            <p>{{ "图片:" + equip.available_image }}</p>
+          <el-tab-pane v-for="seat in seats" :key="seat.available_id" :label="seat.available_name">
+            <p>{{ "座位名称：" + seat.available_name }}</p>
+            <p>{{ "座位当前状态:" + seat.available_status }}</p>
+            <p>{{ "座位信息:" + seat.available_description }}</p>
+            <p>{{ "图片:" + seat.available_image }}</p>
+            <div class="tab-img-container">
+              <el-image :src="'data:image/png;base64,' + seat.available_image" alt="picture" class="tab-img">
+                <template #error>
+                  <div class="image-slot">
+                    <el-text>啊？图片丢失了捏</el-text>
+                    <el-icon class="icon"><i-ep-picture /></el-icon>
+                  </div>
+                </template>
+              </el-image>
+            </div>
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -122,7 +132,7 @@ export default {
       time_form: {
         time_select: "",
       },
-      equips,
+      seats: equips,
       search: Search,
       dialog_switch,
       activeName,
@@ -205,7 +215,7 @@ export default {
     async equip_template() {
       try {
         const roomdata = (await get_avail_set("座位")).data;
-        this.equips = roomdata;
+        this.seats = roomdata;
         console.log(roomdata);
         for (let i = 0; i < roomdata.length; i++) {
           avail_map[roomdata[i].available_name] = [roomdata[i].available_id, i];
@@ -293,5 +303,37 @@ export default {
 .picker {
   margin-top: 30px;
   margin-bottom: 10px;
+}
+
+.tab-img {
+  width: 75%;
+  height: auto;
+}
+
+.tab-img-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-slot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 200px;
+  background: var(--el-fill-color-light);
+  color: var(--el-text-color-secondary);
+}
+
+.icon {
+  font-size: 30px;
+}
+
+.image-slot.error {
+  background-color: #f00;
+  color: #fff;
+  height: 200px;
 }
 </style>

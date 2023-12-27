@@ -9,9 +9,21 @@
     </el-col>
   </el-row>
   <el-row>
-    <cols />
-    <cols />
-    <cols />
+    <cols>
+      <template v-slot:card-title>
+        <p>管理安排</p>
+      </template>
+    </cols>
+    <cols>
+      <template v-slot:card-title>
+        <p>活动通知</p>
+      </template>
+    </cols>
+    <cols>
+      <template v-slot:card-title>
+        <p>书院介绍</p>
+      </template>
+    </cols>
   </el-row>
 </template>
 

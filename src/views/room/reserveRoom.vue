@@ -75,7 +75,17 @@
               <p>{{ "会议室名称：" + room.available_name }}</p>
               <p>{{ "会议室当前状态:" + room.available_status }}</p>
               <p>{{ "会议室信息:" + room.available_description }}</p>
-              <p>{{ "图片:" + room.available_image }}</p>
+              <p>{{ "图片:" }}</p>
+              <div class="tab-img-container">
+                <el-image :src="'data:image/png;base64,' + room.available_image" alt="picture" class="tab-img">
+                  <template #error>
+                    <div class="image-slot">
+                      <el-text>啊？图片丢失了捏</el-text>
+                      <el-icon class="icon"><i-ep-picture /></el-icon>
+                    </div>
+                  </template>
+                </el-image>
+              </div>
             </el-tab-pane>
           </el-tabs>
         </div>
@@ -321,21 +331,6 @@ export default {
   background-color: #ffffff;
 }
 
-/* .demo-border .text {
-  width: 15%;
-}
-.demo-border .line {
-  width: 70%;
-}
-.demo-border .line div {
-  width: 100%;
-  height: 0;
-  border-top: 1px solid var(--el-border-color);
-}
-.demo-border .line .dashed {
-  border-top: 2px dashed var(--el-border-color);
-} */
-
 .el-form {
   margin-left: -40px;
 }
@@ -343,5 +338,37 @@ export default {
 .picker {
   margin-top: 30px;
   margin-bottom: 10px;
+}
+
+.tab-img {
+  width: 75%;
+  height: auto;
+}
+
+.tab-img-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-slot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 200px;
+  background: var(--el-fill-color-light);
+  color: var(--el-text-color-secondary);
+}
+
+.icon {
+  font-size: 30px;
+}
+
+.image-slot.error {
+  background-color: #f00;
+  color: #fff;
+  height: 200px;
 }
 </style>
