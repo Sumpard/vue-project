@@ -14,10 +14,8 @@
     :router="true"
   >
     <el-menu-item index="homepage">
-      <el-icon>
-        <i-ep-House />
-      </el-icon>
-      <span>首页</span>
+      <el-icon> <i-ep-House /> </el-icon>
+      <template #title>首页</template>
     </el-menu-item>
     <el-sub-menu index="reserve">
       <template #title>
@@ -57,9 +55,7 @@
       </el-menu-item>
     </el-sub-menu>
     <el-menu-item index="goodlist" v-if="isAdmin">
-      <el-icon>
-        <i-ep-Box />
-      </el-icon>
+      <el-icon> <i-ep-Box /> </el-icon>
       <span>物品列表</span>
     </el-menu-item>
     <el-menu-item index="userlist" v-if="isAdmin">
@@ -68,6 +64,28 @@
       </el-icon>
       <span>用户列表</span>
     </el-menu-item>
+    <el-sub-menu index="notice" v-if="isAdmin">
+      <template #title>
+        <div>
+          <el-icon><i-ep-Notebook /></el-icon>
+          <span v-if="!isCollapse">通知与反馈</span>
+        </div>
+      </template>
+      <el-menu-item index="editnotice">
+        <el-icon> <i-ep-Edit /> </el-icon>
+        <span>编写通知</span>
+      </el-menu-item>
+      <el-menu-item index="noticelist">
+        <el-icon> <i-ep-ChatLineSquare /> </el-icon>
+        <span>通知列表</span>
+      </el-menu-item>
+      <el-menu-item index="feedbackQuestion">
+        <el-icon>
+          <i-ep-Box />
+        </el-icon>
+        <span>问题反馈列表</span>
+      </el-menu-item>
+    </el-sub-menu>
     <el-sub-menu index="contactus">
       <template #title>
         <div>
