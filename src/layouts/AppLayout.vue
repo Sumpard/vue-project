@@ -15,18 +15,14 @@
         </div>
       </el-header>
       <el-container>
-        <el-aside :width="foo ? '64px' : '200px'">
-          <app-aside v-model="foo" />
-        </el-aside>
+        <app-aside />
         <el-main> <router-view /> </el-main>
       </el-container>
     </el-container>
   </div>
 </template>
 
-<script setup lang="ts">
-const foo = ref(false);
-</script>
+<script setup lang="ts"></script>
 
 <style scoped>
 .el-row {
