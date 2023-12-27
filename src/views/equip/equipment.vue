@@ -80,7 +80,17 @@
             <p>{{ "器材名称：" + equip.available_name }}</p>
             <p>{{ "器材当前状态:" + equip.available_status }}</p>
             <p>{{ "器材信息:" + equip.available_description }}</p>
-            <p>{{ "图片:" + equip.available_image }}</p>
+            <p>{{ "图片:" }}</p>
+            <div class="tab-img-container">
+              <el-image :src="'data:image/png;base64,' + equip.available_image" alt="picture" class="tab-img">
+                <template #error>
+                  <div class="image-slot">
+                    <el-text>啊？图片丢失了捏</el-text>
+                    <el-icon class="icon"><i-ep-picture /></el-icon>
+                  </div>
+                </template>
+              </el-image>
+            </div>
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -284,5 +294,37 @@ export default {
 .picker {
   margin-top: 30px;
   margin-bottom: 10px;
+}
+
+.tab-img {
+  width: 75%;
+  height: auto;
+}
+
+.tab-img-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-slot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 200px;
+  background: var(--el-fill-color-light);
+  color: var(--el-text-color-secondary);
+}
+
+.icon {
+  font-size: 30px;
+}
+
+.image-slot.error {
+  background-color: #f00;
+  color: #fff;
+  height: 200px;
 }
 </style>
