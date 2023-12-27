@@ -1,5 +1,5 @@
 <template>
-  <div class="chart-container">
+  <div class="chart-contain">
     <el-form>
       <el-row>
         <el-form-item label="搜索：" label-width="70">
@@ -127,10 +127,9 @@ onMounted(async () => {
 .divide {
   margin: 15px 0px 0px;
 }
-.chart-container {
+.chart-contain {
   display: flex;
   flex-direction: column;
-  justify-content: center; /* 垂直居中 */
 }
 .outer {
   display: flex;
