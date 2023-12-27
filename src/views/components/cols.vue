@@ -1,23 +1,90 @@
 <template>
   <el-card class="box-card" shadow="hover">
     <div class="clearfix" style="text-align: -webkit-center">
-      <slot name="card-title"></slot>
+      <p>{{ noticetype }}</p>
       <el-button style="float: right; padding: 3px 0" type="text" @click="knowmore()"
         >查看更多<el-icon><i-ep-DArrowRight /></el-icon
       ></el-button>
     </div>
-    <div v-for="o in 5" :key="o" class="text item">
-      {{ "列表内容 " + o }}
-    </div>
-    <a
-      href="https://mp.weixin.qq.com/s?__biz=MjM5NjQxMDE2MQ==&mid=2651003892&idx=1&sn=dc8bd3ea9634a36e61f5a8d78b6f9335&chksm=bd1e1daa8a6994bcef251d98e14051c8d7326bc59d09f7e772948f45f35c141b0dd153dd9d02&mpshare=1&scene=23&srcid=1214lYW3yrvc6fHMlfZu6uxq&sharer_shareinfo=a9e3fa85bd768c2180da4ba9adb18547&sharer_shareinfo_first=a9e3fa85bd768c2180da4ba9adb18547#rd"
-      >健雄获奖</a
+    <div
+      v-if="notices.length > 0"
+      v-for="index in displaynumber < notices.length ? displaynumber : notices.length"
+      class="text item"
     >
+      <el-link @click="openPreview(index)">
+        {{ notices[0] === "" ? index : truncateText(notices[notices.length - index - 1].notice_title, 20) }}
+      </el-link>
+    </div>
   </el-card>
 </template>
 
-<script setup>
-import { ref } from "vue";
+<script lang="ts" setup>
+import { defineProps, ref } from "vue";
+import { useRouter } from "vue-router";
+
+import { getNotice } from "@/api/notice";
+
+const props = defineProps({
+  noticetype: {
+    type: String,
+    default: "卡片标题",
+  },
+  displaynumber: {
+    type: Number,
+    default: 7,
+  },
+});
+
+const notices = ref([]);
+const truncateText = (text: string, maxLength: number) => {
+  //截断text以防内容过长
+  if (text.length > maxLength) {
+    return text.substring(0, maxLength) + "...";
+  }
+  return text;
+};
+
+const router = useRouter(); // 传递路由对象
+const knowmore = () => {
+  console.log("type:", props.noticetype);
+  router.push({
+    path: "/noticelist",
+    query: {
+      type: props.noticetype,
+    },
+  });
+};
+
+const openPreview = (index: number) => {
+  console.log("notices:", notices.value.length);
+  router.push({
+    path: "/noticepreview",
+    query: {
+      content: notices.value[notices.value.length - index - 1].notice_content,
+      type: props.noticetype,
+      title: notices.value[notices.value.length - index - 1].notice_title,
+      time: notices.value[notices.value.length - index - 1].publish_time,
+      name: notices.value[notices.value.length - index - 1].publisher_name,
+    },
+  });
+};
+
+onMounted(async () => {
+  // 通过 API 请求获取数据
+  try {
+    const response = await getNotice(props.noticetype);
+    console.log(response);
+
+    if (response.code === 200) {
+      notices.value = response.data;
+      console.log(notices.value);
+    } else {
+      console.error("Failed to fetch data:", response.msg);
+    }
+  } catch (error) {
+    console.error("API request failed:", error);
+  }
+});
 </script>
 
 <style>
@@ -42,5 +109,9 @@ import { ref } from "vue";
   width: 30%;
   border-top: 5px solid rgb(95, 165, 222);
   margin: 15px;
+}
+
+.btn {
+  color: black;
 }
 </style>

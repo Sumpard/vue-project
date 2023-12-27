@@ -105,6 +105,7 @@ const openPreview = (row) => {
 onMounted(async () => {
   // 通过 API 请求获取数据
   try {
+    console.log("select_type:", select_type.value);
     const response = await getNotice(select_type.value);
     console.log(response);
 
