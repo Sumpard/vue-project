@@ -11,8 +11,8 @@
       v-for="index in displaynumber < notices.length ? displaynumber : notices.length"
       class="text item"
     >
-      <el-link @click="openPreview(index)">
-        {{ notices[0] === "" ? index : truncateText(notices[notices.length - index - 1].notice_title, 20) }}
+      <el-link @click="openPreview(index)" class="compact-text">
+        {{ notices[0] === "" ? index : truncateText(notices[notices.length - index].notice_title, 20) }}
       </el-link>
     </div>
   </el-card>
@@ -31,7 +31,7 @@ const props = defineProps({
   },
   displaynumber: {
     type: Number,
-    default: 7,
+    default: 8,
   },
 });
 
@@ -65,6 +65,7 @@ const openPreview = (index: number) => {
       title: notices.value[notices.value.length - index - 1].notice_title,
       time: notices.value[notices.value.length - index - 1].publish_time,
       name: notices.value[notices.value.length - index - 1].publisher_name,
+      date: new Date().getTime(),
     },
   });
 };
@@ -73,7 +74,7 @@ onMounted(async () => {
   // 通过 API 请求获取数据
   try {
     const response = await getNotice(props.noticetype);
-    console.log(response);
+    console.log("col response:", response);
 
     if (response.code === 200) {
       notices.value = response.data;
@@ -94,6 +95,8 @@ onMounted(async () => {
 
 .item {
   margin-bottom: 18px;
+  margin-left: 10%;
+  margin-right: 10%;
 }
 
 .clearfix:before,
@@ -109,9 +112,15 @@ onMounted(async () => {
   width: 30%;
   border-top: 5px solid rgb(95, 165, 222);
   margin: 15px;
+  height: 420px;
 }
 
 .btn {
   color: black;
+}
+
+.compact-text {
+  line-height: 1; /* 调整行高 */
+  margin-bottom: 0; /* 调整底部外边距 */
 }
 </style>
