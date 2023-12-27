@@ -2,7 +2,7 @@
   <el-card class="box-card" shadow="hover">
     <div class="clearfix" style="text-align: -webkit-center">
       <slot name="card-title"></slot>
-      <el-button style="float: right; padding: 3px 0" type="text"
+      <el-button style="float: right; padding: 3px 0" type="text" @click="knowmore()"
         >查看更多<el-icon><i-ep-DArrowRight /></el-icon
       ></el-button>
     </div>

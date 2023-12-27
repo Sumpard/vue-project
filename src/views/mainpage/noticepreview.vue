@@ -1,4 +1,7 @@
 <template>
+  <el-button @click="goBack"
+    ><el-icon><i-ep-ArrowLeft /></el-icon>返回</el-button
+  >
   <h4 class="title">{{ title }}</h4>
   <br />
   <p class="info">编写人：{{ name }} &ensp;&ensp;&ensp; 发布时间：{{ time }}&ensp;&ensp;&ensp; 通知类别：{{ type }}</p>
@@ -37,6 +40,11 @@ export default {
       time,
       name,
     };
+  },
+  methods: {
+    goBack() {
+      this.$router.back();
+    },
   },
 };
 </script>

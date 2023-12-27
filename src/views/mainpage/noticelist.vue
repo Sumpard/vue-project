@@ -19,7 +19,7 @@
     <div class="my-info">
       <el-table
         :data="filterTableData"
-        max-height="550"
+        max-height="650"
         highlight-current-row
         :default-sort="{ prop: 'publish_time', order: 'descending' }"
       >
@@ -38,17 +38,7 @@
             {{ row.publisher_name }}
           </template>
         </el-table-column>
-        <el-table-column
-          prop="notice_type"
-          label="通知类别"
-          :filters="[
-            { text: '活动通知', value: '活动通知' },
-            { text: '管理安排', value: '管理安排' },
-            { text: '书院介绍', value: '书院介绍' },
-          ]"
-          :filter-method="filterTag"
-          filter-placement="bottom-end"
-        >
+        <el-table-column prop="notice_type" label="通知类别">
           <template #default="scope">
             <el-tag :type="''" disable-transitions>{{ scope.row.notice_type }}</el-tag>
           </template>
@@ -68,12 +58,11 @@
 <script setup lang="ts">
 import { Search } from "@element-plus/icons-vue";
 import { computed, onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 import { getNotice } from "@/api/notice";
 
 const selectedRow = ref(null); //所选notice的内容
-const router = useRouter(); // 获取路由对象
 const tableData = ref([]);
 const search = ref("");
 const filterTableData = computed(() =>
@@ -85,9 +74,9 @@ const filterTableData = computed(() =>
   )
 );
 
-const filterTag = (value: string, row: any) => {
-  return row.notice_type === value;
-};
+const router = useRouter(); // 传递路由对象
+const route = useRoute(); //获取路由参数
+const select_type = ref(route.query.type);
 
 const truncateText = (text: string, maxLength: number) => {
   //截断text以防内容过长
@@ -116,7 +105,7 @@ const openPreview = (row) => {
 onMounted(async () => {
   // 通过 API 请求获取数据
   try {
-    const response = await getNotice("");
+    const response = await getNotice(select_type.value);
     console.log(response);
 
     if (response.code === 200) {

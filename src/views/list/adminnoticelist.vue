@@ -19,7 +19,7 @@
     <div class="my-info">
       <el-table
         :data="filterTableData"
-        max-height="550"
+        max-height="650"
         highlight-current-row
         :default-sort="{ prop: 'publish_time', order: 'descending' }"
       >
@@ -73,6 +73,7 @@
 </template>
 
 <script setup lang="ts">
+import { Search } from "@element-plus/icons-vue";
 import { ElMessageBox } from "element-plus";
 import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
