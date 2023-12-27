@@ -83,6 +83,7 @@ const tableData = ref([]);
 const search = ref("");
 const dialogFormVisible = ref(false);
 const selectedRows = ref<Appointment[]>([]);
+const sucRows = ref<Appointment[]>([]);
 const disableAuditButton = ref(false);
 
 const filterTag = (value: string, row: any) => {
@@ -142,9 +143,12 @@ const accept = async () => {
     console.log("Deleting row with ID:", row.appointment_id);
     if (response.code === 200) {
       ElMessage({ message: "审核通过成功", type: "success" });
+      sucRows.value.push(row);
+    } else {
+      ElMessage.error("审核无法通过");
     }
   }
-
+  selectedRows.value = sucRows.value;
   tableData.value = tableData.value.filter((row) => !selectedRows.value.includes(row));
   selectedRows.value = [];
 };
