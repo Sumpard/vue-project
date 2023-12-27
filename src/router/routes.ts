@@ -28,6 +28,22 @@ const routes: RouteRecordRaw[] = [
         component: () => import("@/views/mainpage/homepage.vue"),
       },
       {
+        path: "/editnotice",
+        component: () => import("@/views/mainpage/editnotice.vue"),
+      },
+      {
+        path: "/noticelist",
+        component: () => import("@/views/list/noticelist.vue"),
+      },
+      {
+        path: "/noticepreview",
+        component: () => import("@/views/mainpage/noticepreview.vue"),
+      },
+      {
+        path: "/noticemodify",
+        component: () => import("@/views/mainpage/modifynotice.vue"),
+      },
+      {
         path: "/homeindex",
         component: () => import("@/views/home/homeindex.vue"),
       },
