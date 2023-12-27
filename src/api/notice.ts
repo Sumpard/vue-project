@@ -13,6 +13,8 @@ export interface notice_submit {
 export interface notice_modify {
   notice_id: number;
   notice_content: string;
+  notice_title: string;
+  notice_type: string;
 }
 
 export async function postNotice( //发布notice
@@ -46,13 +48,20 @@ export async function getNotice(get_type: string) {
 }
 
 export async function deletNotice(del_id: int) {
-  return (await api.delete("/notice/deleteNotice", { params: { del_id } })).data;
+  return (await api.delete("/notice/deleteNotice", { params: { notice_id: del_id } })).data;
 }
 
-export async function modifyNotice(modify_id: string, modify_content: string) {
+export async function modifyNotice(
+  modify_id: string,
+  modify_content: string,
+  modify_title: string,
+  modify_type: string
+) {
   const noticeModifyBody: notice_modify = {
     notice_id: parseInt(modify_id),
     notice_content: modify_content,
+    notice_title: modify_title,
+    notice_type: modify_type,
   };
-  return (await api.put("notice/insertNotice", noticeModifyBody)).data;
+  return (await api.put("/notice/updateNotice", noticeModifyBody)).data;
 }

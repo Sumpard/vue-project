@@ -29,7 +29,7 @@
         </el-table-column>
         <el-table-column label="搜索" fixed="right" width="200">
           <template #header>
-            <el-input v-model="search" size="small" placeholder="请输入用户名搜索" clearable />
+            <el-input v-model="search" size="small" placeholder="请输入撰写人姓名进行搜索" clearable />
           </template>
         </el-table-column>
         <el-table-column fixed="right" label="查看详情" width="120">
@@ -41,7 +41,7 @@
         </el-table-column>
         <el-table-column fixed="right" label="操作" width="120">
           <template #default="scope">
-            <el-button link type="primary" size="small" @click="handleClick">修改</el-button>
+            <el-button link type="primary" size="small" @click="openModify(scope.row)">修改</el-button>
             <el-button link type="primary" size="small" @click="onDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -94,8 +94,25 @@ const openPreview = (row) => {
   });
 };
 
+const openModify = (row) => {
+  //获取会话框内容
+  selectedRow.value = row;
+  console.log("本条通知： ", selectedRow.value);
+  router.push({
+    path: "/noticemodify",
+    query: {
+      content: row.notice_content,
+      type: row.notice_type,
+      title: row.notice_title,
+      time: row.publish_time,
+      name: row.publisher_name,
+      id: row.notice_id,
+    },
+  });
+};
+
 const onDelete = async (row) => {
-  console.log("notice to be delete: ", row.notice_id, row.notice_title);
+  console.log("notice to be delete(id title): ", row.notice_id, row.notice_title);
   await ElMessageBox.confirm("此操作将删除该通知, 是否继续?", "提示", {
     confirmButtonText: "确定",
     cancelButtonText: "取消",
@@ -103,11 +120,13 @@ const onDelete = async (row) => {
   }).then(async () => {
     console.log("delete request submitting");
     const response = await deletNotice(parseInt(row.notice_id));
+    console.log("response:", response);
     if (response.code === 200) {
       Message.success("删除成功");
     } else {
       Message.error(response.msg || "删除失败");
     }
+    location.reload();
   });
 };
 

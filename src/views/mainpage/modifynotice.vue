@@ -26,29 +26,36 @@ import axios from "axios";
 import { ElMessageBox } from "element-plus";
 import { useRouter } from "vue-router";
 
-import { postNotice } from "@/api/notice";
-import { useUserStore } from "@/stores/user";
+import { modifyNotice } from "@/api/notice";
 import Message from "@/utils/message";
-import { formatTimestamp } from "@/utils/timeformat";
 
 export default {
   setup() {
+    const route = useRoute();
+    const modi_content = ref(route.query.content);
+    const modi_type = ref(route.query.type);
+    const modi_title = ref(route.query.title);
+    const modi_time = ref(route.query.time);
+    const modi_id = ref(route.query.id);
+    const modi_name = ref(route.query.name);
     const userouter = useRouter(); // 获取路由对象
+
     onMounted(() => {});
 
     return {
+      text: modi_content,
+      type: modi_type,
+      title: modi_title,
+      time: modi_time,
+      id: modi_id,
+      name: modi_name,
       router: userouter, //路由跳转
     };
   },
 
   data() {
     return {
-      text: "",
-      type: "",
-      title: "",
       types: ["管理安排", "活动通知", "书院介绍"],
-      time: "",
-      user: "",
     };
   },
   methods: {
@@ -87,19 +94,15 @@ export default {
       // console.log("text:",this.text);
       // console.log("type:", this.type);
       // console.log("title:", this.title);
+      // console.log("id:", this.id);
       if (!this.title || !this.text || !this.type) {
         Message.warning("请填写所有内容后再提交通知");
         return;
       }
 
-      const currentTimestamp = Date.now();
-      this.time = formatTimestamp(currentTimestamp);
-      console.log("time:", this.time);
-
-      this.user = useUserStore().user!.user_name;
-      const res = await postNotice(this.text, this.title, this.type, this.time, this.user);
+      const res = await modifyNotice(this.id, this.text, this.title, this.type);
       console.log(res);
-      ElMessageBox.confirm("编辑成功，您可以选择查看预览或是跳转到通知列表", "提示", {
+      ElMessageBox.confirm("修改成功，您可以选择查看预览或是跳转到通知列表", "提示", {
         confirmButtonText: "查看预览",
         cancelButtonText: "通知列表",
         type: "success",
