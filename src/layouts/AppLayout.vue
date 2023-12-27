@@ -16,6 +16,7 @@
       </el-header>
       <el-container>
         <app-aside />
+        <el-main> <router-view /> </el-main>
       </el-container>
     </el-container>
   </div>
