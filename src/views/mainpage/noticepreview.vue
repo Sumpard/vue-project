@@ -12,12 +12,16 @@
 </template>
 
 <script lang="ts">
-import { onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
+import { onMounted, ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 export default {
   setup() {
     const route = useRoute();
+    const router = useRouter();
+    watch(route, (to, from) => {
+      router.go(0);
+    });
     const content = ref(route.query.content);
     const type = ref(route.query.type);
     const title = ref(route.query.title);
