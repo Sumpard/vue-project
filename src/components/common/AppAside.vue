@@ -78,7 +78,7 @@ const menus = [
     icon: IconEpEdit,
     children: [
       { index: "editnotice", name: "编写通知", icon: IconEpEdit },
-      { index: "noticelist", name: "通知列表", icon: IconEpChatLineSquare },
+      { index: "adminnoticelist", name: "通知列表", icon: IconEpChatLineSquare },
       { index: "feedbackQuestion", name: "问题反馈列表", icon: IconEpBox },
     ],
     admin: true,
