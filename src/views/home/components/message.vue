@@ -17,11 +17,11 @@
         <ElFormItem label="用户名">
           <p>{{ user.user_name }}</p>
         </ElFormItem>
-        <ElFormItem label="uid">
+        <ElFormItem label="学号">
           <p>{{ user.user_id }}</p>
         </ElFormItem>
-        <ElFormItem label="角色" class="formLabwel">
-          <p>{{ user.user_role }}</p>
+        <ElFormItem label="诚信点">
+          <p>{{ user.score }}</p>
         </ElFormItem>
 
         <ElFormItem label="邮件地址" prop="email">
@@ -117,7 +117,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       try {
         const result = await updatepassword(editPasswordForm.password, editPasswordForm.newPassword);
         console.log(result);
-        if (result === "OK") {
+        if (result.code === 200) {
           console.log("密码更改成功");
         } else {
           console.log("Error: ");

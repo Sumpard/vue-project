@@ -1,15 +1,11 @@
 <template>
   <!-- Form -->
-  <el-button @click="look"> 查看 </el-button>
 
   <el-button @click="dialogFormVisible = true"> 新建物品 </el-button>
   <el-dialog v-model="dialogFormVisible" title="新增物品" :before-close="handleClose" draggable>
     <el-form ref="ruleFormRef" :model="form" :rules="rules">
       <el-form-item label="名称" prop="name" :label-width="formLabelWidth">
         <el-input v-model="form.name" autocomplete="off" clearable />
-      </el-form-item>
-      <el-form-item label="序号" prop="id" :label-width="formLabelWidth">
-        <el-input v-model="form.id" autocomplete="off" clearable />
       </el-form-item>
 
       <el-form-item label="状态" prop="status" :label-width="formLabelWidth">
@@ -30,15 +26,6 @@
       <el-form-item label="描述" prop="description" :label-width="formLabelWidth">
         <el-input v-model="form.description" autocomplete="off" clearable />
       </el-form-item>
-      <el-form-item label="图片" prop="image" :label-width="formLabelWidth">
-        <el-input v-model="form.image" autocomplete="off" clearable />
-      </el-form-item>
-      <!-- <el-form-item label="Zones" :label-width="formLabelWidth">
-          <el-select v-model="form.region" placeholder="请选择类型">
-            <el-option label="Zone No.1" value="shanghai" />
-            <el-option label="Zone No.2" value="beijing" />
-          </el-select>
-        </el-form-item> -->
     </el-form>
 
     <template #footer>
@@ -57,25 +44,6 @@ import { reactive, ref } from "vue";
 import { addGoods, getAllGoods } from "@/api/goods";
 
 const uploadedImage = ref<string | null>(null);
-const uploadApi = "/api/upload";
-
-const beforeUpload = (file: File) => {
-  console.log("Before Upload:", file);
-  convertFileToBase64(file);
-  return false;
-};
-
-const handleSuccess = (response: any, file: File) => {
-  console.log("Upload Success:", response);
-};
-
-const convertFileToBase64 = (file: File) => {
-  const reader = new FileReader();
-  reader.onload = () => {
-    uploadedImage.value = reader.result as string;
-  };
-  reader.readAsDataURL(file);
-};
 
 const ruleFormRef = ref<FormInstance>();
 const dialogFormVisible = ref(false);
@@ -91,7 +59,6 @@ const form = reactive({
 
 const rules = reactive<any>({
   name: [{ required: true, message: "请输入名称", trigger: "blur" }],
-  id: [{ required: true, message: "请输入编号", trigger: "blur" }],
   type_name: [{ required: true, message: "请选择类型", trigger: "blur" }],
   status: [{ required: true, message: "请选择状态", trigger: "blur" }],
 });
@@ -133,12 +100,6 @@ const handleClose = (done: () => void) => {
     .catch(() => {
       // catch error
     });
-};
-
-const look = async () => {
-  const list = await getAllGoods();
-
-  console.log(list);
 };
 </script>
 <style scoped>

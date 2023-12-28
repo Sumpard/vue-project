@@ -2,10 +2,13 @@
   <!-- 左边 -->
   <div class="mdui-card my-info-easy background-div">
     <!-- icon 头像 -->
-    <div class="container">
-      <img id="touxiang" src="https://zxz.ee/touxiang.png" />
+    <div v-if="user" class="container">
+      <img v-if="user.avatar" id="touxiang" :src="'data:image/png;base64,' + user.avatar" />
+      <img v-else id="touxiang" src="https://zxz.ee/touxiang.png" />
       <el-icon class="click" size="25px" @click="showUploadDialog"><i-ep-CirclePlus /></el-icon>
     </div>
+    <div class="zi"><span class="box"></span></div>
+
     <el-dialog v-model="dialogVisible" title="上传文件" draggable>
       <el-upload
         class="upload-dialog"
@@ -29,43 +32,37 @@
         </span>
       </template>
     </el-dialog>
-    <!-- <div class="avatar">
-      <UploadAvatar @imglink="changeAvatar" :is-show="true" :avatar="currentUser.avatar" v-if="currentUser.avatar" />
-    </div> -->
-    <!-- <div class="infobox">
-    
-      <div class="username">
-        {{ currentUser.nickname }}
-        <i class="iconfont icon-nansheng" v-if="currentUser.gender === '1'"></i>
-        <i class="iconfont icon-nvsheng" v-else></i>
-      </div>
-      
-      <div class="introuce">{{ currentUser.introduce }}</div>
-      
-      <div class="more-info">
-        <div class="email"><i class="iconfont icon-riqi"></i>创建日期:{{ currentUser.date }}</div>
-        <div class="email">
-          <i class="iconfont icon-youjian"></i>邮件:{{
-            currentUser.email ? currentUser.email : '未设置'
-          }}
-        </div>
-        <div class="email">
-          <i class="iconfont icon-gerenzhongxin"></i>用户名:{{ currentUser.username }}
-        </div>
-      </div>
-    </div> -->
   </div>
 </template>
 <script lang="ts" setup>
 import dayjs from "dayjs";
+import Typed from "typed.js";
 
 import { uploadava } from "@/api/user";
+import { useUserStore } from "@/stores/user";
 
 const now = new Date();
 
 const dialogVisible = ref(false);
 const File = ref();
 const emit = defineEmits(["changeAvatar"]);
+const userStore = useUserStore();
+
+const { user } = storeToRefs(userStore);
+
+onMounted(() => {
+  //通过 API 请求获取数据
+  const options = {
+    strings: ["修己安人 学博明辨", "体大慎微 积健为雄"],
+    startDelay: 300,
+    typeSpeed: 100,
+    loop: true,
+    backSpeed: 50,
+    showCursor: true,
+  };
+
+  new Typed(".box", options);
+});
 
 const showUploadDialog = () => {
   dialogVisible.value = true;
@@ -100,29 +97,30 @@ const submitUpload = async () => {
     }
     ElMessage({ message: "更新成功", type: "success" });
     dialogVisible.value = false;
+    user.value!.avatar = result5.data;
   } catch (error) {
     console.error("Failed to save editing:", error);
   }
-};
-
-const changeAvatar = (url: string) => {
-  emit("changeAvatar", url);
 };
 </script>
 
 <style lang="scss" scoped>
 @import url("https://cdn.jsdelivr.net/gh/AyagawaSeirin/homepage@latest/mdui/css/mdui.min.css");
-
+.zi {
+  color: #eee;
+  font-size: 25px;
+}
 .container {
   position: relative;
   width: 200px; /* 调整根据实际需要的尺寸 */
   height: 200px; /* 调整根据实际需要的尺寸 */
   border-radius: 50%;
+  margin-top: 60px;
 }
 .click {
   position: relative;
-  left: 145px;
-  top: -25px;
+  left: 140px;
+  top: -30px;
 }
 #touxiang {
   /* 定义头像的高和宽 */
@@ -132,7 +130,7 @@ const changeAvatar = (url: string) => {
   border-radius: 50%;
   /* 将图片转换为块元素并居中 */
   display: block;
-  margin: 0 0 0 50px;
+  margin: 30px 0 0 40px;
   /* 定义图片默认旋转速度 */
   transition: all 0.5s;
   -ms-transition: all 0.5s;

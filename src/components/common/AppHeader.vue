@@ -1,8 +1,7 @@
 <template>
   <div class="toolbar">
     <el-dropdown v-if="user">
-      <span class="circle"><el-avatar :src="user.avatarUrl" :size="30"></el-avatar></span>
-
+      <span class="circle"><el-avatar :src="'data:image/png;base64,' + user.avatar" :size="35"></el-avatar></span>
       <template #dropdown>
         <el-dropdown-menu>
           <el-dropdown-item>
@@ -26,7 +25,8 @@ const router = useRouter();
 
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
-
+const avatar2 = inject("avatar");
+console.log(avatar2);
 function Onlogout() {
   userStore.logout();
   Message.info("退出登录");

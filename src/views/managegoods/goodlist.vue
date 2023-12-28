@@ -76,9 +76,6 @@
         </template>
       </el-table-column>
       <el-table-column label="修改" fixed="right" width="250">
-        <template #header>
-          <el-input v-model="search" size="small" placeholder="请输入学号或用户名搜索" clearable />
-        </template>
         <template v-slot="{ row }">
           <el-button type="primary" link size="small" @click="showUploadDialog(row)">更新图片</el-button>
 
@@ -114,7 +111,6 @@
 <script setup lang="ts">
 import { Delete, Edit, Search, Share, Upload } from "@element-plus/icons-vue";
 import type { FormInstance, FormRules, UploadInstance } from "element-plus";
-import { Row } from "element-plus/es/components/table-v2/src/components";
 import { computed, getCurrentInstance, onMounted, ref } from "vue";
 
 import { deletegood, editdescription, editstatus, getAllGoods, upload } from "@/api/goods";
