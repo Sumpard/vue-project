@@ -34,3 +34,6 @@ export async function updateUserScore(id: string, score: int) {
 export async function updateUserRole(id: string, role: string) {
   return (await api.putForm("/user/update-role ", { id, role })).data;
 }
+export async function uploadava(avatar: File) {
+  return (await api.putForm("/user/update-avatar", { avatar })).data;
+}

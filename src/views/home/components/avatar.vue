@@ -2,61 +2,126 @@
   <!-- 左边 -->
   <div class="mdui-card my-info-easy background-div">
     <!-- icon 头像 -->
-    <img id="touxiang" src="https://zxz.ee/touxiang.png" />
-    <div class="avatar">
-      <UploadAvatar @imglink="changeAvatar" :is-show="true" :avatar="currentUser.avatar" v-if="currentUser.avatar" />
+    <div v-if="user" class="container">
+      <img v-if="user.avatar" id="touxiang" :src="'data:image/png;base64,' + user.avatar" />
+      <img v-else id="touxiang" src="https://zxz.ee/touxiang.png" />
+      <el-icon class="click" size="25px" @click="showUploadDialog"><i-ep-CirclePlus /></el-icon>
     </div>
-    <!-- <div class="infobox">
-    
-      <div class="username">
-        {{ currentUser.nickname }}
-        <i class="iconfont icon-nansheng" v-if="currentUser.gender === '1'"></i>
-        <i class="iconfont icon-nvsheng" v-else></i>
-      </div>
-      
-      <div class="introuce">{{ currentUser.introduce }}</div>
-      
-      <div class="more-info">
-        <div class="email"><i class="iconfont icon-riqi"></i>创建日期:{{ currentUser.date }}</div>
-        <div class="email">
-          <i class="iconfont icon-youjian"></i>邮件:{{
-            currentUser.email ? currentUser.email : '未设置'
-          }}
-        </div>
-        <div class="email">
-          <i class="iconfont icon-gerenzhongxin"></i>用户名:{{ currentUser.username }}
-        </div>
-      </div>
-    </div> -->
+    <div class="zi"><span class="box"></span></div>
+
+    <el-dialog v-model="dialogVisible" title="上传文件" draggable>
+      <el-upload
+        class="upload-dialog"
+        :before-upload="beforeUpload"
+        drag
+        :auto-upload="false"
+        :on-change="onchange"
+        show-file-list
+        list-type="picture"
+        :limit="1"
+      >
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过5MB</div>
+      </el-upload>
+
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="submitUpload">确定</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 <script lang="ts" setup>
 import dayjs from "dayjs";
+import Typed from "typed.js";
+
+import { uploadava } from "@/api/user";
+import { useUserStore } from "@/stores/user";
 
 const now = new Date();
-const currentUser = {
-  username: "哈哈哈",
-  nickname: "嘻嘻嘻",
-  id: "12343245",
-  role: "guest",
-  data: dayjs(now).format("YYYY-MM-DD"),
-  email: "1283558679",
-  avatar: "",
-  gender: "",
-  introduce: "",
-  date: "2022",
+
+const dialogVisible = ref(false);
+const File = ref();
+const emit = defineEmits(["changeAvatar"]);
+const userStore = useUserStore();
+
+const { user } = storeToRefs(userStore);
+
+onMounted(() => {
+  //通过 API 请求获取数据
+  const options = {
+    strings: ["修己安人 学博明辨", "体大慎微 积健为雄"],
+    startDelay: 300,
+    typeSpeed: 100,
+    loop: true,
+    backSpeed: 50,
+    showCursor: true,
+  };
+
+  new Typed(".box", options);
+});
+
+const showUploadDialog = () => {
+  dialogVisible.value = true;
 };
 
-const emit = defineEmits(["changeAvatar"]);
+const onchange = (file: any) => {
+  File.value = file.raw;
+};
 
-const changeAvatar = (url: string) => {
-  emit("changeAvatar", url);
+const beforeUpload = (file: any) => {
+  // 在上传之前的钩子，可用于文件类型和大小的校验
+  const isJPG = file.type === "image/jpeg" || file.type === "image/png";
+  if (!isJPG) {
+    ElMessage.error("只能上传jpg/png文件！");
+    return false;
+  }
+  const isLt500K = file.size / 1024 / 1024 < 5;
+  if (!isLt500K) {
+    ElMessage.error("文件大小不能超过5MB！");
+    return false;
+  }
+  return true;
+};
+
+const submitUpload = async () => {
+  try {
+    const result5 = await uploadava(File.value);
+    console.log(result5);
+    if (result5.code !== 200) {
+      ElMessage.error("更新图片失败");
+      return;
+    }
+    ElMessage({ message: "更新成功", type: "success" });
+    dialogVisible.value = false;
+    user.value!.avatar = result5.data;
+  } catch (error) {
+    console.error("Failed to save editing:", error);
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 @import url("https://cdn.jsdelivr.net/gh/AyagawaSeirin/homepage@latest/mdui/css/mdui.min.css");
-
+.zi {
+  color: #eee;
+  font-size: 25px;
+}
+.container {
+  position: relative;
+  width: 200px; /* 调整根据实际需要的尺寸 */
+  height: 200px; /* 调整根据实际需要的尺寸 */
+  border-radius: 50%;
+  margin-top: 60px;
+}
+.click {
+  position: relative;
+  left: 140px;
+  top: -30px;
+}
 #touxiang {
   /* 定义头像的高和宽 */
   height: 128px;
@@ -65,7 +130,7 @@ const changeAvatar = (url: string) => {
   border-radius: 50%;
   /* 将图片转换为块元素并居中 */
   display: block;
-  margin: 0 auto;
+  margin: 30px 0 0 40px;
   /* 定义图片默认旋转速度 */
   transition: all 0.5s;
   -ms-transition: all 0.5s;
