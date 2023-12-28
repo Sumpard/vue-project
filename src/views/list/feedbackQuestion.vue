@@ -8,7 +8,7 @@
     >
       <el-table-column prop="propose_time" label="反馈时间" sortable>
         <template v-slot="{ row }">
-          {{ formatISO(row.propose_time) }}
+          {{ formatTimestamp(row.propose_time) }}
         </template>
       </el-table-column>
       <el-table-column prop="proposer_name" label="反馈人" sortable>
@@ -64,7 +64,7 @@
               <!-- 用户侧 -->
               <el-row>
                 <el-form-item label="反馈时间：">
-                  <p>{{ formatISO(selectedRow.propose_time) }}</p>
+                  <p>{{ formatTimestamp(selectedRow.propose_time) }}</p>
                 </el-form-item>
               </el-row>
               <el-row>
@@ -88,7 +88,12 @@
                 <el-form-item label="反馈图片：">
                   <div class="img-container">
                     <div v-for="(image, index) in selectedRow.question_images" :key="index">
-                      <img :src="'data:image/png;base64,' + image" alt="Image" class="img" />
+                      <el-image
+                        :src="'data:image/png;base64,' + image"
+                        alt="Image"
+                        class="img"
+                        :preview-src-list="['data:image/png;base64,' + image]"
+                      />
                     </div>
                   </div>
                 </el-form-item>
@@ -121,7 +126,12 @@
               <el-form-item label="反馈回复图片：" v-if="replyed && selectedRow.reply_images[0] != ''">
                 <div class="img-container">
                   <div v-for="(image, index) in selectedRow.reply_images" :key="index">
-                    <img :src="'data:image/png;base64,' + image" alt="Image" class="img" />
+                    <el-image
+                      :src="'data:image/png;base64,' + image"
+                      alt="Image"
+                      class="img"
+                      :preview-src-list="['data:image/png;base64,' + image]"
+                    />
                   </div>
                 </div>
               </el-form-item>
@@ -157,7 +167,7 @@
 import { computed, onMounted, ref } from "vue";
 
 import { getQuestion, putQuestion } from "@/api/question";
-import { formatISO } from "@/api/timeformat";
+import { formatTimestamp } from "@/api/timeformat";
 import Message from "@/utils/message";
 import ImgUpload from "@/views/components/ImgUpNoBtn.vue";
 
@@ -179,8 +189,8 @@ const ImgSelected = (toBeUp) => {
 };
 
 const ImgUpSuccess = (data) => {
-  console.log("图片已上传成功,返回值data将进行赋值,data:", data.data);
-  repImg.value = data.data.join(";");
+  console.log("图片已上传成功,返回值data将进行赋值,data:", data);
+  repImg.value = data.join(";");
   console.log("repImg.value: " + repImg.value);
 };
 
