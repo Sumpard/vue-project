@@ -60,11 +60,11 @@ const openPreview = (index: number) => {
   router.push({
     path: "/noticepreview",
     query: {
-      content: notices.value[notices.value.length - index - 1].notice_content,
+      content: notices.value[notices.value.length - index].notice_content,
       type: props.noticetype,
-      title: notices.value[notices.value.length - index - 1].notice_title,
-      time: notices.value[notices.value.length - index - 1].publish_time,
-      name: notices.value[notices.value.length - index - 1].publisher_name,
+      title: notices.value[notices.value.length - index].notice_title,
+      time: notices.value[notices.value.length - index].publish_time,
+      name: notices.value[notices.value.length - index].publisher_name,
       date: new Date().getTime(),
     },
   });
