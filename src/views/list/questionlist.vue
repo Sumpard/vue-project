@@ -9,7 +9,7 @@
       >
         <el-table-column prop="propose_time" label="反馈时间" sortable>
           <template v-slot="{ row }">
-            {{ formatISO(row.propose_time) }}
+            {{ formatTimestamp(row.propose_time) }}
           </template>
         </el-table-column>
         <el-table-column prop="question_texts" label="反馈内容摘要">
@@ -53,7 +53,7 @@
                 <!-- 用户侧 -->
                 <el-row>
                   <el-form-item label="反馈时间：">
-                    <p>{{ formatISO(selectedRow.propose_time) }}</p>
+                    <p>{{ formatTimestamp(selectedRow.propose_time) }}</p>
                   </el-form-item>
                 </el-row>
                 <el-row>
@@ -126,7 +126,7 @@
 import { computed, onMounted, ref } from "vue";
 
 import { getQuestion } from "@/api/question";
-import { formatISO } from "@/api/timeformat";
+import { formatTimestamp } from "@/api/timeformat";
 import { useUserStore } from "@/stores/user";
 
 const dialogVisible = ref(false); //会话框显示
