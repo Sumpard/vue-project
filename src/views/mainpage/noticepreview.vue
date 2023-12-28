@@ -1,4 +1,7 @@
 <template>
+  <el-button @click="goBack"
+    ><el-icon><i-ep-ArrowLeft /></el-icon>返回</el-button
+  >
   <h4 class="title">{{ title }}</h4>
   <br />
   <p class="info">编写人：{{ name }} &ensp;&ensp;&ensp; 发布时间：{{ time }}&ensp;&ensp;&ensp; 通知类别：{{ type }}</p>
@@ -9,12 +12,16 @@
 </template>
 
 <script lang="ts">
-import { onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
+import { onMounted, ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 export default {
   setup() {
     const route = useRoute();
+    const router = useRouter();
+    watch(route, (to, from) => {
+      router.go(0);
+    });
     const content = ref(route.query.content);
     const type = ref(route.query.type);
     const title = ref(route.query.title);
@@ -37,6 +44,11 @@ export default {
       time,
       name,
     };
+  },
+  methods: {
+    goBack() {
+      this.$router.back();
+    },
   },
 };
 </script>

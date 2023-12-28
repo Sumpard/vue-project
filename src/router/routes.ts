@@ -28,10 +28,12 @@ const routes: RouteRecordRaw[] = [
         component: () => import("@/views/mainpage/homepage.vue"),
       },
       {
+        //编写通知（管理员）
         path: "/editnotice",
         component: () => import("@/views/mainpage/editnotice.vue"),
       },
       {
+        //通知列表（管理员）
         path: "/adminnoticelist",
         component: () => import("@/views/list/adminnoticelist.vue"),
       },
@@ -42,6 +44,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: "/noticemodify",
         component: () => import("@/views/mainpage/modifynotice.vue"),
+      },
+      {
+        path: "/noticelist",
+        component: () => import("@/views/mainpage/noticelist.vue"),
       },
       {
         path: "/homeindex",
@@ -70,6 +76,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import("@/views/fun/UploadImage.vue"),
       },
       {
+        //问题反馈列表（管理员）
         path: "/feedbackQuestion",
         component: () => import("@/views/list/feedbackQuestion.vue"),
       },

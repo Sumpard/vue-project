@@ -46,10 +46,10 @@
 <script lang="ts" setup>
 import { Plus } from "@element-plus/icons-vue";
 import axios from "axios";
-import { ElMessage, UploadFile, UploadProps } from "element-plus";
+import { ElMessage } from "element-plus";
 import { defineProps, reactive, ref } from "vue";
-import { inject } from "vue";
-import { VueCookies } from "vue-cookies";
+
+import { uploadImages } from "@/api/upload";
 
 const props = defineProps({
   limit: {
@@ -79,7 +79,7 @@ const props = defineProps({
   },
 });
 
-const emits = defineEmits(["uploadSuccess", "update:toBeUp", "forbid"]); //成功上传图片传给父组件data[]
+const emits = defineEmits(["uploadSuccess", "update:toBeUp", "forbid", "uploadFailefailed"]); //成功上传图片传给父组件data[]
 
 const dialogVisible = ref(false);
 const BtnDisabled = ref(false);
@@ -140,9 +140,6 @@ function handleRemove(file) {
   emits("update:toBeUp", toBeUp);
 }
 
-const uploadUrl = "http://120.46.203.58:8080";
-const $cookies = inject("$cookies")!;
-
 const beginUploadImg = ref(async () => {
   //点击按钮开始上传
 
@@ -176,41 +173,15 @@ const beginUploadImg = ref(async () => {
   console.log("创建formData");
   fileList.value.forEach((file) => {
     dataForm.append("files", file.raw);
-    console.log("图片信息", file);
     console.log("formdata value:", dataForm.get("files"));
   });
-
-  const token = $cookies.get("token"); // 使用 vue-cookies 获取 token
-  if (!token) {
-    console.error("Token不存在,请登录获取");
-    return;
+  const res = await uploadImages(dataForm);
+  if (res.code === 200) {
+    onSuccess();
+    emits("uploadSuccess", res.data);
+  } else {
+    emits("uploadFailefailed");
   }
-  console.log("token: " + token);
-
-  console.log("Request data:", dataForm);
-
-  await axios({
-    timeout: 10000,
-    method: "POST",
-    url: uploadUrl + props.router,
-    data: dataForm,
-    //设置请求参数的规则
-    headers: {
-      "Content-Type": "multipart/form-data",
-      token: `${token}`,
-    },
-  })
-    .then((res) => {
-      console.log(res.data);
-      console.log("Full response:", res);
-      if (res.status === 200) {
-        emits("uploadSuccess", res.data);
-        onSuccess();
-      }
-    })
-    .catch(function (error) {
-      console.log("Error:", error);
-    });
 });
 
 function onSuccess() {

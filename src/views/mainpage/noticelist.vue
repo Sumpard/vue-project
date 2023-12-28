@@ -1,5 +1,5 @@
 <template>
-  <div class="chart-container">
+  <div class="chart-contain">
     <el-form>
       <el-row>
         <el-form-item label="搜索：" label-width="70">
@@ -38,33 +38,16 @@
             {{ row.publisher_name }}
           </template>
         </el-table-column>
-        <el-table-column
-          prop="notice_type"
-          label="通知类别"
-          :filters="[
-            { text: '活动通知', value: '活动通知' },
-            { text: '管理安排', value: '管理安排' },
-            { text: '书院介绍', value: '书院介绍' },
-          ]"
-          :filter-method="filterTag"
-          filter-placement="bottom-end"
-        >
+        <el-table-column prop="notice_type" label="通知类别">
           <template #default="scope">
             <el-tag :type="''" disable-transitions>{{ scope.row.notice_type }}</el-tag>
           </template>
         </el-table-column>
-
         <el-table-column fixed="right" label="查看详情" width="120">
           <template #default="scope">
             <el-button link type="primary" size="large" @click="openPreview(scope.row)">
               <el-icon><i-ep-DArrowRight /></el-icon>
             </el-button>
-          </template>
-        </el-table-column>
-        <el-table-column fixed="right" label="操作" width="120">
-          <template #default="scope">
-            <el-button link type="primary" size="small" @click="openModify(scope.row)">修改</el-button>
-            <el-button link type="primary" size="small" @click="onDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -74,16 +57,12 @@
 
 <script setup lang="ts">
 import { Search } from "@element-plus/icons-vue";
-import { ElMessageBox } from "element-plus";
 import { computed, onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
-import { deletNotice, getNotice } from "@/api/notice";
-import { useUserStore } from "@/stores/user";
-import Message from "@/utils/message";
+import { getNotice } from "@/api/notice";
 
 const selectedRow = ref(null); //所选notice的内容
-const router = useRouter(); // 获取路由对象
 const tableData = ref([]);
 const search = ref("");
 const filterTableData = computed(() =>
@@ -95,9 +74,9 @@ const filterTableData = computed(() =>
   )
 );
 
-const filterTag = (value: string, row: any) => {
-  return row.notice_type === value;
-};
+const router = useRouter(); // 传递路由对象
+const route = useRoute(); //获取路由参数
+const select_type = ref(route.query.type);
 
 const truncateText = (text: string, maxLength: number) => {
   //截断text以防内容过长
@@ -123,46 +102,11 @@ const openPreview = (row) => {
   });
 };
 
-const openModify = (row) => {
-  //获取会话框内容
-  selectedRow.value = row;
-  console.log("本条通知： ", selectedRow.value);
-  router.push({
-    path: "/noticemodify",
-    query: {
-      content: row.notice_content,
-      type: row.notice_type,
-      title: row.notice_title,
-      time: row.publish_time,
-      name: row.publisher_name,
-      id: row.notice_id,
-    },
-  });
-};
-
-const onDelete = async (row) => {
-  console.log("notice to be delete(id title): ", row.notice_id, row.notice_title);
-  await ElMessageBox.confirm("此操作将删除该通知, 是否继续?", "提示", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
-  }).then(async () => {
-    console.log("delete request submitting");
-    const response = await deletNotice(parseInt(row.notice_id));
-    console.log("response:", response);
-    if (response.code === 200) {
-      Message.success("删除成功");
-    } else {
-      Message.error(response.msg || "删除失败");
-    }
-    location.reload();
-  });
-};
-
 onMounted(async () => {
   // 通过 API 请求获取数据
   try {
-    const response = await getNotice("");
+    console.log("select_type:", select_type.value);
+    const response = await getNotice(select_type.value);
     console.log(response);
 
     if (response.code === 200) {
@@ -183,7 +127,10 @@ onMounted(async () => {
 .divide {
   margin: 15px 0px 0px;
 }
-
+.chart-contain {
+  display: flex;
+  flex-direction: column;
+}
 .outer {
   display: flex;
   justify-content: center; /* 子元素水平居中 */

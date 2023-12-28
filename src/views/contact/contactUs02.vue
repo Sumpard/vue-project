@@ -36,7 +36,13 @@
       <el-form-item label="上传图片：（可选）" label-width="100">
         <!-- 图片上传组件 -->
 
-        <ImgUpload @update:toBeUp="ImgSelected" @uploadSuccess="ImgUpSuccess" @forbid="NoUpload" ref="childRef" />
+        <ImgUpload
+          @update:toBeUp="ImgSelected"
+          @uploadSuccess="ImgUpSuccess"
+          @forbid="NoUpload"
+          @uploadFailed="ImgUpFailed"
+          ref="childRef"
+        />
       </el-form-item>
 
       <el-button @click="callChildMethod" size="large" type="primary" :disabled="BtnDisabled">提交反馈</el-button>
@@ -100,9 +106,14 @@ export default {
 
     ImgUpSuccess(data) {
       //接收图片上传的地址数组
-      console.log("图片已上传成功,返回值data将进行赋值,data:", data.data);
-      this.questionForm.question_images = data.data.join(";");
+      console.log("图片已上传成功,返回值data将进行赋值,data:", data);
+      this.questionForm.question_images = data.join(";");
       console.log("questionForm.question_images: " + this.questionForm.question_images);
+    },
+
+    ImgUpFailed() {
+      console.log("图片上传失败");
+      Message.warning("由于未知原因图片上传失败，但是您提交的文字信息将会正常传递");
     },
 
     async callChildMethod() {
@@ -193,7 +204,7 @@ export default {
   align-items: center;
   justify-content: center;
   /*height: calc(100% - 30px);*/
-  height: 66vh;
+  height: 80vh;
   background-color: #ffffff;
   font-size: 25px;
   text-align: center;
