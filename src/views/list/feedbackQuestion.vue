@@ -85,15 +85,15 @@
               </el-row>
               <!-- 添加其他需要显示的详情 -->
               <!-- 显示图片 -->
-              <el-row v-if="selectedRow.question_images.length >= 1 && selectedRow.question_images[0] != ''">
+              <el-row v-if="selectedRow.question_images[0] != ''">
                 <el-form-item label="反馈图片：">
                   <div class="img-container">
                     <div v-for="(image, index) in selectedRow.question_images" :key="index">
                       <el-image
-                        :src="'data:image/png;base64,' + image"
+                        :src="'http://120.46.203.58' + image"
                         alt="Image"
                         class="img"
-                        :preview-src-list="['data:image/png;base64,' + image]"
+                        :preview-src-list="['http://120.46.203.58' + image]"
                       />
                     </div>
                   </div>
@@ -135,10 +135,10 @@
                 <div class="img-container">
                   <div v-for="(image, index) in selectedRow.reply_images" :key="index">
                     <el-image
-                      :src="'data:image/png;base64,' + image"
+                      :src="'http://120.46.203.58' + image"
                       alt="Image"
                       class="img"
-                      :preview-src-list="['data:image/png;base64,' + image]"
+                      :preview-src-list="['http://120.46.203.58' + image]"
                     />
                   </div>
                 </div>
@@ -214,6 +214,7 @@ const openDialog = (row) => {
   //获取会话框内容
   selectedRow.value = row;
   dialogVisible.value = true;
+  console.log("selected row img url:", selectedRow.value.question_images[0]);
   replyed.value = selectedRow.value.reply_texts != "" && selectedRow.value.reply_texts != null;
 };
 
@@ -325,18 +326,14 @@ onMounted(async () => {
   margin-left: 50%; /*不加这行的话，label会出现很难选中复制的情况。*/
 }
 .img-container {
-  display: table;
-  float: left;
-  width: 20%;
+  padding: 30px 0;
   text-align: center;
-  line-height: 27px;
-  color: blue;
+  display: inline-block;
+  width: 20%;
+  box-sizing: border-box;
+  vertical-align: top;
 }
-.img-container img {
-  margin: auto;
-  width: 53px;
-  height: 53px;
-}
+
 .form-item-with-margin {
   margin-left: 15%; /* 适当调整间距 */
   margin-right: 20px;
