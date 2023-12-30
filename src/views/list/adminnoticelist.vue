@@ -18,6 +18,7 @@
   <div class="outer">
     <div class="my-info">
       <el-table
+        v-loading="loading"
         :data="filterTableData"
         max-height="650"
         highlight-current-row
@@ -82,6 +83,7 @@ import { deletNotice, getNotice } from "@/api/notice";
 import { useUserStore } from "@/stores/user";
 import Message from "@/utils/message";
 
+const loading = ref(true);
 const selectedRow = ref(null); //所选notice的内容
 const router = useRouter(); // 获取路由对象
 const tableData = ref([]);
@@ -110,7 +112,6 @@ const truncateText = (text: string, maxLength: number) => {
 const openPreview = (row) => {
   //获取会话框内容
   selectedRow.value = row;
-  console.log("本条通知： ", selectedRow.value);
   router.push({
     path: "/noticepreview",
     query: {
@@ -126,7 +127,6 @@ const openPreview = (row) => {
 const openModify = (row) => {
   //获取会话框内容
   selectedRow.value = row;
-  console.log("本条通知： ", selectedRow.value);
   router.push({
     path: "/noticemodify",
     query: {
@@ -141,15 +141,12 @@ const openModify = (row) => {
 };
 
 const onDelete = async (row) => {
-  console.log("notice to be delete(id title): ", row.notice_id, row.notice_title);
   await ElMessageBox.confirm("此操作将删除该通知, 是否继续?", "提示", {
     confirmButtonText: "确定",
     cancelButtonText: "取消",
     type: "warning",
   }).then(async () => {
-    console.log("delete request submitting");
     const response = await deletNotice(parseInt(row.notice_id));
-    console.log("response:", response);
     if (response.code === 200) {
       Message.success("删除成功");
     } else {
@@ -163,12 +160,10 @@ onMounted(async () => {
   // 通过 API 请求获取数据
   try {
     const response = await getNotice("");
-    console.log(response);
 
     if (response.code === 200) {
       tableData.value = response.data;
-      // console.log(tableData.value)
-      ElMessage({ message: "获取成功", type: "success" });
+      loading.value = false;
     } else {
       console.error("Failed to fetch data:", response.msg);
     }

@@ -106,13 +106,11 @@ export default {
 
     ImgUpSuccess(data) {
       //接收图片上传的地址数组
-      console.log("图片已上传成功,返回值data将进行赋值,data:", data);
       this.questionForm.question_images = data.join(";");
-      console.log("questionForm.question_images: " + this.questionForm.question_images);
     },
 
     ImgUpFailed() {
-      console.log("图片上传失败");
+      console.error("图片上传失败");
       Message.warning("由于未知原因图片上传失败，但是您提交的文字信息将会正常传递");
     },
 
@@ -136,23 +134,20 @@ export default {
       const text_ = this.questionForm.question_texts;
 
       if (this.imgselect) {
-        console.log("Image Selected with Question Module");
       } else {
-        console.log("No Image Selected");
+        console.warn("No Image Selected");
       }
 
       const submit_question = await submitQuestion(time_, name_, phone_, imgUrl_, text_);
-
-      console.log("反馈信息： ", time_, name_, phone_, imgUrl_, text_);
-      console.log(submit_question);
       if (submit_question.code === 200) {
         Message.success("反馈上传成功");
+        this.BtnDisabled = true;
+        this.dialogVisible = true;
+        this.inputDisable = true;
+      } else if (submit_question.code === 400) {
+        Message.warning("姓名核验失败，请输入您本人的正确姓名");
       }
-      this.BtnDisabled = true;
-      this.dialogVisible = true;
-      this.inputDisable = true;
     },
-
     ImgSelected(toBeUp) {
       //检查是否有已选的待上传图片\
       this.imgselect = toBeUp;
@@ -197,7 +192,7 @@ export default {
 // }
 </script>
 
-<style>
+<style scoped>
 .chart-container {
   display: flex;
   flex-direction: column;

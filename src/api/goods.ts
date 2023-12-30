@@ -59,3 +59,9 @@ export async function adduser(
     })
   ).data;
 }
+
+export async function upload(id: int, file: File) {
+  const form = new FormData();
+  form.append("image", file);
+  return (await api.put("/available/update-image", form, { params: { "available-id": id } })).data;
+}

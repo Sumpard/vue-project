@@ -1,6 +1,7 @@
 <template>
   <div class="my-info">
     <el-table
+      v-loading="loading"
       :data="filterTableData"
       max-height="550"
       highlight-current-row
@@ -120,7 +121,14 @@
                   >
                 </el-form-item>
                 <el-form-item label="院长回复内容：" v-else>
-                  <el-input v-model="selectedRow.reply_texts" placeholder="尚未回复" :disabled="replyed"></el-input>
+                  <el-input
+                    v-model="selectedRow.reply_texts"
+                    placeholder="尚未回复"
+                    :disabled="replyed"
+                    rows="3"
+                    type="textarea"
+                    style="width: 25vw"
+                  ></el-input>
                 </el-form-item>
               </el-row>
               <el-form-item label="反馈回复图片：" v-if="replyed && selectedRow.reply_images[0] != ''">
@@ -167,10 +175,11 @@
 import { computed, onMounted, ref } from "vue";
 
 import { getQuestion, putQuestion } from "@/api/question";
-import { formatTimestamp } from "@/api/timeformat";
 import Message from "@/utils/message";
+import { formatTimestamp } from "@/utils/timeformat";
 import ImgUpload from "@/views/components/ImgUpNoBtn.vue";
 
+const loading = ref(true);
 const dialogVisible = ref(false); //会话框显示
 const selectedRow = ref(null); //会话框内容
 const tableData = ref([]);
@@ -184,14 +193,11 @@ const imgselect = ref(false);
 const BtnDis = ref(false); //图片参数错误时禁用上传
 
 const ImgSelected = (toBeUp) => {
-  console.log("ImgSelected in parent:", toBeUp);
   imgselect.value = toBeUp;
 };
 
 const ImgUpSuccess = (data) => {
-  console.log("图片已上传成功,返回值data将进行赋值,data:", data);
   repImg.value = data.join(";");
-  console.log("repImg.value: " + repImg.value);
 };
 
 const NoUpload = (forbidden) => {
@@ -207,7 +213,6 @@ const filterTableData = computed(() =>
 const openDialog = (row) => {
   //获取会话框内容
   selectedRow.value = row;
-  console.log("本条记录： ", selectedRow.value);
   dialogVisible.value = true;
   replyed.value = selectedRow.value.reply_texts != "" && selectedRow.value.reply_texts != null;
 };
@@ -242,7 +247,6 @@ const callChildMethod = async () => {
 
   if (imgselect.value) {
     await childRef.value.beginUploadImg();
-    console.log("上传图片......");
   } else {
     console.error("子组件实例不存在");
   }
@@ -251,8 +255,6 @@ const callChildMethod = async () => {
   const reptex_ = selectedRow.value.reply_texts;
 
   const submit_reply = await putQuestion(id_, repimg_, reptex_);
-  console.log("回复信息： ", id_, repimg_, reptex_);
-  console.log("submit_reply data: ", submit_reply);
   if (submit_reply.code === 200) {
     Message.success("回复成功");
   }
@@ -267,17 +269,14 @@ onMounted(async () => {
   try {
     //console.log("user_name:", userStore.user!.user_name);
     const response = await getQuestion("");
-    console.log(response);
 
     if (response.code === 200) {
       tableData.value = response.data;
-      console.log("tableData: ", tableData);
+      loading.value = false;
       if (selectedRow.value.reply_texts != null && selectedRow.value.reply_texts != "") {
         //若有reply_texts,则说明是回复过的
         replyed.value = true;
       }
-      // console.log(tableData.value)
-      ElMessage({ message: "获取成功", type: "success" });
     } else {
       console.error("Failed to fetch data:", response.msg);
     }

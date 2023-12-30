@@ -7,6 +7,7 @@ export {}
 declare global {
   const EffectScope: typeof import('vue')['EffectScope']
   const ElMessage: typeof import('element-plus/es')['ElMessage']
+  const ElMessageBox: typeof import('element-plus/es')['ElMessageBox']
   const IconEpBox: typeof import('~icons/ep/box')['default']
   const IconEpCamera: typeof import('~icons/ep/camera')['default']
   const IconEpChatLineSquare: typeof import('~icons/ep/chat-line-square')['default']
@@ -17,6 +18,10 @@ declare global {
   const IconEpPhone: typeof import('~icons/ep/phone')['default']
   const IconEpPostcard: typeof import('~icons/ep/postcard')['default']
   const IconEpUser: typeof import('~icons/ep/user')['default']
+  const IconMdiAccountGroupOutline: typeof import('~icons/mdi/account-group-outline')['default']
+  const IconMdiBookOutline: typeof import('~icons/mdi/book-outline')['default']
+  const IconMdiMeetingRoomOutlined: typeof import('~icons/mdi/meeting-room-outlined')['default']
+  const IconMdiSeatOutline: typeof import('~icons/mdi/seat-outline')['default']
   const acceptHMRUpdate: typeof import('pinia')['acceptHMRUpdate']
   const computed: typeof import('vue')['computed']
   const createApp: typeof import('vue')['createApp']
