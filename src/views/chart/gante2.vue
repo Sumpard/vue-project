@@ -298,7 +298,7 @@ export default {
               from: start,
               to: end,
             };
-            meetingrooms[appointlist[i].available_id].deals.push(newdeal);
+            meetingrooms[appointlist[i].available_id - 1].deals.push(newdeal);
           }
         } else {
           //console.log("not run:", meetingrooms);
