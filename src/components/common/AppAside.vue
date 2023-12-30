@@ -1,6 +1,6 @@
 <template>
   <el-aside :width="isCollapse ? '64px' : '200px'">
-    <div class="changebutton" @click="isCollapse = !isCollapse">
+    <div class="switch-button" @click="isCollapse = !isCollapse">
       <el-icon>
         <i-ep-Expand v-if="isCollapse" />
         <i-ep-Fold v-else />
@@ -8,7 +8,7 @@
     </div>
     <el-menu active-border-color="blue" :collapse="isCollapse" :collapse-transition="false" :router="true">
       <template v-for="item in menus" :key="item.index">
-        <template v-if="!item.admin || isAdmin">
+        <template v-if="!item.admin || userStore.isAdmin">
           <el-sub-menu v-if="item.children" :index="item.index">
             <template #title>
               <el-icon> <component :is="item.icon" /></el-icon>
@@ -41,10 +41,10 @@ const menus = [
   {
     index: "reserve",
     name: "预约管理",
-    icon: IconEpEdit,
+    icon: IconMdiBookOutline,
     children: [
-      { index: "reserveroom", name: "会议室预约", icon: IconEpEdit },
-      { index: "seat", name: "座位预约", icon: IconEpEdit },
+      { index: "reserveroom", name: "会议室预约", icon: IconMdiAccountGroupOutline },
+      { index: "seat", name: "座位预约", icon: IconMdiSeatOutline },
       { index: "equipment", name: "器材预约", icon: IconEpCamera },
       { index: "reservation", name: "预约记录", icon: IconEpCollection },
     ],
@@ -78,7 +78,7 @@ const menus = [
     icon: IconEpEdit,
     children: [
       { index: "editnotice", name: "编写通知", icon: IconEpEdit },
-      { index: "noticelist", name: "通知列表", icon: IconEpChatLineSquare },
+      { index: "adminnoticelist", name: "通知列表", icon: IconEpChatLineSquare },
       { index: "feedbackQuestion", name: "问题反馈列表", icon: IconEpBox },
     ],
     admin: true,
@@ -95,46 +95,17 @@ const menus = [
 ];
 
 const userStore = useUserStore();
-const { isAdmin } = userStore;
 </script>
 
 <style scoped>
-.changebutton {
+.switch-button {
   border-right: solid 1px #dcdfe6;
   border-bottom: solid 1px #dcdfe6;
   background-color: #ffffff;
-  /* 设置文本大小*/
   font-size: 20px;
-  /* // 设置文本行高 */
   line-height: 40px;
-  /* // 设置文本颜色 */
-
-  /* // 设置文本居中 */
   text-align: center;
-  /* // 设置文本间距 */
   letter-spacing: 0.2em;
-  /* // 设置鼠标悬浮变小手效果 */
   cursor: pointer;
-}
-
-.icon {
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  stroke-width: 0;
-  stroke: currentColor;
-  fill: currentColor;
-}
-
-.icon-users {
-  width: 1.125em;
-}
-
-.iconfont icon-huiyishi {
-  margin-right: 2px;
-}
-
-.el-menu-item.is-active {
-  color: #327be4;
 }
 </style>

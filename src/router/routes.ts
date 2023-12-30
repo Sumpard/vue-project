@@ -25,6 +25,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: "/homepage",
         name: "homepage",
+        alias: "/",
         component: () => import("@/views/mainpage/homepage.vue"),
       },
       {

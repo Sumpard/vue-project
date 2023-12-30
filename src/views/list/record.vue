@@ -1,6 +1,7 @@
 <template>
   <div class="my-info">
     <el-table
+      v-loading="loading"
       :header-cell-style="{ 'text-align': 'center' }"
       :cell-style="{ 'text-align': 'center' }"
       :data="filterTableData"
@@ -9,7 +10,18 @@
       :default-sort="{ prop: 'score', order: 'descending' }"
     >
       <el-table-column prop="available_name" label="预约名称"></el-table-column>
-      <el-table-column prop="available_type_name" label="预约类型"> </el-table-column>
+      <el-table-column
+        prop="available_type_name"
+        label="预约类型"
+        :filters="[
+          { text: '会议室', value: '会议室' },
+          { text: '座位', value: '座位' },
+          { text: '器材', value: '器材' },
+        ]"
+        :filter-method="filterTag"
+        filter-placement="bottom-end"
+      >
+      </el-table-column>
       <el-table-column label="预约时间">
         <template v-slot="{ row }">
           {{ row.appoint_start_time }}
@@ -57,6 +69,7 @@ import type { FormInstance, FormRules } from "element-plus";
 import { getAppointSelf } from "@/api/record";
 import { useUserStore } from "@/stores/user";
 
+const loading = ref(true);
 const userStore = useUserStore();
 const ruleFormRef = ref<FormInstance>();
 const tableData = ref<any[]>([]);
@@ -71,7 +84,7 @@ const filterTableData = computed(() =>
 );
 
 const filterTag = (value: string, row: any) => {
-  return row.appointment_status === value;
+  return row.available_type_name === value;
 };
 
 const mapstatus = (appointment_status: any) => {
@@ -89,16 +102,10 @@ onMounted(async () => {
   // 通过 API 请求获取数据
   try {
     const response1 = await getAppointSelf("SUBMITTED", userStore.user!.user_id);
-    console.log(response1);
-
     const response2 = await getAppointSelf("ACCEPTED", userStore.user!.user_id);
-    console.log(response2);
-
     const response3 = await getAppointSelf("REFUSED", userStore.user!.user_id);
-    const arr = [...response1, ...response2, ...response3];
-    tableData.value = arr;
-    // console.log(tableData.value)
-    ElMessage({ message: "获取成功", type: "success" });
+    tableData.value = [...response1, ...response2, ...response3];
+    loading.value = false;
   } catch (error) {
     console.error("API request failed:", error);
   }

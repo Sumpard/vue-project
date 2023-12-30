@@ -30,7 +30,7 @@ const reset = () => {
 defineExpose({ startTime, endTime, reset });
 </script>
 
-<style>
+<style scoped>
 .time {
   margin-bottom: 10px;
 }

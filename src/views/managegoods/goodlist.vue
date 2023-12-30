@@ -1,10 +1,34 @@
 <template>
   <div class="my-info">
     <div class="rin-card"><addgoods /></div>
+    <el-dialog v-model="dialogVisible" title="上传文件" draggable>
+      <el-upload
+        class="upload-dialog"
+        :before-upload="beforeUpload"
+        drag
+        :auto-upload="false"
+        :on-change="onchange"
+        show-file-list
+        list-type="picture"
+        :limit="1"
+      >
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过5MB</div>
+      </el-upload>
+
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="submitUpload">确定</el-button>
+        </span>
+      </template>
+    </el-dialog>
 
     <el-divider class="divide" />
 
     <el-table
+      v-loading="loading"
       :header-cell-style="{ 'text-align': 'center' }"
       :cell-style="{ 'text-align': 'center' }"
       :data="filterTableData"
@@ -53,10 +77,9 @@
         </template>
       </el-table-column>
       <el-table-column label="修改" fixed="right" width="250">
-        <template #header>
-          <el-input v-model="search" size="small" placeholder="请输入学号或用户名搜索" clearable />
-        </template>
         <template v-slot="{ row }">
+          <el-button type="primary" link size="small" @click="showUploadDialog(row)">更新图片</el-button>
+
           <el-button
             type="primary"
             link
@@ -88,15 +111,57 @@
 
 <script setup lang="ts">
 import { Delete, Edit, Search, Share, Upload } from "@element-plus/icons-vue";
-import type { FormInstance, FormRules } from "element-plus";
+import type { FormInstance, FormRules, UploadInstance } from "element-plus";
 import { computed, getCurrentInstance, onMounted, ref } from "vue";
 
-import { deletegood, editdescription, editstatus, getAllGoods } from "@/api/goods";
+import { deletegood, editdescription, editstatus, getAllGoods, upload } from "@/api/goods";
 import addgoods from "@/views/managegoods/add.vue";
 
+const loading = ref(true);
 const ruleFormRef = ref<FormInstance>();
 const tableData = ref([]);
 const search = ref("");
+const dialogVisible = ref(false);
+const File = ref();
+const id = ref<number>(0);
+
+const beforeUpload = (file: any) => {
+  // 在上传之前的钩子，可用于文件类型和大小的校验
+  const isJPG = file.type === "image/jpeg" || file.type === "image/png";
+  if (!isJPG) {
+    ElMessage.error("只能上传jpg/png文件！");
+    return false;
+  }
+  const isLt500K = file.size / 1024 / 1024 < 5;
+  if (!isLt500K) {
+    ElMessage.error("文件大小不能超过5MB！");
+    return false;
+  }
+  return true;
+};
+
+const onchange = (file: any) => {
+  File.value = file.raw;
+};
+
+const showUploadDialog = (row: any) => {
+  dialogVisible.value = true;
+  id.value = row.available_id;
+};
+
+const submitUpload = async () => {
+  try {
+    const result4 = await upload(id.value, File.value);
+    if (result4.code !== 200) {
+      ElMessage.error("更新图片失败");
+      return;
+    }
+    ElMessage({ message: "更新成功", type: "success" });
+    dialogVisible.value = false;
+  } catch (error) {
+    console.error("Failed to save editing:", error);
+  }
+};
 
 const filterTableData = computed(() =>
   tableData.value.filter(
@@ -142,10 +207,7 @@ const saveeditingdescription = async (row: any, formEl: FormInstance | undefined
     // 校验成功
     if (valid) {
       try {
-        console.log(row.available_description);
-        console.log(typeof row.available_id);
         const result = await editdescription(row.available_id, row.available_description);
-        console.log(result);
 
         if (!result) {
           ElMessage.error("修改描述失败");
@@ -160,17 +222,13 @@ const saveeditingdescription = async (row: any, formEl: FormInstance | undefined
       }
     } else {
       // 校验失败
-      console.log("Form validation failed:", fields);
     }
   });
 };
 
 const deleteTableData = async (row: any) => {
   try {
-    console.log(row.available_id);
     const result3 = await deletegood(row.available_id);
-    console.log(result3);
-    console.log(result3.msg);
     if (result3.code !== 200) {
       ElMessage.error("删除失败");
       return;
@@ -187,10 +245,6 @@ const deleteTableData = async (row: any) => {
 
 const saveeditingstatus = async (row: any) => {
   try {
-    console.log(typeof row.available_id);
-    console.log(row.available_id);
-    console.log(row.editedstatus);
-
     const result2 = await editstatus(row.available_id, row.editedstatus);
 
     if (!result2) {
@@ -209,11 +263,9 @@ onMounted(async () => {
   // 通过 API 请求获取数据
   try {
     const response = await getAllGoods();
-    console.log(response);
-    console.log(response.code);
     if (response.code === 200) {
       tableData.value = response.data;
-      console.log(tableData.value);
+      loading.value = false;
     } else {
       console.error("Failed to fetch data:", response.msg);
     }
@@ -259,5 +311,8 @@ onMounted(async () => {
 .centered-label .el-form-item__content {
   padding: 0px;
   margin-left: 50%; /*不加这行的话，label会出现很难选中复制的情况。*/
+}
+.dialog-footer button:first-child {
+  margin-right: 10px;
 }
 </style>

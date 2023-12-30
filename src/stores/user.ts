@@ -8,17 +8,22 @@ export const useUserStore = defineStore("user", () => {
   const user = ref<User | undefined>($cookies.get("user"));
   const token = ref<string | undefined>($cookies.get("token"));
 
+  const fuckingAvatar = () => {
+    if (!user) return user;
+    const tmp = JSON.parse(JSON.stringify(unref(user)));
+    delete tmp.avatar;
+    return tmp;
+  };
+
   const avatar = computed(() =>
     user.value && user.value.avatar.length > 0
       ? import.meta.env.VITE_APP_BASE_API + "/" + user.value.avatar
       : "/img/default-user.png"
   );
 
-  const login = (data: { token?: string; user?: User }) => {
-    user.value = data.user;
-    token.value = data.token;
-    $cookies.set("token", data.token);
-    $cookies.set("user", data.user);
+  const login = (token_: string) => {
+    token.value = token_;
+    $cookies.set("token", token_);
   };
   const logout = () => {
     user.value = undefined;
@@ -29,7 +34,8 @@ export const useUserStore = defineStore("user", () => {
   const fetch = async () => {
     try {
       user.value = await getUserMe();
-      console.log(user);
+      $cookies.set("user", fuckingAvatar());
+      console.log("fetch", user.value, $cookies.get("user"));
     } catch (e) {}
     return user.value;
   };

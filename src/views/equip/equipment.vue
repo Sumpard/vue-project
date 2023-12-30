@@ -185,20 +185,11 @@ export default {
         user_name,
         phone
       );
-      console.log(
-        "预约信息:",
-        date_,
-        start_,
-        end_,
-        des,
-        avail_id,
-        avail_type_name,
-        avail_name,
-        user_id,
-        user_name,
-        phone,
-        user
-      );
+      if (submit_info.code == 200) {
+        Message.success("提交成功！");
+      } else {
+        Message.error("提交失败");
+      }
     },
 
     async equip_template() {
@@ -208,7 +199,7 @@ export default {
         for (let i = 0; i < roomdata.length; i++) {
           avail_map[roomdata[i].available_name] = [roomdata[i].available_id, i];
         }
-        //console.log("maps:", avail_map);
+        console.log("maps:", avail_map);
       } catch (error) {
         console.error(error);
       }
@@ -239,7 +230,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .chart {
   width: 100%;
   flex: 1;

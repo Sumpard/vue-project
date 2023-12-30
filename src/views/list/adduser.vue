@@ -54,14 +54,11 @@ const uploadedImage = ref<string | null>(null);
 const uploadApi = "/api/upload";
 
 const beforeUpload = (file: File) => {
-  console.log("Before Upload:", file);
   convertFileToBase64(file);
   return false;
 };
 
-const handleSuccess = (response: any, file: File) => {
-  console.log("Upload Success:", response);
-};
+const handleSuccess = (response: any, file: File) => {};
 
 const convertFileToBase64 = (file: File) => {
   const reader = new FileReader();
@@ -111,7 +108,6 @@ const submitForm = async (formEl: FormInstance | undefined) => {
           form.user_name,
           form.user_role
         );
-        console.log(result);
         if (!result) {
           ElMessage.error("增加失败");
           return;
@@ -123,7 +119,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       }
     } else {
       // 校验失败
-      console.log("Form validation failed:", fields);
+      console.warn("Form validation failed:", fields);
     }
   });
 };
