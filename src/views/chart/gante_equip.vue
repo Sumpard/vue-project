@@ -268,7 +268,7 @@ onMounted(async () => {
 async function get_today_equip(day: string, status: string) {
   try {
     const appointlist: Appointment[] = await getAppoint_by_day(day, status, "equipment");
-    //console.log("appoint:", appointlist);
+    console.log("appoint:", appointlist);
     if (appointlist) {
       for (const appoint of appointlist) {
         const start = new Date(appoint.appoint_start_time).getTime() + 8 * hour;

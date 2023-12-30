@@ -7,13 +7,7 @@
     <div class="rin-tr"></div>
     <!-- 表单部分 -->
     <div v-if="user" class="rin-card mdui-card">
-      <ElForm
-        ref="formInstance"
-        label-position="left"
-        label-width="100px"
-        :model="formAllinfo"
-        style="max-width: 600px"
-      >
+      <ElForm ref="formInstance" label-position="left" label-width="100px" style="max-width: 600px">
         <ElFormItem label="用户名">
           <p>{{ user.user_name }}</p>
         </ElFormItem>
@@ -64,7 +58,7 @@ import { updateemail, updatepassword } from "@/api/user";
 import { useUserStore } from "@/stores/user";
 
 const userStore = useUserStore();
-
+const router = useRouter();
 const { user } = storeToRefs(userStore);
 
 const updateAndFinishEditing = async () => {
@@ -116,6 +110,11 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       try {
         const result = await updatepassword(editPasswordForm.password, editPasswordForm.newPassword);
         if (result.code === 200) {
+          ElMessage({ message: "密码更改成功", type: "success" });
+          userStore.logout();
+
+          ElMessage({ message: "请重新登录", type: "success" });
+          router.push({ name: "login" });
         } else {
           // Handle backend validation errors
           editPasswordForm.password = "";
@@ -136,13 +135,6 @@ const resetForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   formEl.resetFields();
 };
-
-const formAllinfo = reactive({
-  nickname: "Tom",
-  email: "",
-  gender: "",
-  introduce: "No. 189, Grove St, Los Angeles",
-});
 
 const isEdit = ref(false);
 
