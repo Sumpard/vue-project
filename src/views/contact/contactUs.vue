@@ -39,7 +39,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .chart {
   width: 100vh;
   /* 设置图表容器的宽度 */
