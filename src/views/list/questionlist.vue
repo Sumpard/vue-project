@@ -126,8 +126,8 @@
 import { computed, onMounted, ref } from "vue";
 
 import { getQuestion } from "@/api/question";
-import { formatTimestamp } from "@/api/timeformat";
 import { useUserStore } from "@/stores/user";
+import { formatTimestamp } from "@/utils/timeformat";
 
 const dialogVisible = ref(false); //会话框显示
 const selectedRow = ref(null); //会话框内容

@@ -174,8 +174,8 @@
 import { computed, onMounted, ref } from "vue";
 
 import { getQuestion, putQuestion } from "@/api/question";
-import { formatTimestamp } from "@/api/timeformat";
 import Message from "@/utils/message";
+import { formatTimestamp } from "@/utils/timeformat";
 import ImgUpload from "@/views/components/ImgUpNoBtn.vue";
 
 const dialogVisible = ref(false); //会话框显示
