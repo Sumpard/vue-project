@@ -98,27 +98,30 @@ export default {
 
       this.user = useUserStore().user!.user_name;
       const res = await postNotice(this.text, this.title, this.type, this.time, this.user);
-      console.log(res);
-      ElMessageBox.confirm("编辑成功，您可以选择查看预览或是跳转到通知列表", "提示", {
-        confirmButtonText: "查看预览",
-        cancelButtonText: "通知列表",
-        type: "success",
-      })
-        .then(() => {
-          this.router.push({
-            path: "/noticepreview",
-            query: {
-              content: this.text,
-              type: this.type,
-              title: this.title,
-              time: this.time,
-              name: this.name,
-            },
-          });
+      if (res.code === 200) {
+        ElMessageBox.confirm("编辑成功，您可以选择查看预览或是跳转到通知列表", "提示", {
+          confirmButtonText: "查看预览",
+          cancelButtonText: "通知列表",
+          type: "success",
         })
-        .catch(() => {
-          this.router.push({ path: "/adminnoticelist" });
-        });
+          .then(() => {
+            this.router.push({
+              path: "/noticepreview",
+              query: {
+                content: this.text,
+                type: this.type,
+                title: this.title,
+                time: this.time,
+                name: this.name,
+              },
+            });
+          })
+          .catch(() => {
+            this.router.push({ path: "/adminnoticelist" });
+          });
+      } else {
+        Message.error("修改失败");
+      }
     },
   },
 };
