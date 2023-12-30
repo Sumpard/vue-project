@@ -6,11 +6,11 @@
     <div class="right-side">
       <div class="toolbar">
         <el-dropdown v-if="user">
-          <span class="circle"><el-avatar :src="user.avatar" :size="30"></el-avatar></span>
+          <span class="circle"><el-avatar :src="'data:image/png;base64,' + user.avatar" :size="30"></el-avatar></span>
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item>
-                <a href="/homeindex">个人中心</a>
+                <a @click="homepage">个人中心</a>
               </el-dropdown-item>
               <el-dropdown-item>
                 <a @click="handleLogout">退出登录</a>
@@ -31,6 +31,9 @@ const router = useRouter();
 
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
+function homepage() {
+  router.push({ path: "/homeindex" });
+}
 
 function handleLogout() {
   userStore.logout();

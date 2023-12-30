@@ -1,5 +1,3 @@
-import Message from "@/utils/message";
-
 import api from "./request";
 
 export interface questions {
@@ -41,7 +39,6 @@ export async function submitQuestion(
   submit_img: string,
   submit_text: string
 ) {
-  //Message.info("正在提交……");
   const questionbody: question_submit = {
     propose_time: submit_time,
     proposer_name: submit_name,
@@ -66,7 +63,7 @@ export async function getQuestion(user_name: string) {
         question_status: "",
       },
     })
-  ).data; //
+  ).data;
 }
 
 export async function putQuestion(put_quesID: number, put_repimg: string, put_reptext: string) {

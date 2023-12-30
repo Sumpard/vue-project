@@ -8,7 +8,7 @@
     </div>
     <el-menu active-border-color="blue" :collapse="isCollapse" :collapse-transition="false" :router="true">
       <template v-for="item in menus" :key="item.index">
-        <template v-if="!item.admin || isAdmin">
+        <template v-if="!item.admin || userStore.isAdmin">
           <el-sub-menu v-if="item.children" :index="item.index">
             <template #title>
               <el-icon> <component :is="item.icon" /></el-icon>
@@ -95,7 +95,6 @@ const menus = [
 ];
 
 const userStore = useUserStore();
-const { isAdmin } = userStore;
 </script>
 
 <style scoped>

@@ -194,7 +194,7 @@ defineExpose({
 });
 </script>
 
-<style>
+<style scoped>
 .hide .el-upload--picture-card {
   display: none;
 }

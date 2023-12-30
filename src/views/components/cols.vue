@@ -2,7 +2,7 @@
   <el-card class="box-card" shadow="hover">
     <div class="clearfix" style="text-align: -webkit-center">
       <p>{{ noticetype }}</p>
-      <el-button style="float: right; padding: 3px 0" type="text" @click="knowmore()"
+      <el-button style="float: right; padding: 3px 0" link type="primary" @click="knowmore()"
         >查看更多<el-icon><i-ep-DArrowRight /></el-icon
       ></el-button>
     </div>
@@ -35,7 +35,7 @@ const props = defineProps({
   },
 });
 
-const notices = ref([]);
+const notices = ref<any[]>([]);
 const truncateText = (text: string, maxLength: number) => {
   //截断text以防内容过长
   if (text.length > maxLength) {
@@ -46,17 +46,10 @@ const truncateText = (text: string, maxLength: number) => {
 
 const router = useRouter(); // 传递路由对象
 const knowmore = () => {
-  console.log("type:", props.noticetype);
-  router.push({
-    path: "/noticelist",
-    query: {
-      type: props.noticetype,
-    },
-  });
+  router.push({ path: "/noticelist", query: { type: props.noticetype } });
 };
 
 const openPreview = (index: number) => {
-  console.log("notices:", notices.value.length);
   router.push({
     path: "/noticepreview",
     query: {
@@ -74,11 +67,8 @@ onMounted(async () => {
   // 通过 API 请求获取数据
   try {
     const response = await getNotice(props.noticetype);
-    console.log("col response:", response);
-
     if (response.code === 200) {
       notices.value = response.data;
-      console.log(notices.value);
     } else {
       console.error("Failed to fetch data:", response.msg);
     }

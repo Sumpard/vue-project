@@ -18,10 +18,10 @@
 <script setup lang="ts">
 import cols from "@/views/components/cols.vue";
 
-const imageUrl = ["1.jpg", "2.jpg", "3.jpg", "4.png"].map((t) => `img/carousel/${t}`);
+const imageUrl = ["1.jpg", "2.jpg", "3.jpg", "4.png"].map((t) => `/img/carousel/${t}`);
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .el-carousel__item h3 {
   color: #475669;
   opacity: 0.75;
