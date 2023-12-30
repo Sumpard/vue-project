@@ -45,7 +45,7 @@
           <el-text class="text_" type="info" @click="refreshCaptcha">看不清楚？换一张</el-text>
         </div>
       </div>
-      <div>
+      <div class="butt">
         <q-btn label="登录" type="submit" color="primary" />
         <q-btn label="重置" type="reset" color="primary" flat class="q-ml-sm" />
         <q-btn label="没有账户？点击注册" color="primary" flat class="q-ml-sm" size="sm" @click="toRegister" />
@@ -87,7 +87,7 @@ async function onSubmit() {
 
   const { code, data } = await login(form.username, form.password, form.verifyCode);
   if (code != 200) {
-    Message.error("登录失败，用户id或密码错误");
+    Message.error("登录失败,用户id或密码错误");
     return;
   }
 
@@ -113,7 +113,7 @@ function toRegister() {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .custom-tab-panels {
   margin-bottom: -25px;
   padding-bottom: 0px;
@@ -150,5 +150,9 @@ function toRegister() {
 
 .verify-wrapper {
   position: relative;
+}
+
+.butt {
+  margin-left: 40px;
 }
 </style>

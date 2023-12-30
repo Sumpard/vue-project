@@ -239,7 +239,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .chart {
   width: 100%;
   flex: 1;

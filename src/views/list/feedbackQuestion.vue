@@ -116,6 +116,9 @@
                     v-model="selectedRow.reply_texts"
                     :placeholder="selectedRow.reply_texts"
                     :disabled="replyed"
+                    type="textarea"
+                    style="width: 30vw"
+                    rows="8"
                     >{{ selectedRow.reply_texts }}</el-input
                   >
                 </el-form-item>

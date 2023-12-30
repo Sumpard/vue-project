@@ -96,6 +96,8 @@ const menus = [
 
 const userStore = useUserStore();
 const { isAdmin } = userStore;
+console.log(userStore);
+console.log(isAdmin);
 </script>
 
 <style scoped>
