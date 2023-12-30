@@ -89,7 +89,6 @@ const truncateText = (text: string, maxLength: number) => {
 const openPreview = (row) => {
   //获取会话框内容
   selectedRow.value = row;
-  console.log("本条通知： ", selectedRow.value);
   router.push({
     path: "/noticepreview",
     query: {
@@ -105,9 +104,7 @@ const openPreview = (row) => {
 onMounted(async () => {
   // 通过 API 请求获取数据
   try {
-    console.log("select_type:", select_type.value);
     const response = await getNotice(select_type.value);
-    console.log(response);
 
     if (response.code === 200) {
       tableData.value = response.data;

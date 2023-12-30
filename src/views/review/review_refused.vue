@@ -82,8 +82,6 @@ const handleDelete = async () => {
     // 替换为实际的 API 调用，逐个调用 API
     const response = await deleteRecord(row.appointment_id);
     // 模拟删除成功
-    console.log(response);
-    console.log("Deleting row with ID:", row.appointment_id);
     if (response.code === 200) {
       ElMessage({ message: "删除预约记录成功", type: "success" });
     }
@@ -97,7 +95,6 @@ onMounted(async () => {
   // 通过 API 请求获取数据
   try {
     const response = await getAppointAll("REFUSED");
-    console.log(response);
 
     if (response.code === 200) {
       tableData.value = response.data;

@@ -46,17 +46,10 @@ const truncateText = (text: string, maxLength: number) => {
 
 const router = useRouter(); // 传递路由对象
 const knowmore = () => {
-  console.log("type:", props.noticetype);
-  router.push({
-    path: "/noticelist",
-    query: {
-      type: props.noticetype,
-    },
-  });
+  router.push({ path: "/noticelist", query: { type: props.noticetype } });
 };
 
 const openPreview = (index: number) => {
-  console.log("notices:", notices.value.length);
   router.push({
     path: "/noticepreview",
     query: {

@@ -191,14 +191,11 @@ const imgselect = ref(false);
 const BtnDis = ref(false); //图片参数错误时禁用上传
 
 const ImgSelected = (toBeUp) => {
-  console.log("ImgSelected in parent:", toBeUp);
   imgselect.value = toBeUp;
 };
 
 const ImgUpSuccess = (data) => {
-  console.log("图片已上传成功,返回值data将进行赋值,data:", data);
   repImg.value = data.join(";");
-  console.log("repImg.value: " + repImg.value);
 };
 
 const NoUpload = (forbidden) => {
@@ -214,7 +211,6 @@ const filterTableData = computed(() =>
 const openDialog = (row) => {
   //获取会话框内容
   selectedRow.value = row;
-  console.log("本条记录： ", selectedRow.value);
   dialogVisible.value = true;
   replyed.value = selectedRow.value.reply_texts != "" && selectedRow.value.reply_texts != null;
 };
@@ -249,7 +245,6 @@ const callChildMethod = async () => {
 
   if (imgselect.value) {
     await childRef.value.beginUploadImg();
-    console.log("上传图片......");
   } else {
     console.error("子组件实例不存在");
   }
@@ -258,8 +253,6 @@ const callChildMethod = async () => {
   const reptex_ = selectedRow.value.reply_texts;
 
   const submit_reply = await putQuestion(id_, repimg_, reptex_);
-  console.log("回复信息： ", id_, repimg_, reptex_);
-  console.log("submit_reply data: ", submit_reply);
   if (submit_reply.code === 200) {
     Message.success("回复成功");
   }
@@ -274,11 +267,9 @@ onMounted(async () => {
   try {
     //console.log("user_name:", userStore.user!.user_name);
     const response = await getQuestion("");
-    console.log(response);
 
     if (response.code === 200) {
       tableData.value = response.data;
-      console.log("tableData: ", tableData);
       if (selectedRow.value.reply_texts != null && selectedRow.value.reply_texts != "") {
         //若有reply_texts,则说明是回复过的
         replyed.value = true;

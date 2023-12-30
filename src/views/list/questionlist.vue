@@ -147,7 +147,6 @@ const filterTableData = computed(() =>
 const openDialog = (row) => {
   //获取会话框内容
   selectedRow.value = row;
-  console.log(selectedRow.value);
   dialogVisible.value = true;
 };
 
@@ -171,9 +170,7 @@ const mapstatus = (question_status: any) => {
 onMounted(async () => {
   // 通过 API 请求获取数据
   try {
-    console.log("user_name:", userStore.user!.user_name);
     const response = await getQuestion(userStore.user!.user_name);
-    console.log(response);
 
     if (response.code === 200) {
       tableData.value = response.data;

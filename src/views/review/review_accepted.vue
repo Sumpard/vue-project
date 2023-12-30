@@ -96,8 +96,6 @@ const handleDelete = async () => {
     // 替换为实际的 API 调用，逐个调用 API
     const response = await deleteRecord(row.appointment_id);
     // 模拟删除成功
-    console.log(response);
-    console.log("Deleting row with ID:", row.appointment_id);
     if (response.code === 200) {
       ElMessage({ message: "删除预约记录成功", type: "success" });
     }
@@ -121,19 +119,16 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     if (valid) {
       try {
         const id = selectedRows.value[0].appointment_id;
-        console.log(form.reply);
         const response = await reviewAppointmentRefuse(
           id,
           form.reply,
           userStore.user!.user_id,
           userStore.user!.user_name
         );
-        console.log(response);
 
         if (response.code === 200) {
           ElMessage({ message: "审核不通过成功", type: "success" });
         }
-        console.log("Audit not passed for row with ID:", id);
 
         dialogFormVisible.value = false;
         form.reply = "";
@@ -144,7 +139,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       }
     } else {
       // 校验失败
-      console.log("Form validation failed:", fields);
+      console.warn("Form validation failed:", fields);
     }
   });
 };
@@ -162,7 +157,6 @@ onMounted(async () => {
   // 通过 API 请求获取数据
   try {
     const response = await getAppointAll("ACCEPTED");
-    console.log(response);
 
     if (response.code === 200) {
       tableData.value = response.data;

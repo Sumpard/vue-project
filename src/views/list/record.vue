@@ -89,10 +89,8 @@ onMounted(async () => {
   // 通过 API 请求获取数据
   try {
     const response1 = await getAppointSelf("SUBMITTED", userStore.user!.user_id);
-    console.log(response1);
 
     const response2 = await getAppointSelf("ACCEPTED", userStore.user!.user_id);
-    console.log(response2);
 
     const response3 = await getAppointSelf("REFUSED", userStore.user!.user_id);
     const arr = [...response1, ...response2, ...response3];

@@ -75,7 +75,6 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     if (valid) {
       try {
         const result = await addGoods(form.description, form.id, form.image, form.name, form.status, form.type_name);
-        console.log(result);
         if (!result) {
           ElMessage.error("增加失败");
           return;
@@ -87,7 +86,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       }
     } else {
       // 校验失败
-      console.log("Form validation failed:", fields);
+      console.warn("Form validation failed:", fields);
     }
   });
 };

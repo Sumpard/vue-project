@@ -90,7 +90,6 @@ const beforeUpload = (file: any) => {
 const submitUpload = async () => {
   try {
     const result5 = await uploadava(File.value);
-    console.log(result5);
     if (result5.code !== 200) {
       ElMessage.error("更新图片失败");
       return;

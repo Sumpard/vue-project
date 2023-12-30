@@ -30,11 +30,6 @@ export default {
 
     onMounted(() => {
       // 在组件初始化时，获取路由参数
-      console.log("Content:", content.value);
-      console.log("Type:", type.value);
-      console.log("Title:", title.value);
-      console.log("Time:", time.value);
-      console.log("Name:", name.value);
     });
 
     return {

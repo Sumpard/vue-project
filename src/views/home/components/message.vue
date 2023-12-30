@@ -72,7 +72,6 @@ const updateAndFinishEditing = async () => {
   // 调用更新 email 的 API
   try {
     const response = await updateemail(user.value.email);
-    console.log("Email updated successfully:", response.data);
     // 更新成功后，将编辑模式设置为 false
 
     ElMessage.success("个人信息更新成功");
@@ -116,11 +115,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     if (valid) {
       try {
         const result = await updatepassword(editPasswordForm.password, editPasswordForm.newPassword);
-        console.log(result);
         if (result.code === 200) {
-          console.log("密码更改成功");
         } else {
-          console.log("Error: ");
           // Handle backend validation errors
           editPasswordForm.password = "";
           ElMessage.error("原始密码错误，请重新输入");
@@ -130,7 +126,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       }
     } else {
       // 校验失败
-      console.log("Form validation failed:", fields);
+      console.warn("Form validation failed:", fields);
     }
   });
 };

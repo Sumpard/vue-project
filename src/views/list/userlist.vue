@@ -135,19 +135,12 @@ const saveEditingscore = async (row: any, formEl: FormInstance | undefined, form
     // 校验成功
     if (valid) {
       try {
-        console.log(row.user_id);
-        console.log(form.score);
-        console.log(typeof row.user_id);
         form.score = parseInt(form.score, 10);
-        console.log(typeof form.score);
         const result = await updateUserScore(row.user_id, form.score);
-        console.log(result);
-
         if (!result) {
           ElMessage.error("修改诚信点失败");
           return;
         }
-
         ElMessage({ message: "修改诚信点成功", type: "success" });
         row.editingscore = false;
         row.score = form.score;
@@ -156,15 +149,13 @@ const saveEditingscore = async (row: any, formEl: FormInstance | undefined, form
       }
     } else {
       // 校验失败
-      console.log("Form validation failed:", fields);
+      console.warn("Form validation failed:", fields);
     }
   });
 };
 
 const saveEditingrole = async (row: any) => {
   try {
-    console.log(row.user_id);
-    console.log(row.editedRole);
     const result2 = await updateUserRole(row.user_id, row.editedRole);
 
     if (!result2) {
@@ -183,11 +174,8 @@ onMounted(async () => {
   // 通过 API 请求获取数据
   try {
     const response = await getAllUsers();
-    console.log(response);
-    console.log(response.code);
     if (response.code === 200) {
       tableData.value = response.data;
-      console.log(tableData.value);
     } else {
       console.error("Failed to fetch data:", response.msg);
     }
