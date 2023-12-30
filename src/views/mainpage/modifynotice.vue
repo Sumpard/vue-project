@@ -25,7 +25,6 @@
 </template>
 
 <script lang="ts">
-import axios from "axios";
 import { ElMessageBox } from "element-plus";
 import { useRouter } from "vue-router";
 
@@ -105,26 +104,30 @@ export default {
       }
 
       const res = await modifyNotice(this.id, this.text, this.title, this.type);
-      ElMessageBox.confirm("修改成功，您可以选择查看预览或是跳转到通知列表", "提示", {
-        confirmButtonText: "查看预览",
-        cancelButtonText: "通知列表",
-        type: "success",
-      })
-        .then(() => {
-          this.router.push({
-            path: "/noticepreview",
-            query: {
-              content: this.text,
-              type: this.type,
-              title: this.title,
-              time: this.time,
-              name: this.name,
-            },
-          });
+      if (res.code === 200) {
+        ElMessageBox.confirm("修改成功，您可以选择查看预览或是跳转到通知列表", "提示", {
+          confirmButtonText: "查看预览",
+          cancelButtonText: "通知列表",
+          type: "success",
         })
-        .catch(() => {
-          this.router.push({ path: "/noticelist" });
-        });
+          .then(() => {
+            this.router.push({
+              path: "/noticepreview",
+              query: {
+                content: this.text,
+                type: this.type,
+                title: this.title,
+                time: this.time,
+                name: this.name,
+              },
+            });
+          })
+          .catch(() => {
+            this.router.push({ path: "/adminnoticelist" });
+          });
+      } else {
+        Message.error("修改失败");
+      }
     },
   },
 };
