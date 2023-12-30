@@ -325,7 +325,7 @@ function handleLinkClick() {
 }
 </script>
 
-<style>
+<style scoped>
 #container {
   max-width: 1200px;
   min-width: 800px;
