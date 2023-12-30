@@ -185,20 +185,6 @@ export default {
         user_name,
         phone
       );
-      console.log(
-        "预约信息:",
-        date_,
-        start_,
-        end_,
-        des,
-        avail_id,
-        avail_type_name,
-        avail_name,
-        user_id,
-        user_name,
-        phone,
-        user
-      );
       if (submit_info.code == 200) {
         Message.success("提交成功！");
       } else {

@@ -1,6 +1,7 @@
 <template>
   <div class="my-info">
     <el-table
+      v-loading="loading"
       :header-cell-style="{ 'text-align': 'center' }"
       :cell-style="{ 'text-align': 'center' }"
       :data="filterTableData"
@@ -57,6 +58,7 @@ import type { FormInstance, FormRules } from "element-plus";
 import { getAppointSelf } from "@/api/record";
 import { useUserStore } from "@/stores/user";
 
+const loading = ref(true);
 const userStore = useUserStore();
 const ruleFormRef = ref<FormInstance>();
 const tableData = ref<any[]>([]);
@@ -89,16 +91,10 @@ onMounted(async () => {
   // 通过 API 请求获取数据
   try {
     const response1 = await getAppointSelf("SUBMITTED", userStore.user!.user_id);
-    console.log(response1);
-
     const response2 = await getAppointSelf("ACCEPTED", userStore.user!.user_id);
-    console.log(response2);
-
     const response3 = await getAppointSelf("REFUSED", userStore.user!.user_id);
-    const arr = [...response1, ...response2, ...response3];
-    tableData.value = arr;
-    // console.log(tableData.value)
-    ElMessage({ message: "获取成功", type: "success" });
+    tableData.value = [...response1, ...response2, ...response3];
+    loading.value = false;
   } catch (error) {
     console.error("API request failed:", error);
   }

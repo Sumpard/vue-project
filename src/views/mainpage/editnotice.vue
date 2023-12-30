@@ -54,8 +54,6 @@ export default {
   methods: {
     handleUploadImage(event, insertImage, files) {
       // 拿到 files 之后上传到文件服务器，然后向编辑框中插入对应的内容
-      console.log(files);
-      console.log("调用图片上传");
       event.preventDefault();
       let file = files[0];
       let formData = new FormData();
@@ -70,7 +68,6 @@ export default {
         })
         .then((response) => {
           const imageUrl = response.data.data.url;
-          console.log(imageUrl);
           // 将图片链接插入到Markdown编辑器中
           insertImage({
             url: imageUrl,
@@ -94,11 +91,9 @@ export default {
 
       const currentTimestamp = Date.now();
       this.time = formatTimestamp(currentTimestamp);
-      console.log("time:", this.time);
 
       this.user = useUserStore().user!.user_name;
       const res = await postNotice(this.text, this.title, this.type, this.time, this.user);
-      console.log(res);
       ElMessageBox.confirm("编辑成功，您可以选择查看预览或是跳转到通知列表", "提示", {
         confirmButtonText: "查看预览",
         cancelButtonText: "通知列表",

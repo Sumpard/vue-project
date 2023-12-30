@@ -1,6 +1,7 @@
 <template>
   <div class="my-info">
     <el-table
+      v-loading="loading"
       :header-cell-style="{ 'text-align': 'center' }"
       :cell-style="{ 'text-align': 'center' }"
       :data="tableData"
@@ -48,10 +49,11 @@
 <script setup lang="ts">
 import { deleteRecord, getAppointAll } from "@/api/review";
 
-export interface Appointment {
+interface Appointment {
   appointment_id: number;
 }
 
+const loading = ref(true);
 const tableData = ref([]);
 const search = ref("");
 const selectedRows = ref<Appointment[]>([]);
@@ -82,8 +84,6 @@ const handleDelete = async () => {
     // 替换为实际的 API 调用，逐个调用 API
     const response = await deleteRecord(row.appointment_id);
     // 模拟删除成功
-    console.log(response);
-    console.log("Deleting row with ID:", row.appointment_id);
     if (response.code === 200) {
       ElMessage({ message: "删除预约记录成功", type: "success" });
     }
@@ -97,12 +97,10 @@ onMounted(async () => {
   // 通过 API 请求获取数据
   try {
     const response = await getAppointAll("REFUSED");
-    console.log(response);
 
     if (response.code === 200) {
       tableData.value = response.data;
-      // console.log(tableData.value)
-      ElMessage({ message: "获取成功", type: "success" });
+      loading.value = false;
     } else {
       console.error("Failed to fetch data:", response.msg);
     }

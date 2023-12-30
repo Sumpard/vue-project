@@ -28,6 +28,7 @@
     <el-divider class="divide" />
 
     <el-table
+      v-loading="loading"
       :header-cell-style="{ 'text-align': 'center' }"
       :cell-style="{ 'text-align': 'center' }"
       :data="filterTableData"
@@ -116,6 +117,7 @@ import { computed, getCurrentInstance, onMounted, ref } from "vue";
 import { deletegood, editdescription, editstatus, getAllGoods, upload } from "@/api/goods";
 import addgoods from "@/views/managegoods/add.vue";
 
+const loading = ref(true);
 const ruleFormRef = ref<FormInstance>();
 const tableData = ref([]);
 const search = ref("");
@@ -145,14 +147,11 @@ const onchange = (file: any) => {
 const showUploadDialog = (row: any) => {
   dialogVisible.value = true;
   id.value = row.available_id;
-  console.log(id.value);
 };
 
 const submitUpload = async () => {
   try {
     const result4 = await upload(id.value, File.value);
-
-    console.log(result4);
     if (result4.code !== 200) {
       ElMessage.error("更新图片失败");
       return;
@@ -208,10 +207,7 @@ const saveeditingdescription = async (row: any, formEl: FormInstance | undefined
     // 校验成功
     if (valid) {
       try {
-        console.log(row.available_description);
-        console.log(typeof row.available_id);
         const result = await editdescription(row.available_id, row.available_description);
-        console.log(result);
 
         if (!result) {
           ElMessage.error("修改描述失败");
@@ -226,17 +222,13 @@ const saveeditingdescription = async (row: any, formEl: FormInstance | undefined
       }
     } else {
       // 校验失败
-      console.log("Form validation failed:", fields);
     }
   });
 };
 
 const deleteTableData = async (row: any) => {
   try {
-    console.log(row.available_id);
     const result3 = await deletegood(row.available_id);
-    console.log(result3);
-    console.log(result3.msg);
     if (result3.code !== 200) {
       ElMessage.error("删除失败");
       return;
@@ -253,10 +245,6 @@ const deleteTableData = async (row: any) => {
 
 const saveeditingstatus = async (row: any) => {
   try {
-    console.log(typeof row.available_id);
-    console.log(row.available_id);
-    console.log(row.editedstatus);
-
     const result2 = await editstatus(row.available_id, row.editedstatus);
 
     if (!result2) {
@@ -275,11 +263,9 @@ onMounted(async () => {
   // 通过 API 请求获取数据
   try {
     const response = await getAllGoods();
-    console.log(response);
-    console.log(response.code);
     if (response.code === 200) {
       tableData.value = response.data;
-      console.log(tableData.value);
+      loading.value = false;
     } else {
       console.error("Failed to fetch data:", response.msg);
     }

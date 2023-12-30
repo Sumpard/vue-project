@@ -121,7 +121,6 @@ export default {
 
   async mounted() {
     const all = await get_all();
-    console.log(all);
     this.room_template();
   },
 
