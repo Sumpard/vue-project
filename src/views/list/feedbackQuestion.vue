@@ -120,7 +120,14 @@
                   >
                 </el-form-item>
                 <el-form-item label="院长回复内容：" v-else>
-                  <el-input v-model="selectedRow.reply_texts" placeholder="尚未回复" :disabled="replyed"></el-input>
+                  <el-input
+                    v-model="selectedRow.reply_texts"
+                    placeholder="尚未回复"
+                    :disabled="replyed"
+                    rows="3"
+                    type="textarea"
+                    style="width: 25vw"
+                  ></el-input>
                 </el-form-item>
               </el-row>
               <el-form-item label="反馈回复图片：" v-if="replyed && selectedRow.reply_images[0] != ''">
