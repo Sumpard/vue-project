@@ -147,12 +147,13 @@ export default {
       console.log(submit_question);
       if (submit_question.code === 200) {
         Message.success("反馈上传成功");
+        this.BtnDisabled = true;
+        this.dialogVisible = true;
+        this.inputDisable = true;
+      } else if (submit_question.code === 400) {
+        Message.warning("姓名核验失败，请输入您本人的正确姓名");
       }
-      this.BtnDisabled = true;
-      this.dialogVisible = true;
-      this.inputDisable = true;
     },
-
     ImgSelected(toBeUp) {
       //检查是否有已选的待上传图片\
       this.imgselect = toBeUp;
