@@ -56,7 +56,6 @@
 
 <script setup lang="ts">
 import { checkCaptcha, getCaptcha, login } from "@/api/login";
-import { getUserMe } from "@/api/user";
 import { useUserStore } from "@/stores/user";
 import Message from "@/utils/message";
 
@@ -92,10 +91,9 @@ async function onSubmit() {
   }
 
   const token = data;
-  userStore.login({ token }); // 存token
-  const user = await getUserMe();
-  userStore.login({ token, user });
-  Message.success("欢迎你，" + user.user_name + "!");
+  userStore.login(token); // 存token
+  const user = await userStore.fetch();
+  Message.success("欢迎你，" + user!.user_name + "!");
 
   if ($route.query.redirect) {
     $router.replace($route.query.redirect as string);
