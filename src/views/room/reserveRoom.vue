@@ -175,7 +175,7 @@ export default {
       const submit = formatTimestamp(temp.getTime());
       const des = this.bookingForm.theme;
       const temp_str = this.bookingForm.room;
-      const avail_id = parseInt(temp_str[0], 10) - 1;
+      const avail_id = parseInt(temp_str[0], 10);
       const avail_type_name = "会议室";
       const avail_name = temp_str;
       const user = useUserStore().user!;
