@@ -13,6 +13,7 @@
       </template>
     </el-dialog>
     <el-table
+      v-loading="loading"
       :header-cell-style="{ 'text-align': 'center' }"
       :cell-style="{ 'text-align': 'center' }"
       :data="tableData"
@@ -65,6 +66,7 @@ export interface Appointment {
   appointment_id: number;
 }
 
+const loading = ref(true);
 const tableData = ref([]);
 const search = ref("");
 const dialogFormVisible = ref(false);
@@ -160,6 +162,7 @@ onMounted(async () => {
 
     if (response.code === 200) {
       tableData.value = response.data;
+      loading.value = false;
     } else {
       console.error("Failed to fetch data:", response.msg);
     }

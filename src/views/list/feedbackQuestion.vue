@@ -1,6 +1,7 @@
 <template>
   <div class="my-info">
     <el-table
+      v-loading="loading"
       :data="filterTableData"
       max-height="550"
       highlight-current-row
@@ -178,6 +179,7 @@ import Message from "@/utils/message";
 import { formatTimestamp } from "@/utils/timeformat";
 import ImgUpload from "@/views/components/ImgUpNoBtn.vue";
 
+const loading = ref(true);
 const dialogVisible = ref(false); //会话框显示
 const selectedRow = ref(null); //会话框内容
 const tableData = ref([]);
@@ -270,6 +272,7 @@ onMounted(async () => {
 
     if (response.code === 200) {
       tableData.value = response.data;
+      loading.value = false;
       if (selectedRow.value.reply_texts != null && selectedRow.value.reply_texts != "") {
         //若有reply_texts,则说明是回复过的
         replyed.value = true;

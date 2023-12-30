@@ -1,6 +1,7 @@
 <template>
   <div class="my-info">
     <el-table
+      v-loading="loading"
       :header-cell-style="{ 'text-align': 'center' }"
       :cell-style="{ 'text-align': 'center' }"
       :data="tableData"
@@ -48,10 +49,11 @@
 <script setup lang="ts">
 import { deleteRecord, getAppointAll } from "@/api/review";
 
-export interface Appointment {
+interface Appointment {
   appointment_id: number;
 }
 
+const loading = ref(true);
 const tableData = ref([]);
 const search = ref("");
 const selectedRows = ref<Appointment[]>([]);
@@ -98,6 +100,7 @@ onMounted(async () => {
 
     if (response.code === 200) {
       tableData.value = response.data;
+      loading.value = false;
     } else {
       console.error("Failed to fetch data:", response.msg);
     }

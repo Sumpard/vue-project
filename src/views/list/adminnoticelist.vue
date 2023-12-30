@@ -18,6 +18,7 @@
   <div class="outer">
     <div class="my-info">
       <el-table
+        v-loading="loading"
         :data="filterTableData"
         max-height="650"
         highlight-current-row
@@ -82,6 +83,7 @@ import { deletNotice, getNotice } from "@/api/notice";
 import { useUserStore } from "@/stores/user";
 import Message from "@/utils/message";
 
+const loading = ref(true);
 const selectedRow = ref(null); //所选notice的内容
 const router = useRouter(); // 获取路由对象
 const tableData = ref([]);
@@ -161,6 +163,7 @@ onMounted(async () => {
 
     if (response.code === 200) {
       tableData.value = response.data;
+      loading.value = false;
     } else {
       console.error("Failed to fetch data:", response.msg);
     }

@@ -28,6 +28,7 @@
     <el-divider class="divide" />
 
     <el-table
+      v-loading="loading"
       :header-cell-style="{ 'text-align': 'center' }"
       :cell-style="{ 'text-align': 'center' }"
       :data="filterTableData"
@@ -116,6 +117,7 @@ import { computed, getCurrentInstance, onMounted, ref } from "vue";
 import { deletegood, editdescription, editstatus, getAllGoods, upload } from "@/api/goods";
 import addgoods from "@/views/managegoods/add.vue";
 
+const loading = ref(true);
 const ruleFormRef = ref<FormInstance>();
 const tableData = ref([]);
 const search = ref("");
@@ -263,6 +265,7 @@ onMounted(async () => {
     const response = await getAllGoods();
     if (response.code === 200) {
       tableData.value = response.data;
+      loading.value = false;
     } else {
       console.error("Failed to fetch data:", response.msg);
     }

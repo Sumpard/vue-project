@@ -18,6 +18,7 @@
   <div class="outer">
     <div class="my-info">
       <el-table
+        v-loading="loading"
         :data="filterTableData"
         max-height="650"
         highlight-current-row
@@ -62,6 +63,7 @@ import { useRoute, useRouter } from "vue-router";
 
 import { getNotice } from "@/api/notice";
 
+const loading = ref(true);
 const selectedRow = ref(null); //所选notice的内容
 const tableData = ref([]);
 const search = ref("");
@@ -108,6 +110,7 @@ onMounted(async () => {
 
     if (response.code === 200) {
       tableData.value = response.data;
+      loading.value = false;
     } else {
       console.error("Failed to fetch data:", response.msg);
     }

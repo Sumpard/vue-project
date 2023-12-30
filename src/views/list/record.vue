@@ -1,6 +1,7 @@
 <template>
   <div class="my-info">
     <el-table
+      v-loading="loading"
       :header-cell-style="{ 'text-align': 'center' }"
       :cell-style="{ 'text-align': 'center' }"
       :data="filterTableData"
@@ -57,6 +58,7 @@ import type { FormInstance, FormRules } from "element-plus";
 import { getAppointSelf } from "@/api/record";
 import { useUserStore } from "@/stores/user";
 
+const loading = ref(true);
 const userStore = useUserStore();
 const ruleFormRef = ref<FormInstance>();
 const tableData = ref<any[]>([]);
@@ -92,6 +94,7 @@ onMounted(async () => {
     const response2 = await getAppointSelf("ACCEPTED", userStore.user!.user_id);
     const response3 = await getAppointSelf("REFUSED", userStore.user!.user_id);
     tableData.value = [...response1, ...response2, ...response3];
+    loading.value = false;
   } catch (error) {
     console.error("API request failed:", error);
   }

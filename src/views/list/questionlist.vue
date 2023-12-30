@@ -2,6 +2,7 @@
   <div class="outer">
     <div class="my-info">
       <el-table
+        v-loading="loading"
         :data="filterTableData"
         max-height="550"
         highlight-current-row
@@ -129,6 +130,7 @@ import { getQuestion } from "@/api/question";
 import { useUserStore } from "@/stores/user";
 import { formatTimestamp } from "@/utils/timeformat";
 
+const loading = ref(true);
 const dialogVisible = ref(false); //会话框显示
 const selectedRow = ref(null); //会话框内容
 
@@ -174,6 +176,7 @@ onMounted(async () => {
 
     if (response.code === 200) {
       tableData.value = response.data;
+      loading.value = false;
     } else {
       console.error("Failed to fetch data:", response.msg);
     }

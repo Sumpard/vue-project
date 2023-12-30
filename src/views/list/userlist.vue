@@ -5,6 +5,7 @@
     <el-divider class="divide" />
 
     <el-table
+      v-loading="loading"
       :header-cell-style="{ 'text-align': 'center' }"
       :cell-style="{ 'text-align': 'center' }"
       :data="filterTableData"
@@ -88,6 +89,7 @@ import { computed, onMounted, ref } from "vue";
 import { User, getAllUsers, updateUserRole, updateUserScore } from "@/api/user";
 import addbutton from "@/views/list/adduser.vue";
 
+const loading = ref(true);
 const ruleFormRef = ref<FormInstance>();
 const tableData = ref<User[]>([]);
 const search = ref("");
@@ -176,6 +178,7 @@ onMounted(async () => {
     const response = await getAllUsers();
     if (response.code === 200) {
       tableData.value = response.data;
+      loading.value = false;
     } else {
       console.error("Failed to fetch data:", response.msg);
     }
