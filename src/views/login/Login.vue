@@ -113,7 +113,7 @@ function toRegister() {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .custom-tab-panels {
   margin-bottom: -25px;
   padding-bottom: 0px;

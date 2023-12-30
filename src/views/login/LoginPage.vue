@@ -29,7 +29,7 @@
 </template>
 <script setup lang="ts"></script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .login-page {
   background-image: url("/img/xr1.jpg");
   background-size: cover;

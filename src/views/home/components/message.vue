@@ -155,7 +155,7 @@ const changeIsEdit = (val: boolean) => {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 @import url("https://cdn.jsdelivr.net/gh/AyagawaSeirin/homepage@latest/mdui/css/mdui.min.css");
 .form {
   margin: 20px 0 0 0;
@@ -177,7 +177,7 @@ const changeIsEdit = (val: boolean) => {
 }
 </style>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .formStar {
   font-family: "PingFangSC-Semibold", "PingFang SC Semibold", "PingFang SC", sans-serif;
   font-weight: 200;
