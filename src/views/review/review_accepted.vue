@@ -23,7 +23,18 @@
     >
       <el-table-column type="selection" width="55" />
       <el-table-column prop="available_name" label="预约名称"></el-table-column>
-      <el-table-column prop="available_type_name" label="预约类型"> </el-table-column>
+      <el-table-column
+        prop="available_type_name"
+        label="预约类型"
+        :filters="[
+          { text: '会议室', value: '会议室' },
+          { text: '座位', value: '座位' },
+          { text: '器材', value: '器材' },
+        ]"
+        :filter-method="filterTag"
+        filter-placement="bottom-end"
+      >
+      </el-table-column>
       <el-table-column prop="renter_name" label="预约人"> </el-table-column>
       <el-table-column prop="renter_phone" label="联系电话"> </el-table-column>
       <el-table-column label="预约时间">
@@ -86,7 +97,9 @@ const handleSelectionChange = (selection: Appointment[]) => {
   selectedRows.value = selection;
   disableAuditButton.value = selectedRows.value.length > 1;
 };
-
+const filterTag = (value: string, row: any) => {
+  return row.available_type_name === value;
+};
 const handleDelete = async () => {
   if (selectedRows.value.length === 0) {
     // 没有选中的行
