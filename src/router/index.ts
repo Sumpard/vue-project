@@ -24,7 +24,7 @@ router.beforeEach(async (to, from) => {
     await verifyToken(userStore.token);
   } catch (e) {
     const err = e as AxiosError;
-    console.log(e);
+    console.log("verify error", e);
     if (err.response?.status == 400) {
       return { name: "404" }; // Pretend that the page is not existent
     } else {
@@ -34,6 +34,7 @@ router.beforeEach(async (to, from) => {
   }
   if (to.meta.requiresAdmin && userStore.user.user_role !== "MANAGER") {
     ElMessage.error("无法访问页面");
+    console.log("not allowed", userStore);
     return { name: "404" };
   }
 });
