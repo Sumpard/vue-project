@@ -118,6 +118,7 @@
                     :disabled="replyed"
                     type="textarea"
                     style="width: 30vw"
+                    rows="8"
                     >{{ selectedRow.reply_texts }}</el-input
                   >
                 </el-form-item>
