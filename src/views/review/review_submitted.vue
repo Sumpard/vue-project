@@ -24,7 +24,18 @@
     >
       <el-table-column type="selection" width="55" />
       <el-table-column prop="available_name" label="预约名称"></el-table-column>
-      <el-table-column prop="available_type_name" label="预约类型"> </el-table-column>
+      <el-table-column
+        prop="available_type_name"
+        label="预约类型"
+        :filters="[
+          { text: '会议室', value: '会议室' },
+          { text: '座位', value: '座位' },
+          { text: '器材', value: '器材' },
+        ]"
+        :filter-method="filterTag"
+        filter-placement="bottom-end"
+      >
+      </el-table-column>
       <el-table-column prop="renter_name" label="预约人"> </el-table-column>
       <el-table-column prop="renter_phone" label="联系电话"> </el-table-column>
       <el-table-column label="预约时间">
@@ -88,10 +99,6 @@ const selectedRows = ref<Appointment[]>([]);
 const sucRows = ref<Appointment[]>([]);
 const disableAuditButton = ref(false);
 
-const filterTag = (value: string, row: any) => {
-  return row.appointment_status === value;
-};
-
 const mapstatus = (appointment_status: any) => {
   // 映射user_role到相应的文本
   return appointment_status === "SUBMITTED"
@@ -150,7 +157,9 @@ const accept = async () => {
   tableData.value = tableData.value.filter((row) => !selectedRows.value.includes(row));
   selectedRows.value = [];
 };
-
+const filterTag = (value: string, row: any) => {
+  return row.available_type_name === value;
+};
 const refuse = async () => {
   if (selectedRows.value.length !== 1) {
     // 如果选中行不是一行，不执行审核不通过操作

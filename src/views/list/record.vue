@@ -10,7 +10,18 @@
       :default-sort="{ prop: 'score', order: 'descending' }"
     >
       <el-table-column prop="available_name" label="预约名称"></el-table-column>
-      <el-table-column prop="available_type_name" label="预约类型"> </el-table-column>
+      <el-table-column
+        prop="available_type_name"
+        label="预约类型"
+        :filters="[
+          { text: '会议室', value: '会议室' },
+          { text: '座位', value: '座位' },
+          { text: '器材', value: '器材' },
+        ]"
+        :filter-method="filterTag"
+        filter-placement="bottom-end"
+      >
+      </el-table-column>
       <el-table-column label="预约时间">
         <template v-slot="{ row }">
           {{ row.appoint_start_time }}
@@ -73,7 +84,7 @@ const filterTableData = computed(() =>
 );
 
 const filterTag = (value: string, row: any) => {
-  return row.appointment_status === value;
+  return row.available_type_name === value;
 };
 
 const mapstatus = (appointment_status: any) => {
