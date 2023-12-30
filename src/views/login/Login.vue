@@ -1,56 +1,64 @@
 <template>
-  <div class="q-pa-md">
-    <q-card-section>
-      <div class="text-h6 q-pb-md text-blue-8 text-center text-weight-bolder">积健为雄!</div>
+  <div class="el-pa-md">
+    <el-card>
+      <div class="text-h6 el-pb-md text-blue-8 text-center text-weight-bolder">积健为雄!</div>
       <div class="text-subtitle text-blue-8 text-center text-weight-bolder">遇见您的书院小助手</div>
-    </q-card-section>
-    <q-tabs v-model="tab" class="text-primary">
-      <q-tab label="用户登录" name="one" />
-    </q-tabs>
-    <q-separator />
-    <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-      <q-tab-panels v-model="tab" animated class="custom-tab-panels">
-        <q-tab-panel name="one">
-          <q-input
-            filled
-            v-model="form.username"
-            label="用户id"
-            lazy-rules
-            :rules="[(val: string | any[]) => val?.length > 0 || '请输入您的用户id']"
-            dense
-          />
-          <q-input
-            filled
-            type="password"
-            v-model="form.password"
-            label="密码"
-            lazy-rules
-            :rules="[(val: string | any[]) => val?.length > 0 || '请输入您的密码']"
-            dense
-          />
-        </q-tab-panel>
-      </q-tab-panels>
-      <div class="image-container">
-        <q-input
-          filled
-          v-model="form.verifyCode"
-          label="验证码"
-          class="code-input"
-          lazy-rules
-          :rules="[(val: string | any[]) => val?.length > 0 || '请输入验证码']"
-          dense
-        ></q-input>
-        <div class="verify-wrapper">
-          <img :src="captcha" alt="验证码" class="code-img" @click="refreshCaptcha" />
-          <el-text class="text_" type="info" @click="refreshCaptcha">看不清楚？换一张</el-text>
+    </el-card>
+    <el-tabs v-model="tab" class="text-primary">
+      <el-tab-pane label="用户登录" name="one"></el-tab-pane>
+    </el-tabs>
+    <!--     <el-divider></el-divider> -->
+    <div class="form-contain">
+      <el-form :model="form" class="el-gutter-md"
+        ><!-- class="el-gutter-md" -->
+        <el-form-item name="one">
+          <el-row :gutter="0">
+            <el-form-item label="用户id">
+              <el-input
+                v-model="form.username"
+                placeholder="请输入您的用户id"
+                :rules="[{ required: true, message: '请输入您的用户id', trigger: 'blur' }]"
+                clearable
+                class="input-margin w-50 m-3"
+              ></el-input>
+            </el-form-item>
+          </el-row>
+          <el-row class="row_" :gutter="0">
+            <el-form-item label="密码">
+              <el-input
+                v-model="form.password"
+                placeholder="请输入您的密码"
+                :rules="[{ required: true, message: '请输入您的密码', trigger: 'blur' }]"
+                clearable
+                show-password
+                class="m-6 input-margin"
+              ></el-input>
+            </el-form-item>
+          </el-row>
+        </el-form-item>
+
+        <div class="image-container">
+          <el-form-item label="验证码">
+            <el-input
+              v-model="form.verifyCode"
+              placeholder="请输入验证码"
+              class="code-input"
+              :rules="[{ required: true, message: '请输入验证码', trigger: 'blur' }]"
+              clearable
+            ></el-input>
+          </el-form-item>
+          <div class="verify-wrapper">
+            <el-image :src="captcha" alt="验证码" class="code-img" @click="refreshCaptcha"></el-image>
+            <span class="text_" type="info" @click="refreshCaptcha">看不清楚？换一张</span>
+          </div>
         </div>
-      </div>
-      <div>
-        <q-btn label="登录" type="submit" color="primary" />
-        <q-btn label="重置" type="reset" color="primary" flat class="q-ml-sm" />
-        <q-btn label="没有账户？点击注册" color="primary" flat class="q-ml-sm" size="sm" @click="toRegister" />
-      </div>
-    </q-form>
+        <div>
+          <el-button type="primary" @click="onSubmit">登录</el-button>
+          <el-button @click="onReset">重置</el-button>
+          <el-button type="text" size="small" @click="toRegister">没有账户？点击注册</el-button>
+        </div>
+      </el-form>
+    </div>
   </div>
 </template>
 
@@ -68,6 +76,12 @@ let tab = ref("one");
 
 const captcha = ref("");
 
+let rules: {
+  username: [{ required: true; message: "请输入您的用户id"; trigger: "blur" }];
+  password: [{ required: true; message: "请输入您的密码"; trigger: "blur" }];
+  verifyCode: [{ required: true; message: "请输入验证码"; trigger: "blur" }];
+};
+
 onMounted(refreshCaptcha);
 
 async function refreshCaptcha() {
@@ -79,6 +93,7 @@ async function onSubmit() {
   const userStore = useUserStore();
 
   const precheckResult = await checkCaptcha(form.verifyCode);
+  console.log(precheckResult);
   if (precheckResult.code !== 200) {
     Message.error("验证码错误");
     refreshCaptcha();
@@ -87,7 +102,7 @@ async function onSubmit() {
 
   const { code, data } = await login(form.username, form.password, form.verifyCode);
   if (code != 200) {
-    Message.error("登录失败，用户id或密码错误");
+    Message.error("登录失败,用户id或密码错误");
     return;
   }
 
@@ -104,9 +119,11 @@ async function onSubmit() {
   }
 }
 
-function onReset() {
+async function onReset() {
+  const precheckResult = await checkCaptcha(form.verifyCode);
   form.username = "";
   form.password = "";
+  form.verifyCode = "";
 }
 function toRegister() {
   $router.replace({ name: "register", query: $route.query });
@@ -122,10 +139,11 @@ function toRegister() {
 .image-container {
   display: flex;
   align-items: center;
+  margin-bottom: 20px;
 }
 
 .code-input {
-  margin-left: 10px;
+  margin-left: 5px;
 }
 
 .code-img {
@@ -150,5 +168,27 @@ function toRegister() {
 
 .verify-wrapper {
   position: relative;
+}
+
+.eltabs {
+  height: 160px;
+}
+
+.input-margin {
+  margin-bottom: 10px;
+  margin-top: -5px;
+}
+
+.el-gutter-md {
+  margin-top: 0px;
+}
+
+.mr {
+  margin-right: 20px;
+}
+
+.form-contain {
+  display: flex;
+  justify-content: center;
 }
 </style>

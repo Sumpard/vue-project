@@ -18,7 +18,7 @@
 <script setup lang="ts">
 import cols from "@/views/components/cols.vue";
 
-const imageUrl = ["1.jpg", "2.jpg", "3.jpg", "4.png"].map((t) => `img/carousel/${t}`);
+const imageUrl = ["1.jpg", "2.jpg", "3.jpg", "4.png"].map((t) => `/img/carousel/${t}`);
 </script>
 
 <style lang="scss" scoped>
