@@ -77,7 +77,7 @@
               <p>{{ "会议室信息:" + room.available_description }}</p>
               <p>{{ "图片:" }}</p>
               <div class="tab-img-container">
-                <el-image :src="'data:image/png;base64,' + room.available_image" alt="picture" class="tab-img">
+                <el-image :src="sf(room.available_image)" alt="picture" class="tab-img">
                   <template #error>
                     <div class="image-slot">
                       <el-text>啊？图片丢失了捏</el-text>
@@ -101,6 +101,7 @@ import type { TabsPaneContext } from "element-plus";
 import { Avail, get_all, get_avail_set, submitAppoint } from "@/api/meeting_gante";
 import { useUserStore } from "@/stores/user";
 import Message from "@/utils/message";
+import { sf } from "@/utils/static-file";
 import { combineDateTime, formatTimestamp } from "@/utils/timeformat";
 import Gante2 from "@/views/chart/gante2.vue";
 
@@ -142,6 +143,7 @@ export default {
       dialog_switch,
       activeName: "First",
       pos: "top",
+      sf,
       disabledDate(time: { getTime: () => number }) {
         //return time.getTime() > Date.now();
         const currentDate = new Date();
