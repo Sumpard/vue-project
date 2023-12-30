@@ -274,8 +274,6 @@ onMounted(async () => {
         //若有reply_texts,则说明是回复过的
         replyed.value = true;
       }
-      // console.log(tableData.value)
-      ElMessage({ message: "获取成功", type: "success" });
     } else {
       console.error("Failed to fetch data:", response.msg);
     }

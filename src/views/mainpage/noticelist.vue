@@ -108,8 +108,6 @@ onMounted(async () => {
 
     if (response.code === 200) {
       tableData.value = response.data;
-      // console.log(tableData.value)
-      ElMessage({ message: "获取成功", type: "success" });
     } else {
       console.error("Failed to fetch data:", response.msg);
     }
