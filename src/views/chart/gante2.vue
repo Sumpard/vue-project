@@ -337,7 +337,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #container {
   max-width: 1200px;
   min-width: 800px;
@@ -360,9 +360,3 @@ export default {
   transition: color 0.3s;
 }
 </style>
-
-/* meetingrooms = [ { model: '会议室1', current: 1, deals: [ { rentedTo: '卢婷', from: today_ + 21 * hour, to: today_ +
-22 * hour }, // more deals... { rentedTo: '许睿', from: today_ + 26 * hour, to: today_ + 26.5 * hour }, ] }, // more {
-model: '会议室2', current: 0, deals: [ { rentedTo: '历婷', from: today_ + 22 * hour, to: today_ + 23 * hour }, // more
-deals... { rentedTo: '勾睿', from: today_ + 26 * hour, to: today_ + 27.5 * hour }, ] }, { model: '会议室3', current: 0,
-deals: [ { rentedTo: '历闻', from: today_ + 22 * hour, to: today_ + 24 * hour }, ] }, ]; */ @/utils/timeformat

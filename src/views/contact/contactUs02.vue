@@ -197,7 +197,7 @@ export default {
 // }
 </script>
 
-<style>
+<style scoped>
 .chart-container {
   display: flex;
   flex-direction: column;
