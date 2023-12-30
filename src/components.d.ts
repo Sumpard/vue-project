@@ -51,7 +51,6 @@ declare module 'vue' {
     ElTimeSelect: typeof import('element-plus/es')['ElTimeSelect']
     ElUpload: typeof import('element-plus/es')['ElUpload']
     IEpArrowLeft: typeof import('~icons/ep/arrow-left')['default']
-    IEpCirclePlus: typeof import('~icons/ep/circle-plus')['default']
     IEpDArrowRight: typeof import('~icons/ep/d-arrow-right')['default']
     IEpExpand: typeof import('~icons/ep/expand')['default']
     IEpFold: typeof import('~icons/ep/fold')['default']

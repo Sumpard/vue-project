@@ -6,7 +6,7 @@
     <div class="right-side">
       <div class="toolbar">
         <el-dropdown v-if="user">
-          <span class="circle"><el-avatar :src="'data:image/png;base64,' + user.avatar" :size="30"></el-avatar></span>
+          <span class="circle"><el-avatar :src="sf(user.avatar)" :size="30"></el-avatar></span>
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item>
@@ -26,6 +26,7 @@
 <script setup lang="ts">
 import { useUserStore } from "@/stores/user";
 import Message from "@/utils/message";
+import { sf } from "@/utils/static-file";
 
 const router = useRouter();
 

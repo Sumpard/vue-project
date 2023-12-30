@@ -9,9 +9,10 @@ export const useUserStore = defineStore("user", () => {
   const token = ref<string | undefined>($cookies.get("token"));
 
   const fuckingAvatar = () => {
+    if (!user) return user;
     const tmp = JSON.parse(JSON.stringify(unref(user)));
     delete tmp.avatar;
-    $cookies.set("user", tmp);
+    return tmp;
   };
 
   const avatar = computed(() =>
@@ -20,11 +21,9 @@ export const useUserStore = defineStore("user", () => {
       : "/img/default-user.png"
   );
 
-  const login = (data: { token?: string; user?: User }) => {
-    user.value = data.user;
-    token.value = data.token;
-    $cookies.set("token", data.token);
-    fuckingAvatar();
+  const login = (token_: string) => {
+    token.value = token_;
+    $cookies.set("token", token_);
   };
   const logout = () => {
     user.value = undefined;
@@ -35,7 +34,7 @@ export const useUserStore = defineStore("user", () => {
   const fetch = async () => {
     try {
       user.value = await getUserMe();
-      fuckingAvatar();
+      $cookies.set("user", fuckingAvatar());
       console.log("fetch", user.value, $cookies.get("user"));
     } catch (e) {}
     return user.value;
