@@ -107,6 +107,7 @@ export default {
     ImgUpSuccess(data) {
       //接收图片上传的地址数组
       this.questionForm.question_images = data.join(";");
+      console.log("image url in contactUs.vue:", this.questionForm.question_images);
     },
 
     ImgUpFailed() {
@@ -116,7 +117,10 @@ export default {
 
     async callChildMethod() {
       // 通过 ref 访问子组件并调用方法
-      await this.$refs.childRef.beginUploadImg();
+      if (this.imgselect) {
+        await this.$refs.childRef.beginUploadImg();
+      }
+
       if (
         this.questionForm.proposer_name === "" ||
         this.questionForm.proposer_phone_number === "" ||
@@ -139,6 +143,7 @@ export default {
       }
 
       const submit_question = await submitQuestion(time_, name_, phone_, imgUrl_, text_);
+      // console.log(submit_question);
       if (submit_question.code === 200) {
         Message.success("反馈上传成功");
         this.BtnDisabled = true;
@@ -146,6 +151,8 @@ export default {
         this.inputDisable = true;
       } else if (submit_question.code === 400) {
         Message.warning("姓名核验失败，请输入您本人的正确姓名");
+      } else {
+        Message.error("问题反馈发送失败");
       }
     },
     ImgSelected(toBeUp) {

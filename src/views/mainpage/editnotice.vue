@@ -22,11 +22,11 @@
 </template>
 
 <script lang="ts">
-import axios from "axios";
 import { ElMessageBox } from "element-plus";
 import { useRouter } from "vue-router";
 
 import { postNotice } from "@/api/notice";
+import { uploadNoticeImages } from "@/api/upload";
 import { useUserStore } from "@/stores/user";
 import Message from "@/utils/message";
 import { formatTimestamp } from "@/utils/timeformat";
@@ -52,32 +52,24 @@ export default {
     };
   },
   methods: {
-    handleUploadImage(event, insertImage, files) {
+    async handleUploadImage(event, insertImage, files) {
       // 拿到 files 之后上传到文件服务器，然后向编辑框中插入对应的内容
       event.preventDefault();
       let file = files[0];
       let formData = new FormData();
-      formData.append("smfile", file);
-      axios
-        .post("/sm/api/v2/upload", formData, {
-          //添加了跨域代理，这里的/proxy就是https://sm.ms/
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: "YJ2Vy2lQb4pooGHKCeWbVqcgfwhnSS7u",
-          },
-        })
-        .then((response) => {
-          const imageUrl = response.data.data.url;
-          // 将图片链接插入到Markdown编辑器中
-          insertImage({
-            url: imageUrl,
-            width: "auto",
-            height: "auto",
-          });
-        })
-        .catch((error) => {
-          console.error("图片上传失败", error);
+      formData.append("files", file);
+      // console.log("before upload");
+      const res = await uploadNoticeImages(formData);
+      // console.log("upload response:", res);
+      if (res.code === 200) {
+        insertImage({
+          url: "http://120.46.203.58" + res.data,
+          width: "auto",
+          height: "auto",
         });
+      } else {
+        Message.warning("图片上传失败 错误代码" + res.code + "，请联系管理人员");
+      }
     },
 
     async submitnotice() {
@@ -94,30 +86,26 @@ export default {
 
       this.user = useUserStore().user!.user_name;
       const res = await postNotice(this.text, this.title, this.type, this.time, this.user);
-      if (res.code === 200) {
-        ElMessageBox.confirm("编辑成功，您可以选择查看预览或是跳转到通知列表", "提示", {
-          confirmButtonText: "查看预览",
-          cancelButtonText: "通知列表",
-          type: "success",
-        })
-          .then(() => {
-            this.router.push({
-              path: "/noticepreview",
-              query: {
-                content: this.text,
-                type: this.type,
-                title: this.title,
-                time: this.time,
-                name: this.name,
-              },
-            });
-          })
-          .catch(() => {
-            this.router.push({ path: "/adminnoticelist" });
+      ElMessageBox.confirm("编辑成功，您可以选择查看预览或是跳转到通知列表", "提示", {
+        confirmButtonText: "查看预览",
+        cancelButtonText: "通知列表",
+        type: "success",
+      })
+        .then(() => {
+          this.router.push({
+            path: "/noticepreview",
+            query: {
+              content: this.text,
+              type: this.type,
+              title: this.title,
+              time: this.time,
+              name: this.name,
+            },
           });
-      } else {
-        Message.error("修改失败");
-      }
+        })
+        .catch(() => {
+          this.router.push({ path: "/adminnoticelist" });
+        });
     },
   },
 };

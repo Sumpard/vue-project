@@ -49,7 +49,7 @@ import axios from "axios";
 import { ElMessage } from "element-plus";
 import { defineProps, reactive, ref } from "vue";
 
-import { uploadImages } from "@/api/upload";
+import { uploadQuestionImages } from "@/api/upload";
 
 const props = defineProps({
   limit: {
@@ -175,10 +175,11 @@ const beginUploadImg = ref(async () => {
     dataForm.append("files", file.raw);
     console.log("formdata value:", dataForm.get("files"));
   });
-  const res = await uploadImages(dataForm);
+  const res = await uploadQuestionImages(dataForm);
   if (res.code === 200) {
     onSuccess();
     emits("uploadSuccess", res.data);
+    console.log("image response:", res.data);
   } else {
     emits("uploadFailefailed");
   }
