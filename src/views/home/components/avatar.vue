@@ -3,7 +3,7 @@
   <div class="mdui-card my-info-easy background-div">
     <!-- icon 头像 -->
     <div v-if="user" class="container">
-      <img v-if="user.avatar" id="touxiang" :src="'data:image/png;base64,' + user.avatar" />
+      <img v-if="user.avatar" id="touxiang" :src="sf(user.avatar)" />
       <img v-else id="touxiang" src="https://zxz.ee/touxiang.png" />
       <el-icon class="click" size="25px" @click="showUploadDialog"><i-ep-CirclePlus /></el-icon>
     </div>
@@ -40,6 +40,7 @@ import Typed from "typed.js";
 
 import { uploadava } from "@/api/user";
 import { useUserStore } from "@/stores/user";
+import { sf } from "@/utils/static-file";
 
 const now = new Date();
 
@@ -60,6 +61,7 @@ onMounted(() => {
     backSpeed: 50,
     showCursor: true,
   };
+  console.log(user.avatar);
 
   new Typed(".box", options);
 });
