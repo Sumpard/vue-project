@@ -13,6 +13,7 @@
       </template>
     </el-dialog>
     <el-table
+      v-loading="loading"
       :header-cell-style="{ 'text-align': 'center' }"
       :cell-style="{ 'text-align': 'center' }"
       :data="tableData"
@@ -23,7 +24,18 @@
     >
       <el-table-column type="selection" width="55" />
       <el-table-column prop="available_name" label="预约名称"></el-table-column>
-      <el-table-column prop="available_type_name" label="预约类型"> </el-table-column>
+      <el-table-column
+        prop="available_type_name"
+        label="预约类型"
+        :filters="[
+          { text: '会议室', value: '会议室' },
+          { text: '座位', value: '座位' },
+          { text: '器材', value: '器材' },
+        ]"
+        :filter-method="filterTag"
+        filter-placement="bottom-end"
+      >
+      </el-table-column>
       <el-table-column prop="renter_name" label="预约人"> </el-table-column>
       <el-table-column prop="renter_phone" label="联系电话"> </el-table-column>
       <el-table-column label="预约时间">
@@ -79,16 +91,13 @@ export interface Appointment {
   appointment_id: number;
 }
 
+const loading = ref(true);
 const tableData = ref([]);
 const search = ref("");
 const dialogFormVisible = ref(false);
 const selectedRows = ref<Appointment[]>([]);
 const sucRows = ref<Appointment[]>([]);
 const disableAuditButton = ref(false);
-
-const filterTag = (value: string, row: any) => {
-  return row.appointment_status === value;
-};
 
 const mapstatus = (appointment_status: any) => {
   // 映射user_role到相应的文本
@@ -115,8 +124,6 @@ const handleDelete = async () => {
     // 替换为实际的 API 调用，逐个调用 API
     const response = await deleteRecord(row.appointment_id);
     // 模拟删除成功
-    console.log(response);
-    console.log("Deleting row with ID:", row.appointment_id);
     if (response.code === 200) {
       ElMessage({ message: "删除预约记录成功", type: "success" });
     }
@@ -139,8 +146,6 @@ const accept = async () => {
       userStore.user!.user_name
     );
     // 模拟删除成功
-    console.log(response);
-    console.log("Deleting row with ID:", row.appointment_id);
     if (response.code === 200) {
       ElMessage({ message: "审核通过成功", type: "success" });
       sucRows.value.push(row);
@@ -152,7 +157,9 @@ const accept = async () => {
   tableData.value = tableData.value.filter((row) => !selectedRows.value.includes(row));
   selectedRows.value = [];
 };
-
+const filterTag = (value: string, row: any) => {
+  return row.available_type_name === value;
+};
 const refuse = async () => {
   if (selectedRows.value.length !== 1) {
     // 如果选中行不是一行，不执行审核不通过操作
@@ -167,19 +174,16 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     if (valid) {
       try {
         const id = selectedRows.value[0].appointment_id;
-        console.log(form.reply);
         const response = await reviewAppointmentRefuse(
           id,
           form.reply,
           userStore.user!.user_id,
           userStore.user!.user_name
         );
-        console.log(response);
 
         if (response.code === 200) {
           ElMessage({ message: "审核不通过成功", type: "success" });
         }
-        console.log("Audit not passed for row with ID:", id);
 
         dialogFormVisible.value = false;
         form.reply = "";
@@ -190,7 +194,6 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       }
     } else {
       // 校验失败
-      console.log("Form validation failed:", fields);
     }
   });
 };
@@ -207,12 +210,10 @@ onMounted(async () => {
   // 通过 API 请求获取数据
   try {
     const response = await getAppointAll("SUBMITTED");
-    console.log(response);
 
     if (response.code === 200) {
       tableData.value = response.data;
-      // console.log(tableData.value)
-      ElMessage({ message: "获取成功", type: "success" });
+      loading.value = false;
     } else {
       console.error("Failed to fetch data:", response.msg);
     }

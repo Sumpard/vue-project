@@ -2,6 +2,7 @@
   <div class="outer">
     <div class="my-info">
       <el-table
+        v-loading="loading"
         :data="filterTableData"
         max-height="550"
         highlight-current-row
@@ -126,9 +127,10 @@
 import { computed, onMounted, ref } from "vue";
 
 import { getQuestion } from "@/api/question";
-import { formatTimestamp } from "@/api/timeformat";
 import { useUserStore } from "@/stores/user";
+import { formatTimestamp } from "@/utils/timeformat";
 
+const loading = ref(true);
 const dialogVisible = ref(false); //会话框显示
 const selectedRow = ref(null); //会话框内容
 
@@ -147,7 +149,6 @@ const filterTableData = computed(() =>
 const openDialog = (row) => {
   //获取会话框内容
   selectedRow.value = row;
-  console.log(selectedRow.value);
   dialogVisible.value = true;
 };
 
@@ -171,14 +172,11 @@ const mapstatus = (question_status: any) => {
 onMounted(async () => {
   // 通过 API 请求获取数据
   try {
-    console.log("user_name:", userStore.user!.user_name);
     const response = await getQuestion(userStore.user!.user_name);
-    console.log(response);
 
     if (response.code === 200) {
       tableData.value = response.data;
-      // console.log(tableData.value)
-      ElMessage({ message: "获取成功", type: "success" });
+      loading.value = false;
     } else {
       console.error("Failed to fetch data:", response.msg);
     }

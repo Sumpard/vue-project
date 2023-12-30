@@ -161,7 +161,6 @@ export default {
         return;
       }
       if (this.bookingForm_equip.booker.length != 11) {
-        console.log(this.bookingForm_equip.booker.length);
         Message.error("手机号码填写不合规范！");
         return;
       }
@@ -216,11 +215,9 @@ export default {
       try {
         const roomdata = (await get_avail_set("座位")).data;
         this.seats = roomdata;
-        console.log(roomdata);
         for (let i = 0; i < roomdata.length; i++) {
           avail_map[roomdata[i].available_name] = [roomdata[i].available_id, i];
         }
-        console.log("maps:", avail_map);
       } catch (error) {
         console.error(error);
       }
