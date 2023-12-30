@@ -73,7 +73,13 @@
                   <el-form-item label="反馈图片：">
                     <div class="img-container">
                       <div v-for="(image, index) in selectedRow.question_images" :key="index">
-                        <img :src="'data:image/png;base64,' + image" alt="Image" class="img" />
+                        <el-image
+                          :src="'http://120.46.203.58' + image"
+                          alt="Image"
+                          class="img"
+                          :preview-src-list="['http://120.46.203.58' + image]"
+                          fit="cover"
+                        />
                       </div>
                     </div>
                   </el-form-item>
@@ -101,7 +107,13 @@
                 <el-form-item label="反馈回复图片：" v-if="selectedRow.reply_images[0] != ''">
                   <div class="img-container">
                     <div v-for="(image, index) in selectedRow.reply_images" :key="index">
-                      <img :src="'data:image/png;base64,' + image" alt="Image" class="img" />
+                      <el-image
+                        :src="'http://120.46.203.58' + image"
+                        alt="Image"
+                        class="img"
+                        :preview-src-list="['http://120.46.203.58' + image]"
+                        fit="cover"
+                      />
                     </div>
                   </div>
                 </el-form-item>
@@ -238,11 +250,7 @@ onMounted(async () => {
   line-height: 27px;
   color: blue;
 }
-.img-container img {
-  margin: auto;
-  width: 53px;
-  height: 53px;
-}
+
 .form-item-with-margin {
   margin-left: 15%; /* 适当调整间距 */
   margin-right: 20px;
