@@ -17,10 +17,12 @@ const routes: RouteRecordRaw[] = [
         children: [
           {
             path: "list",
+            props: (route) => ({ type: route.query.type }),
             component: () => import("@/views/contents/notice/notice-list.vue"),
           },
           {
             path: ":noticeId",
+            name: "notice-detail",
             props: true,
             component: () => import("@/views/contents/notice/notice-detail.vue"),
           },
@@ -84,11 +86,14 @@ const routes: RouteRecordRaw[] = [
                 component: () => import("@/views/admin/notice/notice-create.vue"),
               },
               {
-                path: "edit",
+                path: "edit/:noticeId",
+                name: "notice-edit",
+                props: true,
                 component: () => import("@/views/admin/notice/notice-edit.vue"),
               },
               {
                 path: "list",
+                name: "admin-notice-list",
                 component: () => import("@/views/admin/notice/notice-list.vue"),
               },
             ],

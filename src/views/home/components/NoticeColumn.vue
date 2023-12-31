@@ -1,77 +1,48 @@
 <template>
   <el-card class="box-card" shadow="hover">
-    <div class="clearfix" style="text-align: -webkit-center">
-      <p>{{ noticetype }}</p>
-      <el-button style="float: right; padding: 3px 0" link type="primary" @click="knowmore()"
-        >查看更多<el-icon><i-ep-DArrowRight /></el-icon
-      ></el-button>
+    <div class="clearfix text-center">
+      <p>{{ noticeType }}</p>
+      <el-button style="float: right; padding: 3px 0" link type="primary" @click="viewMore()">
+        查看更多 <el-icon><i-ep-DArrowRight /></el-icon>
+      </el-button>
     </div>
-    <div
-      v-if="notices.length > 0"
-      v-for="index in displaynumber < notices.length ? displaynumber : notices.length"
-      class="text item"
-    >
-      <el-link @click="openPreview(index)" class="compact-text">
-        {{ notices[0] === "" ? index : truncateText(notices[notices.length - index].notice_title, 20) }}
+    <div v-for="notice in notices" class="text item">
+      <el-link @click="openDetail(notice)" class="compact-text">
+        {{ truncText(notice.notice_title, 20) }}
       </el-link>
     </div>
   </el-card>
 </template>
 
 <script setup lang="ts">
-import { getNotice } from "@/api/notice";
+import { getNoticeByType } from "@/api/notice";
+import { Notice } from "@/interfaces/notice";
+import { truncText } from "@/utils/text-utils";
 
-const props = defineProps({
-  noticetype: {
-    type: String,
-    default: "卡片标题",
-  },
-  displaynumber: {
-    type: Number,
-    default: 8,
-  },
-});
+const props = withDefaults(
+  defineProps<{
+    noticeType: string;
+    displayCount?: int;
+  }>(),
+  { displayCount: 8 }
+);
 
-const notices = ref<any[]>([]);
-const truncateText = (text: string, maxLength: number) => {
-  //截断text以防内容过长
-  if (text.length > maxLength) {
-    return text.substring(0, maxLength) + "...";
-  }
-  return text;
+const notices = ref<Notice[]>([]);
+
+const router = useRouter();
+
+const viewMore = () => {
+  router.push({ path: "/notice/list", query: { type: props.noticeType } });
 };
 
-const router = useRouter(); // 传递路由对象
-const knowmore = () => {
-  router.push({ path: "/noticelist", query: { type: props.noticetype } });
-};
-
-const openPreview = (index: number) => {
-  router.push({
-    path: "/noticepreview",
-    query: {
-      content: notices.value[notices.value.length - index].notice_content,
-      type: props.noticetype,
-      title: notices.value[notices.value.length - index].notice_title,
-      time: notices.value[notices.value.length - index].publish_time,
-      name: notices.value[notices.value.length - index].publisher_name,
-      date: new Date().getTime(),
-    },
-  });
+const openDetail = (notice: Notice) => {
+  router.push({ name: "notice-detail", params: { noticeId: notice.notice_id } });
 };
 
 onMounted(async () => {
-  // 通过 API 请求获取数据
-  try {
-    const response = await getNotice(props.noticetype);
-    if (response.code === 200) {
-      notices.value = response.data;
-    } else {
-      console.error("Failed to fetch data:", response.msg);
-    }
-  } catch (error) {
-    console.error("API request failed:", error);
-  }
+  // 这里应当后端根据时间排好序，但后端没做，就让前端来按时间降序
+  // 后端也应当返回总数
+  notices.value = (await getNoticeByType(props.noticeType)).toReversed().slice(0, props.displayCount);
 });
 </script>
 

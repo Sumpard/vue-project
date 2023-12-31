@@ -1,5 +1,5 @@
 <template>
-  <h>编辑通知</h>
+  <h6>编辑通知</h6>
   <el-form>
     <el-form-item label="选择通知类型:">
       <el-select v-model="type" placeholder="通知类型">

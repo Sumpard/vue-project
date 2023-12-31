@@ -9,9 +9,9 @@
     </el-col>
   </el-row>
   <el-row>
-    <notice-column noticetype="活动通知" />
-    <notice-column noticetype="管理安排" />
-    <notice-column noticetype="书院介绍" />
+    <notice-column notice-type="活动通知" />
+    <notice-column notice-type="管理安排" />
+    <notice-column notice-type="书院介绍" />
   </el-row>
 </template>
 
