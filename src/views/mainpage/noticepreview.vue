@@ -1,11 +1,13 @@
 <template>
-  <el-button @click="goBack"
-    ><el-icon><i-ep-ArrowLeft /></el-icon>返回</el-button
-  >
-  <h4 class="title">{{ title }}</h4>
-  <br />
-  <p class="info">编写人：{{ name }} &ensp;&ensp;&ensp; 发布时间：{{ time }}&ensp;&ensp;&ensp; 通知类别：{{ type }}</p>
-  <br />
+  <el-button @click="goBack">
+    <el-icon><i-ep-ArrowLeft /></el-icon>返回
+  </el-button>
+  <h4 class="text-center">{{ title }}</h4>
+  <div class="info m-4 text-center q-gutter-x-lg">
+    <span>编写人：{{ name }}</span>
+    <span>发布时间：{{ time }}</span>
+    <span>通知类别：{{ type }}</span>
+  </div>
   <div class="container">
     <v-md-editor v-model="content" height="auto" mode="preview" />
   </div>
@@ -50,11 +52,7 @@ export default {
   margin: 0 auto;
   width: 80%;
 }
-.title {
-  text-align: center;
-}
 .info {
-  text-align: center;
   color: dimgrey;
 }
 </style>
