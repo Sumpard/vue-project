@@ -34,7 +34,7 @@
     </el-dialog>
   </div>
 </template>
-<script lang="ts" setup>
+<script setup lang="ts">
 import dayjs from "dayjs";
 import Typed from "typed.js";
 

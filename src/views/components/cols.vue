@@ -18,10 +18,7 @@
   </el-card>
 </template>
 
-<script lang="ts" setup>
-import { defineProps, ref } from "vue";
-import { useRouter } from "vue-router";
-
+<script setup lang="ts">
 import { getNotice } from "@/api/notice";
 
 const props = defineProps({

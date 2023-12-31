@@ -84,7 +84,6 @@
 
 <script setup lang="ts">
 import type { FormInstance, FormRules } from "element-plus";
-import { computed, onMounted, ref } from "vue";
 
 import { User, getAllUsers, updateUserRole, updateUserScore } from "@/api/user";
 import addbutton from "@/views/list/adduser.vue";

@@ -74,10 +74,10 @@
                     <div class="img-container">
                       <div v-for="(image, index) in selectedRow.question_images" :key="index">
                         <el-image
-                          :src="'http://120.46.203.58' + image"
+                          :src="sf(image)"
                           alt="Image"
                           class="img"
-                          :preview-src-list="['http://120.46.203.58' + image]"
+                          :preview-src-list="[sf(image)]"
                           fit="cover"
                         />
                       </div>
@@ -107,13 +107,7 @@
                 <el-form-item label="反馈回复图片：" v-if="selectedRow.reply_images[0] != ''">
                   <div class="img-container">
                     <div v-for="(image, index) in selectedRow.reply_images" :key="index">
-                      <el-image
-                        :src="'http://120.46.203.58' + image"
-                        alt="Image"
-                        class="img"
-                        :preview-src-list="['http://120.46.203.58' + image]"
-                        fit="cover"
-                      />
+                      <el-image :src="sf(image)" alt="Image" class="img" :preview-src-list="[sf(image)]" fit="cover" />
                     </div>
                   </div>
                 </el-form-item>
@@ -136,18 +130,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
-
 import { getQuestion } from "@/api/question";
 import { useUserStore } from "@/stores/user";
+import { sf } from "@/utils/static-file";
 import { formatTimestamp } from "@/utils/timeformat";
 
 const loading = ref(true);
 const dialogVisible = ref(false); //会话框显示
-const selectedRow = ref(null); //会话框内容
+const selectedRow = ref<any>(); //会话框内容
 
 const userStore = useUserStore();
-const tableData = ref([]);
+const tableData = ref<any[]>([]);
 const search = ref("");
 const filterTableData = computed(() =>
   tableData.value.filter(

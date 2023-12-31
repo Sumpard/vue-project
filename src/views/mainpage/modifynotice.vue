@@ -25,13 +25,12 @@
 </template>
 
 <script lang="ts">
-import axios from "axios";
 import { ElMessageBox } from "element-plus";
-import { useRouter } from "vue-router";
 
 import { modifyNotice } from "@/api/notice";
 import { uploadNoticeImages } from "@/api/upload";
 import Message from "@/utils/message";
+import { sf } from "@/utils/static-file";
 
 export default {
   setup() {
@@ -70,14 +69,10 @@ export default {
     async handleUploadImage(event, insertImage, files) {
       // 拿到 files 之后上传到文件服务器，然后向编辑框中插入对应的内容
       event.preventDefault();
-      let file = files[0];
-      let formData = new FormData();
-      formData.append("files", file);
-      const res = await uploadNoticeImages(formData);
-      // console.log("upload response:", res);
+      const res = await uploadNoticeImages([files[0]]);
       if (res.code === 200) {
         insertImage({
-          url: "http://120.46.203.58" + res.data,
+          url: sf(res.data),
           width: "auto",
           height: "auto",
         });

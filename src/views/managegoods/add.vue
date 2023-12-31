@@ -37,9 +37,8 @@
   </el-dialog>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import type { FormInstance, FormRules } from "element-plus";
-import { reactive, ref } from "vue";
 
 import { addGoods, getAllGoods } from "@/api/goods";
 

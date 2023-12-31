@@ -112,7 +112,6 @@
 <script setup lang="ts">
 import { Delete, Edit, Search, Share, Upload } from "@element-plus/icons-vue";
 import type { FormInstance, FormRules, UploadInstance } from "element-plus";
-import { computed, getCurrentInstance, onMounted, ref } from "vue";
 
 import { deletegood, editdescription, editstatus, getAllGoods, upload } from "@/api/goods";
 import addgoods from "@/views/managegoods/add.vue";
