@@ -33,7 +33,7 @@
 import { Plus } from "@element-plus/icons-vue";
 import { ElMessage, UploadFile, UploadProps, UploadUserFile } from "element-plus";
 
-import { uploadImages } from "@/api/upload";
+import { uploadQuestionImages } from "@/api/upload";
 
 const props = withDefaults(
   defineProps<{
@@ -83,7 +83,7 @@ const handleUpload = async () => {
     return;
   }
   ElMessage.info("图片上传中");
-  await uploadImages(fileList.map((f) => f.raw!));
+  await uploadQuestionImages(fileList.map((f) => f.raw!));
   ElMessage.success("上传成功");
   fileList.length = 0;
 };

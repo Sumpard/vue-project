@@ -55,11 +55,7 @@ export default {
     async handleUploadImage(event, insertImage, files) {
       // 拿到 files 之后上传到文件服务器，然后向编辑框中插入对应的内容
       event.preventDefault();
-      let file = files[0];
-      let formData = new FormData();
-      formData.append("files", file);
-      // console.log("before upload");
-      const res = await uploadNoticeImages(formData);
+      const res = await uploadNoticeImages(files[0]);
       // console.log("upload response:", res);
       if (res.code === 200) {
         insertImage({
