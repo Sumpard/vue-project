@@ -29,7 +29,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { Plus } from "@element-plus/icons-vue";
 import { ElMessage, UploadFile, UploadProps, UploadUserFile } from "element-plus";
 

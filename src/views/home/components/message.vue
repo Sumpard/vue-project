@@ -50,7 +50,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import type { FormInstance } from "element-plus";
 import { ElMessage } from "element-plus";
 

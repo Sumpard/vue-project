@@ -18,7 +18,7 @@
   </el-card>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { getNotice } from "@/api/notice";
 
 const props = defineProps({
