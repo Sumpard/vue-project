@@ -6,7 +6,13 @@
         <i-ep-Fold v-else />
       </el-icon>
     </div>
-    <el-menu active-border-color="blue" :collapse="isCollapse" :collapse-transition="false" :router="true">
+    <el-menu
+      default-active="/"
+      active-border-color="blue"
+      :collapse="isCollapse"
+      :collapse-transition="false"
+      :router="true"
+    >
       <template v-for="item in menus" :key="item.index">
         <template v-if="!item.admin || userStore.isAdmin">
           <el-sub-menu v-if="item.children" :index="item.index">
