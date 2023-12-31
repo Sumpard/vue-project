@@ -30,14 +30,14 @@
     <el-table
       :header-cell-style="{ 'text-align': 'center' }"
       :cell-style="{ 'text-align': 'center' }"
-      :data="filterTableData"
+      :data="tableData"
       max-height="550"
       highlight-current-row
     >
       <el-table-column prop="available_id" label="编号"></el-table-column>
       <el-table-column prop="available_name" label="名称"></el-table-column>
       <el-table-column prop="available_type_name" label="类型"></el-table-column>
-      <el-table-column prop="available_status" label="状态">
+      <!-- <el-table-column prop="available_status" label="状态">
         <template v-slot="{ row }">
           <template v-if="!row.editingstatus">
             {{ mapstatus(row.available_status) }}
@@ -58,7 +58,7 @@
             </el-select>
           </template>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column prop="available_description" label="描述" width="200px">
         <template v-slot="{ row }">
           <template v-if="!row.editingdescription">
@@ -95,12 +95,12 @@
             v-if="row.editingdescription"
             >保存描述</el-button
           >
-          <el-button type="primary" link size="small" @click="starteditingstatus(row)" v-if="!row.editingstatus"
+          <!-- <el-button type="primary" link size="small" @click="starteditingstatus(row)" v-if="!row.editingstatus"
             >修改状态</el-button
           >
           <el-button type="success" link size="small" @click="saveeditingstatus(row)" v-if="row.editingstatus"
             >保存状态</el-button
-          >
+          > -->
           <el-button @click="deleteTableData(row)" link :icon="Delete" type="primary"></el-button>
         </template>
       </el-table-column>
@@ -163,15 +163,6 @@ const submitUpload = async () => {
     console.error("Failed to save editing:", error);
   }
 };
-
-const filterTableData = computed(() =>
-  tableData.value.filter(
-    (data) =>
-      !search.value ||
-      data.user_id.toLowerCase().includes(search.value.toLowerCase()) ||
-      data.user_name.toLowerCase().includes(search.value.toLowerCase())
-  )
-);
 
 const form = reactive({
   available_description: undefined,

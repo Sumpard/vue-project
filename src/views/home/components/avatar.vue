@@ -61,8 +61,6 @@ onMounted(() => {
     backSpeed: 50,
     showCursor: true,
   };
-  console.log(user.avatar);
-
   new Typed(".box", options);
 });
 
