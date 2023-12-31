@@ -34,14 +34,14 @@ export async function postNotice( //发布notice
   return (await api.post("notice/insertNotice", noticePostBody)).data;
 }
 
-export async function getNotice(get_type: string) {
+export async function getNotice(get_id: string) {
   //以notice_type查找notice
   return (
     await api.get("/notice/selectNoticeList", {
       params: {
         beginTime: "",
         endTime: "",
-        notice_type: get_type,
+        notice_id: parseInt(get_id),
       },
     })
   ).data;
@@ -64,4 +64,17 @@ export async function modifyNotice(
     notice_type: modify_type,
   };
   return (await api.put("/notice/updateNotice", noticeModifyBody)).data;
+}
+
+export async function getNoticeAbstract(get_type: string) {
+  //以notice_type查找notice的概要（不含content）
+  return (
+    await api.get("notice/selectNoticePartList", {
+      params: {
+        beginTime: "",
+        endTime: "",
+        notice_type: get_type,
+      },
+    })
+  ).data;
 }

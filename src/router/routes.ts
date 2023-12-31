@@ -40,7 +40,9 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: "/noticepreview",
+        name: "noticedetail",
         component: () => import("@/views/mainpage/noticepreview.vue"),
+        props: true,
       },
       {
         path: "/noticemodify",

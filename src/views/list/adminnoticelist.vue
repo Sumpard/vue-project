@@ -77,8 +77,7 @@
 import { Search } from "@element-plus/icons-vue";
 import { ElMessageBox } from "element-plus";
 
-import { deletNotice, getNotice } from "@/api/notice";
-import { useUserStore } from "@/stores/user";
+import { deletNotice, getNoticeAbstract } from "@/api/notice";
 import Message from "@/utils/message";
 
 const loading = ref(true);
@@ -112,12 +111,9 @@ const openPreview = (row) => {
   selectedRow.value = row;
   router.push({
     path: "/noticepreview",
-    query: {
-      content: row.notice_content,
-      type: row.notice_type,
-      title: row.notice_title,
-      time: row.publish_time,
-      name: row.publisher_name,
+    name: "noticedetail",
+    params: {
+      id: row.notice_id,
     },
   });
 };
@@ -157,7 +153,7 @@ const onDelete = async (row) => {
 onMounted(async () => {
   // 通过 API 请求获取数据
   try {
-    const response = await getNotice("");
+    const response = await getNoticeAbstract("");
 
     if (response.code === 200) {
       tableData.value = response.data;
