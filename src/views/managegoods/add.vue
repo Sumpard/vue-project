@@ -8,12 +8,12 @@
         <el-input v-model="form.name" autocomplete="off" clearable />
       </el-form-item>
 
-      <el-form-item label="状态" prop="status" :label-width="formLabelWidth">
+      <!-- <el-form-item label="状态" prop="status" :label-width="formLabelWidth">
         <el-select v-model="form.status" placeholder="请选择状态">
           <el-option label="使用中" value="USING" />
           <el-option label="开放" value="FREE" />
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
 
       <el-form-item label="类型" prop="type_name" :label-width="formLabelWidth">
         <el-select v-model="form.type_name" placeholder="请选择类型">
@@ -53,7 +53,7 @@ const form = reactive({
   id: "",
   image: "",
   name: "",
-  status: "",
+  status: "FREE",
   type_name: "",
 });
 
