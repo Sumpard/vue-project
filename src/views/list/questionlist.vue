@@ -130,8 +130,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
-
 import { getQuestion } from "@/api/question";
 import { useUserStore } from "@/stores/user";
 import { sf } from "@/utils/static-file";

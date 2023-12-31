@@ -76,8 +76,6 @@
 <script setup lang="ts">
 import { Search } from "@element-plus/icons-vue";
 import { ElMessageBox } from "element-plus";
-import { computed, onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
 
 import { deletNotice, getNotice } from "@/api/notice";
 import { useUserStore } from "@/stores/user";

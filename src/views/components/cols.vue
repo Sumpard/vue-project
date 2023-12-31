@@ -19,9 +19,6 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, ref } from "vue";
-import { useRouter } from "vue-router";
-
 import { getNotice } from "@/api/notice";
 
 const props = defineProps({

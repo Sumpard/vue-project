@@ -45,9 +45,7 @@
 
 <script lang="ts" setup>
 import { Plus } from "@element-plus/icons-vue";
-import axios from "axios";
 import { ElMessage } from "element-plus";
-import { defineProps, reactive, ref } from "vue";
 
 import { uploadQuestionImages } from "@/api/upload";
 

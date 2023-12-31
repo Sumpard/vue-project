@@ -46,7 +46,6 @@
 
 <script lang="ts" setup>
 import type { FormInstance, FormRules } from "element-plus";
-import { reactive, ref } from "vue";
 
 import { adduser } from "@/api/goods";
 

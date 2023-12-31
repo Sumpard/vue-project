@@ -12,9 +12,6 @@
 </template>
 
 <script lang="ts">
-import { onMounted, ref, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
-
 export default {
   setup() {
     const route = useRoute();

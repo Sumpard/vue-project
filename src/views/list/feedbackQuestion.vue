@@ -162,8 +162,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
-
 import { getQuestion, putQuestion } from "@/api/question";
 import Message from "@/utils/message";
 import { sf } from "@/utils/static-file";

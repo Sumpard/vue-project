@@ -61,7 +61,6 @@
 <script lang="ts">
 import { Plus } from "@element-plus/icons-vue";
 import { ElMessageBox } from "element-plus";
-import { defineProps, reactive, ref } from "vue";
 
 import { submitQuestion } from "@/api/question";
 import { useUserStore } from "@/stores/user";

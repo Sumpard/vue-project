@@ -58,8 +58,6 @@
 
 <script setup lang="ts">
 import { Search } from "@element-plus/icons-vue";
-import { computed, onMounted, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
 
 import { getNotice } from "@/api/notice";
 

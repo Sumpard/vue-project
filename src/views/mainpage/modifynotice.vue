@@ -26,7 +26,6 @@
 
 <script lang="ts">
 import { ElMessageBox } from "element-plus";
-import { useRouter } from "vue-router";
 
 import { modifyNotice } from "@/api/notice";
 import { uploadNoticeImages } from "@/api/upload";
