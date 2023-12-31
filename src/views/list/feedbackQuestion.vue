@@ -40,7 +40,7 @@
         filter-placement="bottom-end"
       >
         <template #default="scope">
-          <el-tag :type="scope.row.question_status === 'FINISHED' ? '' : 'error'" disable-transitions>{{
+          <el-tag :type="scope.row.question_status === 'FINISHED' ? '' : 'danger'" disable-transitions>{{
             mapstatus(scope.row.question_status)
           }}</el-tag>
         </template>
@@ -89,12 +89,7 @@
                 <el-form-item label="反馈图片：">
                   <div class="img-container">
                     <div v-for="(image, index) in selectedRow.question_images" :key="index">
-                      <el-image
-                        :src="'http://120.46.203.58' + image"
-                        alt="Image"
-                        class="img"
-                        :preview-src-list="['http://120.46.203.58' + image]"
-                      />
+                      <el-image :src="sf(image)" alt="Image" class="img" :preview-src-list="[sf(image)]" />
                     </div>
                   </div>
                 </el-form-item>
@@ -134,12 +129,7 @@
               <el-form-item label="反馈回复图片：" v-if="replyed && selectedRow.reply_images[0] != ''">
                 <div class="img-container">
                   <div v-for="(image, index) in selectedRow.reply_images" :key="index">
-                    <el-image
-                      :src="'http://120.46.203.58' + image"
-                      alt="Image"
-                      class="img"
-                      :preview-src-list="['http://120.46.203.58' + image]"
-                    />
+                    <el-image :src="sf(image)" alt="Image" class="img" :preview-src-list="[sf(image)]" />
                   </div>
                 </div>
               </el-form-item>
@@ -176,18 +166,19 @@ import { computed, onMounted, ref } from "vue";
 
 import { getQuestion, putQuestion } from "@/api/question";
 import Message from "@/utils/message";
+import { sf } from "@/utils/static-file";
 import { formatTimestamp } from "@/utils/timeformat";
 import ImgUpload from "@/views/components/ImgUpNoBtn.vue";
 
 const loading = ref(true);
 const dialogVisible = ref(false); //会话框显示
-const selectedRow = ref(null); //会话框内容
-const tableData = ref([]);
+const selectedRow = ref<any>(); //会话框内容
+const tableData = ref<any[]>([]);
 const search = ref("");
 const replyed = ref(false); //boolen,用于判断是否已经reply过
 
 /*调用图片上传组件的函数*/
-const childRef = ref(null);
+const childRef = ref();
 const repImg = ref("");
 const imgselect = ref(false);
 const BtnDis = ref(false); //图片参数错误时禁用上传
@@ -247,7 +238,7 @@ const callChildMethod = async () => {
   Message.info("正在提交回复内容");
 
   if (imgselect.value) {
-    await childRef.value.beginUploadImg();
+    await childRef.value!.beginUploadImg();
   } else {
     console.error("子组件实例不存在");
   }

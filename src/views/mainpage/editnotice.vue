@@ -29,6 +29,7 @@ import { postNotice } from "@/api/notice";
 import { uploadNoticeImages } from "@/api/upload";
 import { useUserStore } from "@/stores/user";
 import Message from "@/utils/message";
+import { sf } from "@/utils/static-file";
 import { formatTimestamp } from "@/utils/timeformat";
 
 export default {
@@ -63,7 +64,7 @@ export default {
       // console.log("upload response:", res);
       if (res.code === 200) {
         insertImage({
-          url: "http://120.46.203.58" + res.data,
+          url: sf(res.data),
           width: "auto",
           height: "auto",
         });

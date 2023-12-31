@@ -25,13 +25,13 @@
 </template>
 
 <script lang="ts">
-import axios from "axios";
 import { ElMessageBox } from "element-plus";
 import { useRouter } from "vue-router";
 
 import { modifyNotice } from "@/api/notice";
 import { uploadNoticeImages } from "@/api/upload";
 import Message from "@/utils/message";
+import { sf } from "@/utils/static-file";
 
 export default {
   setup() {
@@ -77,7 +77,7 @@ export default {
       // console.log("upload response:", res);
       if (res.code === 200) {
         insertImage({
-          url: "http://120.46.203.58" + res.data,
+          url: sf(res.data),
           width: "auto",
           height: "auto",
         });
