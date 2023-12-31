@@ -19,8 +19,6 @@ import UserInfoCard from "./components/UserInfoCard.vue";
 </script>
 
 <style scoped>
-@import url("https://cdn.jsdelivr.net/gh/AyagawaSeirin/homepage@latest/mdui/css/mdui.min.css");
-
 @media screen and (min-width: 320px) {
   .my-info {
     width: 100%;

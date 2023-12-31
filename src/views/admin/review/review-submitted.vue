@@ -224,7 +224,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-@import url("https://cdn.jsdelivr.net/gh/AyagawaSeirin/homepage@latest/mdui/css/mdui.min.css");
 .divide {
   margin: 15px 30px 15px;
 }
