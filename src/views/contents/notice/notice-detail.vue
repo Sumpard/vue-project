@@ -14,6 +14,8 @@
 </template>
 
 <script lang="ts">
+import { getNotice } from "@/api/notice";
+
 export default {
   setup() {
     const route = useRoute();
@@ -21,14 +23,29 @@ export default {
     watch(route, (to, from) => {
       router.go(0);
     });
-    const content = ref(route.query.content);
-    const type = ref(route.query.type);
-    const title = ref(route.query.title);
-    const time = ref(route.query.time);
-    const name = ref(route.query.name);
+    const content = ref("");
+    const type = ref("");
+    const title = ref("");
+    const time = ref("");
+    const name = ref("");
 
     onMounted(() => {
-      // 在组件初始化时，获取路由参数
+      async () => {
+        try {
+          const id = route.params.id;
+          console.log("get notice by id:", id);
+          const response = await getNotice(id);
+
+          if (response.code === 200) {
+            console.log("response:", response);
+            content.value = response.notice_content;
+          } else {
+            console.error("Failed to fetch data:", response.msg);
+          }
+        } catch (error) {
+          console.error("API request failed:", error);
+        }
+      };
     });
 
     return {

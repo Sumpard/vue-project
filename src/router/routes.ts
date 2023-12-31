@@ -20,7 +20,8 @@ const routes: RouteRecordRaw[] = [
             component: () => import("@/views/contents/notice/notice-list.vue"),
           },
           {
-            path: "",
+            path: ":noticeId",
+            props: true,
             component: () => import("@/views/contents/notice/notice-detail.vue"),
           },
         ],
