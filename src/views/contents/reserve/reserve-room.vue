@@ -15,7 +15,7 @@
         <div class="scroll">
           <el-scrollbar>
             <div class="chart">
-              <Gante2 :timett="time_form.time_select" />
+              <RoomResChart :timett="time_form.time_select" />
             </div>
           </el-scrollbar>
         </div>
@@ -103,7 +103,8 @@ import { useUserStore } from "@/stores/user";
 import Message from "@/utils/message";
 import { sf } from "@/utils/static-file";
 import { combineDateTime, formatTimestamp } from "@/utils/timeformat";
-import Gante2 from "@/views/chart/gante2.vue";
+
+import RoomResChart from "./chart/RoomResChart.vue";
 
 /* interface room {
   available_description: string;
@@ -118,7 +119,7 @@ const activeName = ref("first");
 const dialog_switch = ref(false);
 
 export default {
-  components: { Gante2 },
+  components: { RoomResChart },
 
   async mounted() {
     const all = await get_all();
