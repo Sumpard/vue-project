@@ -95,10 +95,14 @@ const equalToPassword = (rule: any, value: any, callback: any) => {
 
 const rules = reactive<any>({
   password: [{ required: true, message: "请输入旧密码", trigger: "blur" }],
-  newPassword: [{ required: true, message: "请输入新密码", trigger: "blur" }],
+  newPassword: [
+    { required: true, message: "请输入新密码", trigger: "blur" },
+    { min: 6, message: "密码长度最少为6位", trigger: "blur" },
+  ],
   confirm: [
     { required: true, trigger: "blur", message: "请再次输入您的密码" },
     { required: true, validator: equalToPassword, trigger: "blur" },
+    { min: 6, message: "密码长度最少为6位", trigger: "blur" },
   ],
 });
 
