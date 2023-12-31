@@ -6,7 +6,13 @@
         <i-ep-Fold v-else />
       </el-icon>
     </div>
-    <el-menu active-border-color="blue" :collapse="isCollapse" :collapse-transition="false" :router="true">
+    <el-menu
+      default-active="/"
+      active-border-color="blue"
+      :collapse="isCollapse"
+      :collapse-transition="false"
+      :router="true"
+    >
       <template v-for="item in menus" :key="item.index">
         <template v-if="!item.admin || userStore.isAdmin">
           <el-sub-menu v-if="item.children" :index="item.index">
@@ -37,16 +43,16 @@ import { useUserStore } from "@/stores/user";
 const isCollapse = ref(false);
 
 const menus = [
-  { index: "homepage", name: "首页", icon: IconEpHouse },
+  { index: "/", name: "首页", icon: IconEpHouse },
   {
     index: "reserve",
     name: "预约管理",
     icon: IconMdiBookOutline,
     children: [
-      { index: "reserveroom", name: "会议室预约", icon: IconMdiAccountGroupOutline },
-      { index: "seat", name: "座位预约", icon: IconMdiSeatOutline },
-      { index: "equipment", name: "器材预约", icon: IconEpCamera },
-      { index: "reservation", name: "预约记录", icon: IconEpCollection },
+      { index: "/reserve/room", name: "会议室预约", icon: IconMdiAccountGroupOutline },
+      { index: "/reserve/seat", name: "座位预约", icon: IconMdiSeatOutline },
+      { index: "/reserve/equipment", name: "器材预约", icon: IconEpCamera },
+      { index: "/reserve/record", name: "预约记录", icon: IconEpCollection },
     ],
   },
   {
@@ -54,20 +60,20 @@ const menus = [
     name: "预约审核",
     icon: IconEpEdit,
     children: [
-      { index: "review1", name: "待审核预约", icon: IconEpEdit },
-      { index: "review2", name: "已审核预约", icon: IconEpEdit },
-      { index: "review3", name: "已拒绝预约", icon: IconEpEdit },
+      { index: "/admin/review/submitted", name: "待审核预约", icon: IconEpEdit },
+      { index: "/admin/review/accepted", name: "已审核预约", icon: IconEpEdit },
+      { index: "/admin/review/refused", name: "已拒绝预约", icon: IconEpEdit },
     ],
     admin: true,
   },
   {
-    index: "goodlist",
+    index: "/admin/entities",
     name: "物品列表",
     icon: IconEpBox,
     admin: true,
   },
   {
-    index: "userlist",
+    index: "/admin/users",
     name: "用户列表",
     icon: IconEpUser,
     admin: true,
@@ -77,19 +83,19 @@ const menus = [
     name: "通知与反馈",
     icon: IconEpEdit,
     children: [
-      { index: "editnotice", name: "编写通知", icon: IconEpEdit },
-      { index: "adminnoticelist", name: "通知列表", icon: IconEpChatLineSquare },
-      { index: "feedbackQuestion", name: "问题反馈列表", icon: IconEpBox },
+      { index: "/admin/notice/create", name: "编写通知", icon: IconEpEdit },
+      { index: "/admin/notice/list", name: "通知列表", icon: IconEpChatLineSquare },
+      { index: "/admin/feedback/list", name: "问题反馈列表", icon: IconEpBox },
     ],
     admin: true,
   },
   {
-    index: "contact",
+    index: "feedback",
     name: "联系我们",
     icon: IconEpPhone,
     children: [
-      { index: "questionsub", name: "填写反馈", icon: IconEpPostcard },
-      { index: "questionlist", name: "反馈记录", icon: IconEpMessage },
+      { index: "/feedback/submit", name: "填写反馈", icon: IconEpPostcard },
+      { index: "/feedback/list", name: "反馈记录", icon: IconEpMessage },
     ],
   },
 ];

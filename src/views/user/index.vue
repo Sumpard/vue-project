@@ -4,10 +4,9 @@
     <!-- <BannerItem :banner="currentUser.banner" @changeBanner="changeBanner" /> -->
     <!-- 个人信息 -->
     <div class="info-deatil">
-      <!-- <UserInfo :currentUser="currentUser" @changeAvatar="changeAvatar" /> -->
-      <avatar />
+      <user-avatar-card />
       <div class="all-info">
-        <message />
+        <user-info-card />
       </div>
     </div>
     <!-- 我的文章 -->
@@ -15,13 +14,11 @@
 </template>
 
 <script setup lang="ts">
-import avatar from "./components/avatar.vue";
-import message from "./components/message.vue";
+import UserAvatarCard from "./components/UserAvatarCard.vue";
+import UserInfoCard from "./components/UserInfoCard.vue";
 </script>
 
 <style scoped>
-@import url("https://cdn.jsdelivr.net/gh/AyagawaSeirin/homepage@latest/mdui/css/mdui.min.css");
-
 @media screen and (min-width: 320px) {
   .my-info {
     width: 100%;

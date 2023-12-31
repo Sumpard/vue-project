@@ -9,14 +9,14 @@
     </el-col>
   </el-row>
   <el-row>
-    <cols noticetype="活动通知" />
-    <cols noticetype="管理安排" />
-    <cols noticetype="书院介绍" />
+    <notice-column noticetype="活动通知" />
+    <notice-column noticetype="管理安排" />
+    <notice-column noticetype="书院介绍" />
   </el-row>
 </template>
 
 <script setup lang="ts">
-import cols from "@/views/components/cols.vue";
+import NoticeColumn from "./components/NoticeColumn.vue";
 
 const imageUrl = ["1.jpg", "2.jpg", "3.jpg", "4.png"].map((t) => `/img/carousel/${t}`);
 </script>

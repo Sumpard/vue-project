@@ -1,6 +1,6 @@
 <template>
   <div class="my-info">
-    <div class="rin-card"><addgoods /></div>
+    <div class="rin-card"><add-entity-dialog /></div>
     <el-dialog v-model="dialogVisible" title="上传文件" draggable>
       <el-upload
         class="upload-dialog"
@@ -114,7 +114,8 @@ import { Delete, Edit, Search, Share, Upload } from "@element-plus/icons-vue";
 import type { FormInstance, FormRules, UploadInstance } from "element-plus";
 
 import { deletegood, editdescription, editstatus, getAllGoods, upload } from "@/api/goods";
-import addgoods from "@/views/managegoods/add.vue";
+
+import AddEntityDialog from "./components/AddEntityDialog.vue";
 
 const loading = ref(true);
 const ruleFormRef = ref<FormInstance>();
@@ -266,7 +267,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-@import url("https://cdn.jsdelivr.net/gh/AyagawaSeirin/homepage@latest/mdui/css/mdui.min.css");
 .divide {
   margin: 15px 0px 0px;
 }

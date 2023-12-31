@@ -148,7 +148,6 @@ const changeIsEdit = (val: boolean) => {
 </script>
 
 <style scoped lang="scss">
-@import url("https://cdn.jsdelivr.net/gh/AyagawaSeirin/homepage@latest/mdui/css/mdui.min.css");
 .form {
   margin: 20px 0 0 0;
 }

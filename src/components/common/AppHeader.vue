@@ -1,7 +1,9 @@
 <template>
   <div class="header-content">
     <div>
-      <img src="/img/logo.jpg" class="logo-image" />
+      <router-link to="/">
+        <img src="/img/logo.jpg" class="logo-image" />
+      </router-link>
     </div>
     <div class="right-side">
       <div class="toolbar">
@@ -33,7 +35,7 @@ const router = useRouter();
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 function homepage() {
-  router.push({ path: "/homeindex" });
+  router.push({ name: "user-home" });
 }
 
 function handleLogout() {

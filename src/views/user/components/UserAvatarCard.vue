@@ -104,7 +104,6 @@ const submitUpload = async () => {
 </script>
 
 <style scoped lang="scss">
-@import url("https://cdn.jsdelivr.net/gh/AyagawaSeirin/homepage@latest/mdui/css/mdui.min.css");
 .zi {
   color: #eee;
   font-size: 25px;

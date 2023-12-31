@@ -1,6 +1,6 @@
 <template>
   <div class="my-info">
-    <div class="rin-card"><addbutton /></div>
+    <div class="rin-card"><add-user-dialog /></div>
 
     <el-divider class="divide" />
 
@@ -86,7 +86,8 @@
 import type { FormInstance, FormRules } from "element-plus";
 
 import { User, getAllUsers, updateUserRole, updateUserScore } from "@/api/user";
-import addbutton from "@/views/list/adduser.vue";
+
+import AddUserDialog from "./components/AddUserDialog.vue";
 
 const loading = ref(true);
 const ruleFormRef = ref<FormInstance>();
@@ -188,7 +189,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-@import url("https://cdn.jsdelivr.net/gh/AyagawaSeirin/homepage@latest/mdui/css/mdui.min.css");
 .divide {
   margin: 15px 0px 0px;
 }
