@@ -35,8 +35,7 @@ export async function postNotice( //发布notice
 }
 
 export async function getNotice(notice_id: int): Promise<Notice> {
-  // return (await api.get("/notice/selectNotice/", { params: { notice_id } })).data;
-  return (await api.get("notice/selectNoticeList", { params: { beginTime: "", endTime: "", notice_id } })).data.data[0];
+  return (await api.get("/notice/selectNotice/", { params: { notice_id } })).data.data;
 }
 
 export async function deleteNotice(del_id: int) {
