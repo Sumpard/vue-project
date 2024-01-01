@@ -31,7 +31,7 @@
         </el-table-column>
         <el-table-column prop="notice_title" label="通知标题">
           <template v-slot="{ row }">
-            {{ truncateText(row.notice_title, 15) }}
+            {{ truncText(row.notice_title, 15) }}
           </template>
         </el-table-column>
         <el-table-column prop="publisher_name" label="撰写人">
@@ -77,14 +77,15 @@
 import { Search } from "@element-plus/icons-vue";
 import { ElMessageBox } from "element-plus";
 
-import { deletNotice, getNotice } from "@/api/notice";
-import { useUserStore } from "@/stores/user";
+import { deleteNotice, getNoticeByType } from "@/api/notice";
+import { Notice } from "@/interfaces/notice";
 import Message from "@/utils/message";
+import { truncText } from "@/utils/text-utils";
+
+const router = useRouter(); // 获取路由对象
 
 const loading = ref(true);
-const selectedRow = ref(null); //所选notice的内容
-const router = useRouter(); // 获取路由对象
-const tableData = ref([]);
+const tableData = ref<Notice[]>([]);
 const search = ref("");
 const filterTableData = computed(() =>
   tableData.value.filter(
@@ -99,52 +100,21 @@ const filterTag = (value: string, row: any) => {
   return row.notice_type === value;
 };
 
-const truncateText = (text: string, maxLength: number) => {
-  //截断text以防内容过长
-  if (text.length > maxLength) {
-    return text.substring(0, maxLength) + "...";
-  }
-  return text;
+const openPreview = (row: Notice) => {
+  router.push({ name: "notice-detail", params: { noticeId: row.notice_id } });
 };
 
-const openPreview = (row) => {
-  //获取会话框内容
-  selectedRow.value = row;
-  router.push({
-    path: "/noticepreview",
-    query: {
-      content: row.notice_content,
-      type: row.notice_type,
-      title: row.notice_title,
-      time: row.publish_time,
-      name: row.publisher_name,
-    },
-  });
+const openModify = (row: Notice) => {
+  router.push({ name: "notice-edit", params: { noticeId: row.notice_id } });
 };
 
-const openModify = (row) => {
-  //获取会话框内容
-  selectedRow.value = row;
-  router.push({
-    path: "/noticemodify",
-    query: {
-      content: row.notice_content,
-      type: row.notice_type,
-      title: row.notice_title,
-      time: row.publish_time,
-      name: row.publisher_name,
-      id: row.notice_id,
-    },
-  });
-};
-
-const onDelete = async (row) => {
+const onDelete = async (row: Notice) => {
   await ElMessageBox.confirm("此操作将删除该通知, 是否继续?", "提示", {
     confirmButtonText: "确定",
     cancelButtonText: "取消",
     type: "warning",
   }).then(async () => {
-    const response = await deletNotice(parseInt(row.notice_id));
+    const response = await deleteNotice(row.notice_id);
     if (response.code === 200) {
       Message.success("删除成功");
     } else {
@@ -155,19 +125,8 @@ const onDelete = async (row) => {
 };
 
 onMounted(async () => {
-  // 通过 API 请求获取数据
-  try {
-    const response = await getNotice("");
-
-    if (response.code === 200) {
-      tableData.value = response.data;
-      loading.value = false;
-    } else {
-      console.error("Failed to fetch data:", response.msg);
-    }
-  } catch (error) {
-    console.error("API request failed:", error);
-  }
+  tableData.value = await getNoticeByType();
+  loading.value = false;
 });
 </script>
 

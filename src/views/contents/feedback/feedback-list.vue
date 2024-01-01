@@ -15,7 +15,7 @@
         </el-table-column>
         <el-table-column prop="question_texts" label="反馈内容摘要">
           <template v-slot="{ row }">
-            {{ truncateText(row.question_texts, 15) }}
+            {{ truncText(row.question_texts, 15) }}
           </template>
         </el-table-column>
         <el-table-column
@@ -133,6 +133,7 @@
 import { getQuestion } from "@/api/question";
 import { useUserStore } from "@/stores/user";
 import { sf } from "@/utils/static-file";
+import { truncText } from "@/utils/text-utils";
 import { formatTimestamp } from "@/utils/timeformat";
 
 const loading = ref(true);
@@ -155,14 +156,6 @@ const openDialog = (row) => {
   //获取会话框内容
   selectedRow.value = row;
   dialogVisible.value = true;
-};
-
-const truncateText = (text: string, maxLength: number) => {
-  //截断text以防内容过长
-  if (text.length > maxLength) {
-    return text.substring(0, maxLength) + "...";
-  }
-  return text;
 };
 
 const filterTag = (value: string, row: any) => {

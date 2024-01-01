@@ -31,7 +31,7 @@
         </el-table-column>
         <el-table-column prop="notice_title" label="通知标题">
           <template v-slot="{ row }">
-            {{ truncateText(row.notice_title, 15) }}
+            {{ truncText(row.notice_title, 15) }}
           </template>
         </el-table-column>
         <el-table-column prop="publisher_name" label="撰写人">
@@ -59,11 +59,14 @@
 <script setup lang="ts">
 import { Search } from "@element-plus/icons-vue";
 
-import { getNotice } from "@/api/notice";
+import { getNoticeByType } from "@/api/notice";
+import { Notice } from "@/interfaces/notice";
+import { truncText } from "@/utils/text-utils";
+
+const props = defineProps<{ type: string }>();
 
 const loading = ref(true);
-const selectedRow = ref(null); //所选notice的内容
-const tableData = ref([]);
+const tableData = ref<Notice[]>([]);
 const search = ref("");
 const filterTableData = computed(() =>
   tableData.value.filter(
@@ -74,47 +77,15 @@ const filterTableData = computed(() =>
   )
 );
 
-const router = useRouter(); // 传递路由对象
-const route = useRoute(); //获取路由参数
-const select_type = ref(route.query.type);
+const router = useRouter();
 
-const truncateText = (text: string, maxLength: number) => {
-  //截断text以防内容过长
-  if (text.length > maxLength) {
-    return text.substring(0, maxLength) + "...";
-  }
-  return text;
-};
-
-const openPreview = (row) => {
-  //获取会话框内容
-  selectedRow.value = row;
-  router.push({
-    path: "/noticepreview",
-    query: {
-      content: row.notice_content,
-      type: row.notice_type,
-      title: row.notice_title,
-      time: row.publish_time,
-      name: row.publisher_name,
-    },
-  });
+const openPreview = (row: Notice) => {
+  router.push({ name: "notice-detail", params: { noticeId: row.notice_id } });
 };
 
 onMounted(async () => {
-  // 通过 API 请求获取数据
-  try {
-    const response = await getNotice(select_type.value);
-
-    if (response.code === 200) {
-      tableData.value = response.data;
-      loading.value = false;
-    } else {
-      console.error("Failed to fetch data:", response.msg);
-    }
-  } catch (error) {
-    console.error("API request failed:", error);
-  }
+  tableData.value = await getNoticeByType(props.type);
+  loading.value = false;
 });
 </script>
 

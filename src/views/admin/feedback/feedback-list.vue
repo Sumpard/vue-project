@@ -26,7 +26,7 @@
 
       <el-table-column prop="question_texts" label="反馈内容摘要">
         <template v-slot="{ row }">
-          {{ truncateText(row.question_texts, 15) }}
+          {{ truncText(row.question_texts, 15) }}
         </template>
       </el-table-column>
       <el-table-column
@@ -165,6 +165,7 @@
 import { getQuestion, putQuestion } from "@/api/question";
 import Message from "@/utils/message";
 import { sf } from "@/utils/static-file";
+import { truncText } from "@/utils/text-utils";
 import { formatTimestamp } from "@/utils/timeformat";
 import ImgUpload from "@/views/components/ImgUpNoBtn.vue";
 
@@ -205,14 +206,6 @@ const openDialog = (row) => {
   dialogVisible.value = true;
   console.log("selected row img url:", selectedRow.value.question_images[0]);
   replyed.value = selectedRow.value.reply_texts != "" && selectedRow.value.reply_texts != null;
-};
-
-const truncateText = (text: string, maxLength: number) => {
-  //截断text以防内容过长
-  if (text.length > maxLength) {
-    return text.substring(0, maxLength) + "...";
-  }
-  return text;
 };
 
 const filterTag = (value: string, row: any) => {
