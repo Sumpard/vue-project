@@ -12,17 +12,18 @@
     <el-dialog v-model="dialogVisible" title="上传文件" draggable>
       <el-upload
         class="upload-dialog"
-        :before-upload="beforeUpload"
+        accept=".png,.jpg,.jpeg"
         drag
         :auto-upload="false"
         :on-change="onchange"
+        :on-remove="onremove"
         show-file-list
         list-type="picture"
         :limit="1"
       >
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-        <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过5MB</div>
+        <div class="el-upload__tip" slot="tip">只能上传一张jpg/png/jpeg图片，且大小不超过5MB</div>
       </el-upload>
 
       <template #footer>
@@ -50,7 +51,8 @@ const emit = defineEmits(["changeAvatar"]);
 const userStore = useUserStore();
 
 const { user } = storeToRefs(userStore);
-
+const zerofile = ref();
+const isvalid = ref(true);
 onMounted(() => {
   //通过 API 请求获取数据
   const options = {
@@ -68,27 +70,31 @@ const showUploadDialog = () => {
   dialogVisible.value = true;
 };
 
+const onremove = (file: any) => {
+  File.value = zerofile.value;
+  console.log(File.value);
+};
 const onchange = (file: any) => {
   File.value = file.raw;
-};
-
-const beforeUpload = (file: any) => {
-  // 在上传之前的钩子，可用于文件类型和大小的校验
-  const isJPG = file.type === "image/jpeg" || file.type === "image/png";
-  if (!isJPG) {
-    ElMessage.error("只能上传jpg/png文件！");
-    return false;
-  }
-  const isLt500K = file.size / 1024 / 1024 < 5;
-  if (!isLt500K) {
+  isvalid.value = true;
+  console.log(File.value);
+  const isLt500K = file.size / 1024 / 1024 > 5;
+  console.log(file.size / 1024 / 1024);
+  if (isLt500K) {
     ElMessage.error("文件大小不能超过5MB！");
     return false;
   }
+
+  isvalid.value = false;
   return true;
 };
 
 const submitUpload = async () => {
   try {
+    if (!File.value) {
+      ElMessage.error("请至少上传一张图片");
+      return;
+    }
     const result5 = await uploadava(File.value);
     if (result5.code !== 200) {
       ElMessage.error("更新图片失败");
