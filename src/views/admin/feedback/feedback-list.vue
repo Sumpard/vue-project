@@ -74,6 +74,11 @@
                 </el-form-item>
               </el-row>
               <el-row>
+                <el-form-item label="反馈人电话：">
+                  <p>{{ selectedRow.proposer_phone_number }}</p>
+                </el-form-item>
+              </el-row>
+              <el-row>
                 <el-form-item label="反馈内容：">
                   <p>{{ selectedRow.question_texts }}</p>
                 </el-form-item>

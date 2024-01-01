@@ -92,7 +92,7 @@ export default {
             this.router.push({ name: "notice-detail", params: { noticeId: res.data } });
           })
           .catch(() => {
-            this.router.push({ path: "list" });
+            this.router.push({ name: "admin-notice-list" });
           });
       }
     },
