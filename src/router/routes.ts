@@ -7,93 +7,124 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true },
     children: [
       {
-        path: "/reservation",
-        component: () => import("@/views/list/record.vue"),
-      },
-      {
-        path: "/reserveroom",
-        component: () => import("@/views/room/reserveRoom.vue"),
-      },
-      {
-        path: "/equipment",
-        component: () => import("@/views/equip/equipment.vue"),
-      },
-      {
-        path: "/seat",
-        component: () => import("@/views/seat/seat.vue"),
-      },
-      {
-        path: "/homepage",
+        path: "homepage",
         name: "homepage",
         alias: "/",
-        component: () => import("@/views/mainpage/homepage.vue"),
+        component: () => import("@/views/home/index.vue"),
       },
       {
-        //编写通知（管理员）
-        path: "/editnotice",
-        component: () => import("@/views/mainpage/editnotice.vue"),
+        path: "notice",
+        children: [
+          {
+            path: "list",
+            props: (route) => ({ type: route.query.type }),
+            component: () => import("@/views/contents/notice/notice-list.vue"),
+          },
+          {
+            path: ":noticeId",
+            name: "notice-detail",
+            props: true,
+            component: () => import("@/views/contents/notice/notice-detail.vue"),
+          },
+        ],
       },
       {
-        //通知列表（管理员）
-        path: "/adminnoticelist",
-        component: () => import("@/views/list/adminnoticelist.vue"),
+        path: "user/home",
+        name: "user-home",
+        component: () => import("@/views/user/index.vue"),
       },
       {
-        path: "/noticepreview",
-        component: () => import("@/views/mainpage/noticepreview.vue"),
+        path: "reserve",
+        children: [
+          {
+            path: "room",
+            component: () => import("@/views/contents/reserve/reserve-room.vue"),
+          },
+          {
+            path: "seat",
+            component: () => import("@/views/contents/reserve/reserve-seat.vue"),
+          },
+          {
+            path: "equipment",
+            component: () => import("@/views/contents/reserve/reserve-equipment.vue"),
+          },
+          {
+            path: "record",
+            component: () => import("@/views/contents/reserve/reserve-record.vue"),
+          },
+        ],
       },
       {
-        path: "/noticemodify",
-        component: () => import("@/views/mainpage/modifynotice.vue"),
+        path: "feedback",
+        children: [
+          {
+            path: "submit",
+            component: () => import("@/views/contents/feedback/feedback-submit.vue"),
+          },
+          {
+            path: "list",
+            component: () => import("@/views/contents/feedback/feedback-list.vue"),
+          },
+        ],
       },
       {
-        path: "/noticelist",
-        component: () => import("@/views/mainpage/noticelist.vue"),
-      },
-      {
-        path: "/homeindex",
-        component: () => import("@/views/home/homeindex.vue"),
-      },
-      {
-        path: "/questionsub",
-        component: () => import("@/views/contact/contactUs02.vue"),
-      },
-      {
-        path: "/questionlist",
-        component: () => import("@/views/list/questionlist.vue"),
-      },
-      {
-        path: "/goodlist",
-        component: () => import("@/views/managegoods/goodlist.vue"),
-        meta: { requiresAdmin: true },
-      },
-      {
-        path: "/userlist",
-        component: () => import("@/views/list/userlist.vue"),
-        meta: { requiresAdmin: true },
-      },
-      {
-        path: "/upload-image",
-        component: () => import("@/views/fun/UploadImage.vue"),
-      },
-      {
-        //问题反馈列表（管理员）
-        path: "/feedbackQuestion",
-        component: () => import("@/views/list/feedbackQuestion.vue"),
-      },
-      {
-        path: "/review1",
-        component: () => import("@/views/review/review_submitted.vue"),
-        meta: { requiresAdmin: true },
-      },
-      {
-        path: "/review2",
-        component: () => import("@/views/review/review_accepted.vue"),
-        meta: { requiresAdmin: true },
-      },
-      {
-        path: "/review3",
-        component: () => import("@/views/review/review_refused.vue"),
+        path: "admin",
+        children: [
+          {
+            path: "users",
+            component: () => import("@/views/admin/user/user-list.vue"),
+          },
+          {
+            path: "entities",
+            component: () => import("@/views/admin/entity/entity-list.vue"),
+          },
+          {
+            path: "notice",
+            children: [
+              {
+                path: "create",
+                component: () => import("@/views/admin/notice/notice-create.vue"),
+              },
+              {
+                path: "edit/:noticeId",
+                name: "notice-edit",
+                props: true,
+                component: () => import("@/views/admin/notice/notice-edit.vue"),
+              },
+              {
+                path: "list",
+                name: "admin-notice-list",
+                component: () => import("@/views/admin/notice/notice-list.vue"),
+              },
+            ],
+          },
+          {
+            path: "review",
+            children: [
+              {
+                path: "submitted",
+                component: () => import("@/views/admin/review/review-submitted.vue"),
+              },
+              {
+                path: "accepted",
+                component: () => import("@/views/admin/review/review-accepted.vue"),
+              },
+              {
+                path: "refused",
+                component: () => import("@/views/admin/review/review-refused.vue"),
+              },
+            ],
+          },
+          {
+            path: "feedback",
+            children: [
+              {
+                path: "list",
+                component: () => import("@/views/admin/feedback/feedback-list.vue"),
+              },
+            ],
+          },
+        ],
         meta: { requiresAdmin: true },
       },
     ],
@@ -101,17 +132,17 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/auth",
     name: "auth",
-    component: () => import("@/views/login/LoginPage.vue"),
+    component: () => import("@/views/login/index.vue"),
     children: [
       {
         path: "/auth/login",
         name: "login",
-        component: () => import("@/views/login/Login.vue"),
+        component: () => import("@/views/login/login.vue"),
       },
       {
         path: "/auth/register",
         name: "register",
-        component: () => import("@/views/login/Register.vue"),
+        component: () => import("@/views/login/register.vue"),
       },
     ],
   },

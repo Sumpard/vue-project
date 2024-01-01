@@ -43,11 +43,9 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { Plus } from "@element-plus/icons-vue";
-import axios from "axios";
 import { ElMessage } from "element-plus";
-import { defineProps, reactive, ref } from "vue";
 
 import { uploadQuestionImages } from "@/api/upload";
 
@@ -168,18 +166,10 @@ const beginUploadImg = ref(async () => {
   });
 
   //开始上传
-  console.log("开始上传图片");
-  const dataForm = new FormData(); //新建formdata
-  console.log("创建formData");
-  fileList.value.forEach((file) => {
-    dataForm.append("files", file.raw);
-    console.log("formdata value:", dataForm.get("files"));
-  });
-  const res = await uploadQuestionImages(dataForm);
+  const res = await uploadQuestionImages(fileList.value.map((t) => t.raw!));
   if (res.code === 200) {
     onSuccess();
     emits("uploadSuccess", res.data);
-    console.log("image response:", res.data);
   } else {
     emits("uploadFailefailed");
   }
