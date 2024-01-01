@@ -29,13 +29,13 @@
         </div>
         <el-form :model="bookingForm" label-width="120px" class="elform">
           <div class="flex">
-            <el-form-item label="会议室">
+            <el-form-item label="会议室" :required="true">
               <el-select v-model="bookingForm.room" placeholder="选择会议室">
                 <el-option v-for="room in rooms" :value="room.available_name"> </el-option>
               </el-select>
             </el-form-item>
           </div>
-          <el-form-item label="日期">
+          <el-form-item label="日期" :required="true">
             <el-date-picker
               v-model="bookingForm.date"
               type="date"
@@ -43,16 +43,16 @@
               :disabled-date="disabledDate"
             ></el-date-picker>
           </el-form-item>
-          <el-form-item label="时间">
+          <el-form-item label="时间" :required="true">
             <!-- <el-time-picker v-model="bookingForm.time" placeholder="选择时间段"></el-time-picker> -->
             <div>
               <time-set ref="timeset" />
             </div>
           </el-form-item>
-          <el-form-item label="手机号">
+          <el-form-item label="手机号" :required="true">
             <el-input v-model="bookingForm.booker" clearable placeholder="请输入手机号"></el-input>
           </el-form-item>
-          <el-form-item label="会议主题">
+          <el-form-item label="会议主题" :required="true">
             <el-input v-model="bookingForm.theme" clearable placeholder="请输入会议主题"></el-input>
           </el-form-item>
           <el-form-item label="备注">
@@ -73,7 +73,7 @@
           <el-tabs v-model="activeName" type="card" class="demo-tabs" @tab-click="handleClick">
             <el-tab-pane v-for="room in rooms" :key="room.available_id" :label="room.available_name">
               <p>{{ "会议室名称：" + room.available_name }}</p>
-              <p>{{ "会议室当前状态:" + room.available_status }}</p>
+              <!-- <p>{{ "会议室当前状态:" + room.available_status }}</p> -->
               <p>{{ "会议室信息:" + room.available_description }}</p>
               <p>{{ "图片:" }}</p>
               <div class="tab-img-container">

@@ -28,13 +28,13 @@
       </div>
       <el-form :model="bookingForm_equip" label-width="120px">
         <div class="flex">
-          <el-form-item label="器材">
+          <el-form-item label="器材" :required="true">
             <el-select v-model="bookingForm_equip.equip" placeholder="选择器材">
               <el-option v-for="equip in equips" :value="equip.available_name"> </el-option>
             </el-select>
           </el-form-item>
         </div>
-        <el-form-item label="日期">
+        <el-form-item label="日期" :required="true">
           <el-date-picker
             v-model="bookingForm_equip.date"
             type="date"
@@ -42,16 +42,16 @@
             :disabled-date="disabledDate"
           ></el-date-picker>
         </el-form-item>
-        <el-form-item label="时间">
+        <el-form-item label="时间" :required="true">
           <!-- <el-time-picker v-model="bookingForm_equip.time" placeholder="选择时间段"></el-time-picker> -->
           <div>
             <time-set ref="timeset" />
           </div>
         </el-form-item>
-        <el-form-item label="手机号">
+        <el-form-item label="手机号" :required="true">
           <el-input v-model="bookingForm_equip.booker" clearable placeholder="请输入手机号"></el-input>
         </el-form-item>
-        <el-form-item label="用途">
+        <el-form-item label="用途" :required="true">
           <el-input v-model="bookingForm_equip.use" clearable placeholder="请输入器材用途"></el-input>
         </el-form-item>
         <el-form-item label="备注">
@@ -78,7 +78,7 @@
         <el-tabs v-model="activeName" type="card" class="demo-tabs" @tab-click="handleClick">
           <el-tab-pane v-for="equip in equips" :key="equip.available_id" :label="equip.available_name">
             <p>{{ "器材名称：" + equip.available_name }}</p>
-            <p>{{ "器材当前状态:" + equip.available_status }}</p>
+            <!--             <p>{{ "器材当前状态:" + equip.available_status }}</p> -->
             <p>{{ "器材信息:" + equip.available_description }}</p>
             <p>{{ "图片:" }}</p>
             <div class="tab-img-container">
